@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baptiste — PageLab</title>
+<link rel="icon" type="image/png" href="/public/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#07070f;--bg2:#0d0d1a;--bg3:#111120;--card:#12121f;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--violet:#7c3aed;--vlight:#9d5ff3;--vdim:rgba(124,58,237,0.1);--vborder:rgba(124,58,237,0.25);--green:#10b981;--muted:#6b6b8a;--muted2:#9898b8;--text:#eeeef8}
+html,body{height:100%;-webkit-font-smoothing:antialiased;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;display:flex}
+a{color:inherit;text-decoration:none}
+
+/* SIDEBAR */
+.sidebar{width:252px;height:100vh;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sb-logo{padding:18px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border)}
+.sb-logo img{width:26px;height:26px;object-fit:contain;border-radius:6px}
+.sb-logo span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:15px}
+.sb-section{padding:14px 10px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.agent-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:9px;cursor:pointer;margin:1px 4px;transition:background .15s}
+.agent-row:hover{background:rgba(255,255,255,0.04)}
+.agent-row img{width:30px;height:30px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.agent-row-fb{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.ar-info{flex:1;min-width:0}
+.ar-name{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ar-role{font-size:11px;color:var(--muted2)}
+.ar-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ar-dot.on{background:var(--green)}
+.ar-dot.off{background:var(--muted)}
+.sb-footer{margin-top:auto;padding:12px 10px;border-top:1px solid var(--border)}
+.sb-link{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12px;color:var(--muted2);cursor:pointer;transition:all .15s}
+.sb-link:hover{background:rgba(255,255,255,0.04);color:var(--text)}
+.sb-link svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5;flex-shrink:0}
+
+/* PLAN BADGE */
+.plan-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:50px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:4px 14px 12px}
+.plan-trial{background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.2)}
+.plan-solo{background:var(--vdim);color:#c4b5fd;border:1px solid var(--vborder)}
+.plan-pro{background:rgba(99,102,241,0.1);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25)}
+.plan-agence{background:rgba(245,158,11,0.1);color:#fcd34d;border:1px solid rgba(245,158,11,0.2)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;min-width:0}
+
+/* HEADER */
+.chat-header{padding:0 18px;height:58px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.ch-left{display:flex;align-items:center;gap:11px}
+.ch-left img{width:36px;height:36px;border-radius:50%;object-fit:cover}
+.ch-name{font-weight:600;font-size:14px}
+.ch-sub{font-size:11px;color:var(--muted2);display:flex;align-items:center;gap:4px}
+.ch-sub::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ch-right{display:flex;align-items:center;gap:8px}
+.icon-btn{width:34px;height:34px;border-radius:8px;background:transparent;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted2);transition:all .15s}
+.icon-btn:hover{border-color:var(--border2);color:var(--text)}
+.icon-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5}
+.mob-toggle{display:none;padding:0 14px;cursor:pointer;color:var(--muted2)}
+.mob-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
+
+/* MESSAGES */
+.messages{flex:1;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px}
+.messages::-webkit-scrollbar{width:4px}
+.messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.msg{display:flex;align-items:flex-end;gap:10px;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg-ava{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.bubble{padding:11px 15px;border-radius:17px;font-size:14px;line-height:1.65;max-width:min(560px,calc(100vw - 120px))}
+.bubble-bot{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px}
+.bubble-user{background:var(--violet);color:#fff;border-bottom-right-radius:4px}
+.msg.user{flex-direction:row-reverse}
+.typing{display:flex;gap:4px;padding:12px 15px;background:var(--card);border:1px solid var(--border);border-radius:17px;border-bottom-left-radius:4px;width:fit-content}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:bounce 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+
+/* SUGGESTIONS */
+.suggestions{display:flex;gap:8px;flex-wrap:wrap;padding-left:42px}
+.sugg-btn{padding:7px 13px;border:1px solid var(--border2);border-radius:50px;font-size:12px;color:var(--muted2);cursor:pointer;background:transparent;font-family:'Inter',sans-serif;transition:all .2s;white-space:nowrap}
+.sugg-btn:hover{border-color:var(--violet);color:var(--text)}
+
+/* UPGRADE BANNER */
+.upgrade-banner{margin:0 18px 12px;padding:12px 16px;background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(79,70,229,0.08));border:1px solid var(--vborder);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.upgrade-text{font-size:13px;color:#c4b5fd}
+.upgrade-btn{padding:7px 16px;background:var(--violet);color:#fff;border:none;border-radius:50px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:background .2s}
+.upgrade-btn:hover{background:var(--vlight)}
+
+/* INPUT */
+.input-area{padding:14px 18px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.input-inner{display:flex;gap:10px;align-items:center;max-width:800px}
+.chat-input{flex:1;padding:12px 18px;background:var(--card);border:1px solid var(--border2);border-radius:50px;font-size:15px;color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
+.chat-input:focus{border-color:var(--violet)}
+.chat-input::placeholder{color:var(--muted)}
+.send-btn{width:42px;height:42px;border-radius:50%;background:var(--violet);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.send-btn:hover{background:var(--vlight);transform:scale(1.05)}
+.send-btn svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:2}
+
+@media(max-width:768px){
+  .sidebar{display:none;position:fixed;left:0;top:0;bottom:0;z-index:100;transform:translateX(-100%);transition:transform .3s;width:240px}
+  .sidebar.open{display:flex;transform:translateX(0)}
+  .mob-toggle{display:flex;align-items:center}
+  .messages{padding:14px 12px}
+  .bubble{max-width:calc(100vw - 80px)}
+  .chat-header{padding:0 12px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <img src="/public/logo.png" alt="PageLab" onerror="this.style.display='none'">
+    <span>PageLab</span>
+  </div>
+  <div id="planBadge"></div>
+  <div class="sb-section">Votre équipe</div>
+  <div id="agentsList"></div>
+  <div class="sb-footer">
+    <a href="/activite.html" class="sb-link" id="activiteLink">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Historique complet
+    </a>
+    <a href="/billing.html" class="sb-link" id="billingLink">
+      <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Facturation
+    </a>
+    <a href="/index.html" class="sb-link">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      Retour au site
+    </a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="chat-header">
+    <div class="ch-left">
+      <button class="mob-toggle" onclick="toggleSidebar()"><svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <img src="/public/agents/baptiste.png" alt="Baptiste" onerror="this.outerHTML='<div style=width:36px;height:36px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-weight:700>B</div>'">
+      <div>
+        <div class="ch-name">Baptiste</div>
+        <div class="ch-sub">Coordinateur de votre équipe</div>
+      </div>
+    </div>
+    <div class="ch-right">
+      <a href="/activite.html" class="icon-btn" id="activiteHeaderLink" title="Historique">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div id="upgradeBanner" style="display:none" class="upgrade-banner">
+    <div class="upgrade-text">⚡ Passez au plan Pro pour activer les 10 agents</div>
+    <button class="upgrade-btn" onclick="upgrade()">Upgrader →</button>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="input-area">
+    <div class="input-inner">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Parlez à Baptiste...">
+      <button class="send-btn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search)
+const SESSION = params.get('s')
+
+if (!SESSION) location.href = '/login.html'
+
+// Decode session for client-side info
+let sessionData = null
+try { sessionData = JSON.parse(atob(SESSION.replace(/-/g,'+').replace(/_/g,'/'))) } catch {}
+if (sessionData && sessionData.exp < Date.now()) location.href = '/login.html?error=expired'
+
+const AGENTS = [
+  {s:'baptiste',n:'Baptiste',r:'Coordinateur',c:'#7c3aed'},
+  {s:'leo',n:'Léo',r:'SEO & Blog',c:'#2563eb'},
+  {s:'sophie',n:'Sophie',r:'Newsletter',c:'#db2777'},
+  {s:'marc',n:'Marc',r:'Relances',c:'#d97706'},
+  {s:'alex',n:'Alex',r:'Social Media',c:'#059669'},
+  {s:'julie',n:'Julie',r:'Prospection',c:'#0891b2'},
+  {s:'hugo',n:'Hugo',r:'Avis Google',c:'#dc2626'},
+  {s:'emma',n:'Emma',r:'Veille',c:'#6366f1'},
+  {s:'lucas',n:'Lucas',r:'Comptabilité',c:'#65a30d'},
+  {s:'nina',n:'Nina',r:'Fiches produits',c:'#9333ea'},
+]
+
+// Build sidebar agents (static for now, real status from API)
+const list = document.getElementById('agentsList')
+AGENTS.forEach(a => {
+  const row = document.createElement('div'); row.className = 'agent-row'
+  row.innerHTML = `
+    <img src="/public/agents/${a.s}.png" alt="${a.n}" style="border:2px solid ${a.c}44" onerror="this.outerHTML='<div class=agent-row-fb style=background:${a.c}22;color:${a.c}>${a.n[0]}</div>'">
+    <div class="ar-info"><div class="ar-name">${a.n}</div><div class="ar-role">${a.r}</div></div>
+    <div class="ar-dot on"></div>
+  `
+  list.appendChild(row)
+})
+
+// Show plan badge
+if (sessionData?.plan) {
+  const badge = document.getElementById('planBadge')
+  const planNames = { trial: '7 jours gratuits', solo: 'Plan Solo', pro: 'Plan Pro', agence: 'Plan Agence', cancelled: 'Annulé' }
+  badge.innerHTML = `<div class="plan-badge plan-${sessionData.plan}">${planNames[sessionData.plan] || sessionData.plan}</div>`
+  if (sessionData.plan === 'solo') document.getElementById('upgradeBanner').style.display = 'flex'
+}
+
+// Update links with session
+document.getElementById('activiteLink').href = `/activite.html?s=${SESSION}`
+document.getElementById('activiteHeaderLink').href = `/activite.html?s=${SESSION}`
+document.getElementById('billingLink').href = `/billing.html?s=${SESSION}`
+
+const msgs = document.getElementById('messages')
+const conversationHistory = []
+
+function botAvatar() {
+  return `<img src="/public/agents/baptiste.png" class="msg-ava" alt="B" onerror="this.style.cssText='width:32px;height:32px;border-radius:50%;background:#7c3aed;flex-shrink:0'">`
+}
+
+function addBotMsg(html, delay = 0) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const wrap = document.createElement('div'); wrap.className = 'msg'
+      wrap.innerHTML = `${botAvatar()}<div class="typing"><span></span><span></span><span></span></div>`
+      msgs.appendChild(wrap); scrollDown()
+      setTimeout(() => {
+        wrap.innerHTML = `${botAvatar()}<div class="bubble bubble-bot">${html}</div>`
+        scrollDown(); resolve()
+      }, 800)
+    }, delay)
+  })
+}
+
+function addUserMsg(text) {
+  const wrap = document.createElement('div'); wrap.className = 'msg user'
+  wrap.innerHTML = `<div class="bubble bubble-user">${text}</div>`
+  msgs.appendChild(wrap); scrollDown()
+}
+
+function addSuggestions(items) {
+  const wrap = document.createElement('div'); wrap.className = 'suggestions'
+  items.forEach(s => {
+    const btn = document.createElement('button'); btn.className = 'sugg-btn'
+    btn.textContent = s
+    btn.onclick = () => { wrap.remove(); sendWithText(s) }
+    wrap.appendChild(btn)
+  })
+  setTimeout(() => { msgs.appendChild(wrap); scrollDown() }, 200)
+}
+
+function scrollDown() { setTimeout(() => { msgs.scrollTop = msgs.scrollHeight }, 60) }
+
+async function sendWithText(text) {
+  addUserMsg(text)
+  conversationHistory.push({ role: 'user', content: text })
+  await callBaptiste()
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput')
+  const text = input.value.trim()
+  if (!text) return
+  input.value = ''
+  await sendWithText(text)
+}
+
+document.getElementById('chatInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendMessage()
+})
+
+async function callBaptiste() {
+  // Typing indicator
+  const typingWrap = document.createElement('div'); typingWrap.className = 'msg'
+  typingWrap.innerHTML = `${botAvatar()}<div class="typing"><span></span><span></span><span></span></div>`
+  msgs.appendChild(typingWrap); scrollDown()
+
+  try {
+    const res = await fetch('/.netlify/functions/baptiste-chat', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session: SESSION, messages: conversationHistory })
+    })
+    const data = await res.json()
+    typingWrap.remove()
+
+    if (!res.ok || data.error) throw new Error(data.error || 'Erreur')
+
+    const wrap = document.createElement('div'); wrap.className = 'msg'
+    wrap.innerHTML = `${botAvatar()}<div class="bubble bubble-bot">${data.response}</div>`
+    msgs.appendChild(wrap); scrollDown()
+    conversationHistory.push({ role: 'assistant', content: data.response })
+
+    if (data.agentsUpdated) {
+      setTimeout(() => {
+        const notice = document.createElement('div')
+        notice.style.cssText = 'font-size:12px;color:var(--green);text-align:center;padding:6px;animation:fadeUp .3s ease'
+        notice.textContent = '✓ Vos agents ont été mis à jour'
+        msgs.appendChild(notice); scrollDown()
+        setTimeout(() => notice.remove(), 3000)
+      }, 200)
+    }
+  } catch (err) {
+    typingWrap.remove()
+    const wrap = document.createElement('div'); wrap.className = 'msg'
+    wrap.innerHTML = `${botAvatar()}<div class="bubble bubble-bot">Une erreur s'est produite. Réessayez dans un moment.</div>`
+    msgs.appendChild(wrap); scrollDown()
+  }
+}
+
+async function upgrade() {
+  try {
+    const res = await fetch('/.netlify/functions/stripe-checkout', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan: 'pro', session: SESSION })
+    })
+    const data = await res.json()
+    if (data.url) location.href = data.url
+  } catch (err) { alert('Erreur lors de la redirection vers le paiement.') }
+}
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open') }
+
+// Handle payment success
+if (params.get('payment') === 'success') {
+  setTimeout(() => {
+    addBotMsg('🎉 Paiement confirmé ! Votre plan est maintenant actif. Tous vos agents sont opérationnels.')
+  }, 500)
+}
+
+// Init greeting
+async function init() {
+  await addBotMsg('Bonjour ! Je charge les données de votre compte...', 300)
+  await callBaptiste()
+  // After first response, show suggestions
+  setTimeout(() => {
+    addSuggestions([
+      '⏸ Pause tous les agents',
+      '📊 Que s\'est-il passé cette semaine ?',
+      '📋 Voir l\'historique complet'
+    ])
+  }, 1500)
+}
+
+// First message triggers real API
+conversationHistory.push({ role: 'user', content: 'Bonjour Baptiste, montre-moi un résumé de mon équipe et de ce qui s\'est passé cette semaine.' })
+init()
+</script>
+</body>
+</html>

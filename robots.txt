@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /baptiste
+Disallow: /onboarding
+Disallow: /activite
+Disallow: /api/
+
+Sitemap: https://pagelab.fr/sitemap.xml

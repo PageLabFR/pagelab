@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configuration de votre équipe — PageLab</title>
+<link rel="icon" type="image/png" href="/public/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#07070f;--bg2:#0d0d1a;--bg3:#111120;--card:#12121f;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--violet:#7c3aed;--vlight:#9d5ff3;--vdim:rgba(124,58,237,0.1);--vborder:rgba(124,58,237,0.25);--green:#10b981;--muted:#6b6b8a;--muted2:#9898b8;--text:#eeeef8}
+html,body{height:100%;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;display:flex;flex-direction:column;overflow:hidden}
+.ob-header{padding:0 20px;height:58px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.ob-logo{display:flex;align-items:center;gap:8px}
+.ob-logo img{width:26px;height:26px;object-fit:contain;border-radius:6px}
+.ob-logo span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:15px}
+.progress-wrap{flex:1;display:flex;align-items:center;gap:8px}
+.progress-bar{flex:1;display:flex;gap:3px}
+.pseg{flex:1;height:3px;background:var(--border2);border-radius:3px;transition:background .4s}
+.pseg.done{background:var(--violet)}
+.progress-text{font-size:12px;color:var(--muted);white-space:nowrap}
+.chat-area{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:14px}
+.chat-area::-webkit-scrollbar{width:3px}
+.chat-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.msg{display:flex;align-items:flex-end;gap:9px;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg-ava{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.bubble{padding:11px 15px;border-radius:16px;font-size:14px;line-height:1.65;max-width:min(500px,calc(100vw - 90px))}
+.bubble-bot{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px}
+.bubble-user{background:var(--violet);color:#fff;border-bottom-right-radius:4px}
+.msg.user{flex-direction:row-reverse}
+.typing{display:flex;gap:4px;padding:12px 15px;background:var(--card);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:4px;width:fit-content}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:bounce 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
+.tools-wrap{padding-left:43px;display:flex;flex-direction:column;gap:10px;animation:fadeUp .3s ease}
+.tools-grid{display:flex;flex-wrap:wrap;gap:8px}
+.tool-btn{padding:9px 16px;border:1px solid var(--border2);border-radius:50px;font-size:13px;color:var(--muted2);cursor:pointer;background:var(--card);font-family:'Inter',sans-serif;transition:all .2s}
+.tool-btn.sel{background:var(--vdim);border-color:var(--violet);color:#c4b5fd}
+.tool-btn:hover:not(.sel){border-color:var(--border);color:var(--text)}
+.confirm-btn{padding:10px 24px;background:var(--violet);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;margin-top:4px;width:fit-content}
+.confirm-btn:hover{background:var(--vlight)}
+.success-actions{padding-left:43px;display:flex;flex-direction:column;gap:12px;animation:fadeUp .4s ease}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:flex;align-items:center;gap:5px;padding:5px 12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:50px;font-size:12px;color:var(--green)}
+.pill::before{content:'✓';font-weight:700}
+.btn-dashboard{padding:12px 26px;background:var(--violet);color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;box-shadow:0 0 20px rgba(124,58,237,0.2)}
+.btn-dashboard:hover{background:var(--vlight);transform:translateY(-1px)}
+.input-area{padding:14px 16px;border-top:1px solid var(--border);background:var(--bg);flex-shrink:0}
+.input-inner{display:flex;gap:10px;align-items:center;max-width:680px;margin:0 auto}
+.chat-input{flex:1;padding:12px 16px;background:var(--card);border:1px solid var(--border2);border-radius:50px;font-size:15px;color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
+.chat-input:focus{border-color:var(--violet)}
+.chat-input::placeholder{color:var(--muted)}
+.chat-input:disabled{opacity:.5;cursor:not-allowed}
+.send-btn{width:42px;height:42px;border-radius:50%;background:var(--violet);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.send-btn:hover:not(:disabled){background:var(--vlight);transform:scale(1.05)}
+.send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.send-btn svg{width:17px;height:17px;fill:none;stroke:#fff;stroke-width:2}
+@media(max-width:480px){.ob-logo span,.progress-text{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="ob-header">
+  <div class="ob-logo">
+    <img src="/public/logo.png" alt="PageLab" onerror="this.style.display='none'">
+    <span>PageLab</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar">
+      <div class="pseg" id="s1"></div><div class="pseg" id="s2"></div>
+      <div class="pseg" id="s3"></div><div class="pseg" id="s4"></div><div class="pseg" id="s5"></div>
+    </div>
+    <div class="progress-text" id="progressText">Étape 1 / 5</div>
+  </div>
+</div>
+<div class="chat-area" id="chatArea"></div>
+<div class="input-area" id="inputArea">
+  <div class="input-inner">
+    <input type="text" class="chat-input" id="chatInput" placeholder="Répondez à Baptiste..." autocomplete="off">
+    <button class="send-btn" id="sendBtn" onclick="send()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+// Get session from URL
+const params = new URLSearchParams(location.search)
+const SESSION = params.get('s')
+
+if (!SESSION) {
+  location.href = '/register.html'
+}
+
+const chat = document.getElementById('chatArea')
+const input = document.getElementById('chatInput')
+const sendBtn = document.getElementById('sendBtn')
+let step = 0
+let userName = '', userSector = '', painPoints = '', selectedTools = []
+const apiKeys = {}
+
+const API_INSTRUCTIONS = {
+  wordpress: 'Allez dans votre WordPress → Utilisateurs → Votre profil → Clés d\'application → Ajouter une clé. Copiez-collez la clé ici :',
+  stripe: 'Allez sur dashboard.stripe.com → Développeurs → Clés API → Révéler la clé secrète. Copiez-collez ici :',
+  brevo: 'Allez sur app.brevo.com → Mon compte → SMTP & API → Clés API → Générer. Copiez-collez ici :',
+  buffer: 'Allez sur buffer.com → Settings → Apps & Integrations → Access Token. Copiez-collez ici :',
+  shopify: 'Allez sur votre admin Shopify → Apps → Développer des apps → Créer une app → Accès API. Copiez-collez le token ici :',
+  woocommerce: 'Allez dans WooCommerce → Réglages → Avancé → REST API → Ajouter une clé. Copiez-collez la clé secrète ici :',
+  google_my_business: 'La connexion Google My Business se fait via OAuth. Copiez ici votre Access Token Google (console.cloud.google.com) :'
+}
+
+let pendingTools = []
+let toolIdx = 0
+
+function setProgress(n) {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`s${i}`).classList.toggle('done', i <= n)
+  }
+  document.getElementById('progressText').textContent = `Étape ${Math.min(n,5)} / 5`
+}
+
+function disable() { input.disabled = true; sendBtn.disabled = true }
+function enable(ph = 'Répondez à Baptiste...') { input.disabled = false; sendBtn.disabled = false; input.placeholder = ph; input.focus() }
+
+function botMsg(html, delay = 0) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const wrap = document.createElement('div')
+      wrap.className = 'msg'
+      wrap.innerHTML = `<img src="/public/agents/baptiste.png" class="msg-ava" alt="B" onerror="this.style.cssText='width:34px;height:34px;border-radius:50%;background:#7c3aed;flex-shrink:0'"><div class="typing"><span></span><span></span><span></span></div>`
+      chat.appendChild(wrap)
+      scroll()
+      setTimeout(() => {
+        wrap.innerHTML = `<img src="/public/agents/baptiste.png" class="msg-ava" alt="B" onerror="this.style.cssText='width:34px;height:34px;border-radius:50%;background:#7c3aed;flex-shrink:0'"><div class="bubble bubble-bot">${html}</div>`
+        scroll()
+        resolve()
+      }, 1000)
+    }, delay)
+  })
+}
+
+function userMsg(text) {
+  const wrap = document.createElement('div'); wrap.className = 'msg user'
+  wrap.innerHTML = `<div class="bubble bubble-user">${text}</div>`
+  chat.appendChild(wrap); scroll()
+}
+
+function scroll() { setTimeout(() => { chat.scrollTop = chat.scrollHeight }, 60) }
+
+async function start() {
+  disable()
+  setProgress(1)
+  await botMsg('Bonjour ! Je suis Baptiste, votre coordinateur IA. Je configure votre équipe en quelques minutes.<br><br>Pour commencer, quel est votre <b>prénom</b> ?', 400)
+  step = 1; enable('Votre prénom...')
+}
+
+async function handleStep(val) {
+  disable()
+  if (step === 1) {
+    userName = val.trim()
+    userMsg(val); setProgress(2)
+    await botMsg(`Ravi de vous rencontrer <b>${userName}</b> ! 🙌<br><br>Quelle est votre <b>activité principale</b> ? (ex: plombier, consultant, e-commerce, restaurant...)`)
+    step = 2; enable('Votre activité...')
+  } else if (step === 2) {
+    userSector = val.trim()
+    userMsg(val); setProgress(3)
+    await botMsg(`Parfait. Qu'est-ce qui vous prend le <b>plus de temps</b> dans votre semaine professionnelle ?`)
+    step = 3; enable('Ce qui prend le plus de temps...')
+  } else if (step === 3) {
+    painPoints = val.trim()
+    userMsg(val); setProgress(4)
+    await botMsg(`Compris. Quels <b>outils</b> utilisez-vous ? Sélectionnez tout ce qui concerne votre activité :`)
+    showTools()
+    step = 4
+  } else if (step === 'key') {
+    const tool = pendingTools[toolIdx]
+    apiKeys[tool] = val
+    userMsg('••••••••••••••••')
+    await botMsg(`✅ <b>${tool.charAt(0).toUpperCase()+tool.slice(1)}</b> connecté !`)
+    toolIdx++
+    if (toolIdx < pendingTools.length) {
+      await botMsg(API_INSTRUCTIONS[pendingTools[toolIdx]])
+      enable(`Clé API ${pendingTools[toolIdx]}...`)
+    } else {
+      await finalizeOnboarding()
+    }
+  }
+}
+
+function showTools() {
+  const tools = ['WordPress','Shopify','WooCommerce','Stripe','Brevo','Buffer','Google My Business']
+  const slugs = ['wordpress','shopify','woocommerce','stripe','brevo','buffer','google_my_business']
+  const wrap = document.createElement('div'); wrap.className = 'tools-wrap'
+  const grid = document.createElement('div'); grid.className = 'tools-grid'
+  tools.forEach((t,i) => {
+    const btn = document.createElement('button'); btn.className = 'tool-btn'
+    btn.textContent = t
+    btn.onclick = () => {
+      btn.classList.toggle('sel')
+      const slug = slugs[i]
+      if (btn.classList.contains('sel')) selectedTools.push(slug)
+      else selectedTools = selectedTools.filter(x => x !== slug)
+    }
+    grid.appendChild(btn)
+  })
+  const none = document.createElement('button'); none.className = 'tool-btn'
+  none.textContent = 'Aucun de ces outils'
+  none.onclick = async () => { selectedTools = ['aucun']; wrap.remove(); userMsg('Aucun outil'); await finalizeOnboarding() }
+  grid.appendChild(none)
+  const confirm = document.createElement('button'); confirm.className = 'confirm-btn'
+  confirm.textContent = 'Confirmer →'
+  confirm.onclick = async () => {
+    if (!selectedTools.length) selectedTools = ['aucun']
+    wrap.remove()
+    userMsg(selectedTools.filter(t => t !== 'aucun').map(t => t.charAt(0).toUpperCase()+t.slice(1)).join(', ') || 'Aucun outil')
+    setProgress(5)
+    pendingTools = selectedTools.filter(t => t !== 'aucun')
+    if (!pendingTools.length) { await finalizeOnboarding(); return }
+    toolIdx = 0
+    await botMsg(API_INSTRUCTIONS[pendingTools[0]])
+    step = 'key'; enable(`Clé API ${pendingTools[0]}...`)
+  }
+  wrap.appendChild(grid); wrap.appendChild(confirm)
+  chat.appendChild(wrap); scroll()
+}
+
+async function finalizeOnboarding() {
+  disable()
+  setProgress(5)
+  document.getElementById('inputArea').style.display = 'none'
+
+  try {
+    const res = await fetch('/.netlify/functions/onboarding-save', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session: SESSION, prenom: userName, secteur: userSector, painPoints, tools: selectedTools, apiKeys })
+    })
+    const data = await res.json()
+    const agents = data.agentsActivated || ['baptiste', 'marc', 'leo']
+
+    await botMsg(`🎉 Parfait <b>${userName}</b> ! Votre équipe est prête.<br><br>Vos agents démarrent selon leur planning. Vous recevrez un récap chaque lundi matin.<br><br>Bienvenue dans PageLab ! 🚀`)
+
+    const actionsWrap = document.createElement('div'); actionsWrap.className = 'success-actions'
+    const pillsWrap = document.createElement('div'); pillsWrap.className = 'pills'
+    agents.forEach(a => {
+      const pill = document.createElement('div'); pill.className = 'pill'
+      pill.textContent = a.charAt(0).toUpperCase()+a.slice(1)+' activé'
+      pillsWrap.appendChild(pill)
+    })
+    const cta = document.createElement('button'); cta.className = 'btn-dashboard'
+    cta.textContent = 'Accéder à mon espace Baptiste →'
+    cta.onclick = () => { location.href = `/baptiste.html?s=${SESSION}` }
+    actionsWrap.appendChild(pillsWrap); actionsWrap.appendChild(cta)
+    setTimeout(() => { chat.appendChild(actionsWrap); scroll() }, 500)
+  } catch (err) {
+    await botMsg('Une erreur s\'est produite. <a href="/register.html" style="color:#a78bfa">Réessayez</a>')
+  }
+}
+
+function send() {
+  const val = input.value.trim()
+  if (!val || input.disabled) return
+  input.value = ''
+  handleStep(val)
+}
+input.addEventListener('keydown', e => { if (e.key === 'Enter') send() })
+start()
+</script>
+</body>
+</html>
