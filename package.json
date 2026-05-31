@@ -1,17 +1,12 @@
 {
   "name": "pagelab",
   "version": "1.0.0",
-  
-  "description": "PageLab — 10 agents IA autonomes pour artisans et PME",
+  "description": "PageLab — 10 agents IA autonomes",
   "scripts": {
-    "dev": "netlify dev",
-    "build": "echo 'Site statique - aucun build requis'"
+    "build": "echo 'Static site'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
-  },
-  "devDependencies": {
-    "netlify-cli": "^17.0.0"
   },
   "engines": {
     "node": ">=20.0.0"

@@ -1,42 +1,38 @@
-export default async (req) => {
-  if (req.method === 'OPTIONS') return new Response('', { status: 200 })
-  if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 })
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+}
 
-  const PRICE_IDS = {
-    solo: 'price_1TWDWC1FzE1O4WqO1sNkinsV',
-    pro: 'price_1TWDWQ1FzE1O4WqO3W6fTURB',
-    agence: 'price_1TWDWe1FzE1O4WqOrpJOX4Pk'
-  }
+const PRICE_IDS = {
+  solo: 'price_1TWDWC1FzE1O4WqO1sNkinsV',
+  pro: 'price_1TWDWQ1FzE1O4WqO3W6fTURB',
+  agence: 'price_1TWDWe1FzE1O4WqOrpJOX4Pk'
+}
+
+exports.handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: HEADERS, body: '' }
+  if (event.httpMethod !== 'POST') return { statusCode: 405, headers: HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) }
 
   try {
-    const { plan, session } = await req.json()
+    const { plan, session } = JSON.parse(event.body || '{}')
+    if (!PRICE_IDS[plan]) return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: 'Plan invalide' }) }
 
-    if (!PRICE_IDS[plan]) {
-      return new Response(JSON.stringify({ error: 'Plan invalide' }), { status: 400 })
-    }
-
-    // Decode session to get email
     let email = null
     if (session) {
-      try {
-        const s = JSON.parse(Buffer.from(session, 'base64url').toString())
-        email = s.email
-      } catch {}
+      try { email = JSON.parse(Buffer.from(session, 'base64url').toString()).email } catch {}
     }
 
-    const siteUrl = process.env.SITE_URL
-
-    // Create Stripe checkout session
+    const siteUrl = process.env.SITE_URL || 'https://pagelab.fr'
     const params = new URLSearchParams({
-      'mode': 'subscription',
+      mode: 'subscription',
       'line_items[0][price]': PRICE_IDS[plan],
       'line_items[0][quantity]': '1',
-      'success_url': `${siteUrl}/baptiste.html?payment=success&s=${session || ''}`,
-      'cancel_url': `${siteUrl}/billing.html?payment=cancelled`,
-      'allow_promotion_codes': 'true',
-      'billing_address_collection': 'auto',
+      success_url: `${siteUrl}/baptiste.html?payment=success&s=${session || ''}`,
+      cancel_url: `${siteUrl}/billing.html?payment=cancelled`,
+      allow_promotion_codes: 'true',
     })
-
     if (email) params.set('customer_email', email)
 
     const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
@@ -48,20 +44,12 @@ export default async (req) => {
       body: params.toString()
     })
 
-    if (!res.ok) {
-      const err = await res.text()
-      throw new Error(`Stripe error: ${err}`)
-    }
+    if (!res.ok) throw new Error(await res.text())
+    const data = await res.json()
 
-    const checkoutSession = await res.json()
-
-    return new Response(JSON.stringify({ url: checkoutSession.url }), {
-      status: 200, headers: { 'Content-Type': 'application/json' }
-    })
+    return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ url: data.url }) }
   } catch (err) {
-    console.error('stripe-checkout error:', err)
-    return new Response(JSON.stringify({ error: 'Erreur serveur' }), { status: 500 })
+    console.error('stripe-checkout error:', err.message)
+    return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: err.message }) }
   }
 }
-
-export const config = { path: '/api/stripe/checkout' }

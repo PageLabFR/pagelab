@@ -1,7 +1,12 @@
-import { supabase, logTask } from './_shared/supabase.js'
+const { createClient } = require('@supabase/supabase-js')
 
-export default async () => {
-  console.log('🕐 Cron universel — ' + new Date().toISOString())
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+)
+
+exports.handler = async () => {
+  console.log('Cron universel — ' + new Date().toISOString())
   const now = new Date().toISOString()
   const results = []
 
@@ -14,52 +19,36 @@ export default async () => {
       .not('agent_slug', 'in', '("baptiste","nina")')
 
     if (!due || due.length === 0) {
-      console.log('✅ Aucun agent à exécuter')
-      return new Response(JSON.stringify({ ran: 0 }), { status: 200 })
+      return { statusCode: 200, body: JSON.stringify({ ran: 0 }) }
     }
 
-    console.log(`📋 ${due.length} agent(s) à exécuter`)
+    const siteUrl = process.env.SITE_URL || 'https://pagelab.fr'
 
     for (const item of due) {
       const user = item.users
       if (!user?.is_active) continue
-
-      // Check trial expiry
-      if (user.plan === 'trial' && new Date(user.trial_ends_at) < new Date()) {
-        console.log(`⏭ Trial expiré pour ${user.email}`)
-        continue
-      }
-
-      // Check plan === cancelled
+      if (user.plan === 'trial' && new Date(user.trial_ends_at) < new Date()) continue
       if (user.plan === 'cancelled') continue
 
       try {
-        const res = await fetch(`${process.env.SITE_URL}/.netlify/functions/agent-${item.agent_slug}`, {
+        const res = await fetch(`${siteUrl}/.netlify/functions/agent-${item.agent_slug}`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-cron-secret': process.env.CRON_SECRET
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            agentConfig: item.config || {}
-          })
+          headers: { 'Content-Type': 'application/json', 'x-cron-secret': process.env.CRON_SECRET },
+          body: JSON.stringify({ userId: user.id, agentConfig: item.config || {} })
         })
-        const data = await res.json()
         results.push({ agent: item.agent_slug, user: user.email, ok: res.ok })
-        console.log(`${res.ok ? '✅' : '❌'} ${item.agent_slug} — ${user.email}`)
       } catch (err) {
-        console.error(`❌ ${item.agent_slug}:`, err.message)
-        await logTask(user.id, item.agent_slug, 'cron_error', { error: err.message }, 'error')
-        results.push({ agent: item.agent_slug, user: user.email, ok: false })
+        console.error(`Agent ${item.agent_slug} error:`, err.message)
+        await supabase.from('tasks_history').insert({
+          user_id: user.id, agent_slug: item.agent_slug,
+          action_type: 'cron_error', result: { error: err.message }, status: 'error'
+        })
       }
     }
 
-    return new Response(JSON.stringify({ ran: results.length, results }), { status: 200 })
+    return { statusCode: 200, body: JSON.stringify({ ran: results.length, results }) }
   } catch (err) {
-    console.error('Cron error:', err)
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 })
+    console.error('Cron error:', err.message)
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) }
   }
 }
-
-export const config = { schedule: '0 8 * * *' }
