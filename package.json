@@ -1,7 +1,7 @@
 {
   "name": "pagelab",
   "version": "1.0.0",
-  "type": "module",
+  
   "description": "PageLab — 10 agents IA autonomes pour artisans et PME",
   "scripts": {
     "dev": "netlify dev",
