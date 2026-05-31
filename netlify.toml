@@ -81,3 +81,33 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/api/auth/send-magic-link"
+  to = "/.netlify/functions/auth-send-magic-link"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/baptiste/chat"
+  to = "/.netlify/functions/baptiste-chat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/onboarding/save"
+  to = "/.netlify/functions/onboarding-save"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/stripe/checkout"
+  to = "/.netlify/functions/stripe-checkout"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/stripe/webhook"
+  to = "/.netlify/functions/stripe-webhook"
+  status = 200
+  force = true
