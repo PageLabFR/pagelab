@@ -1,4 +1,4 @@
-[build]
+﻿[build]
   publish = "."
   functions = "netlify/functions"
 
@@ -81,10 +81,3 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-
-[[headers]]
-  for = "/api/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "https://pagelab.fr"
-    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type, Authorization, x-cron-secret, x-from-baptiste"
