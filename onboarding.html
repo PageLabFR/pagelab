@@ -109,7 +109,7 @@ const API_INSTRUCTIONS = {
   buffer: 'Allez sur buffer.com → Settings → Apps & Integrations → Access Token. Copiez-collez ici :',
   shopify: 'Allez sur votre admin Shopify → Apps → Développer des apps → Créer une app → Accès API. Copiez-collez le token ici :',
   woocommerce: 'Allez dans WooCommerce → Réglages → Avancé → REST API → Ajouter une clé. Copiez-collez la clé secrète ici :',
-  google_my_business: 'La connexion Google My Business se fait via OAuth. Copiez ici votre Access Token Google (console.cloud.google.com) :'
+  notion: 'Allez sur notion.so → Settings → Connections → Develop or manage integrations → New integration → Copier le Secret :'
 }
 
 let pendingTools = []
@@ -191,8 +191,8 @@ async function handleStep(val) {
 }
 
 function showTools() {
-  const tools = ['WordPress','Shopify','WooCommerce','Stripe','Brevo','Buffer','Google My Business']
-  const slugs = ['wordpress','shopify','woocommerce','stripe','brevo','buffer','google_my_business']
+  const tools = ['WordPress','Shopify','WooCommerce','Stripe','Brevo','Buffer','Notion']
+  const slugs = ['wordpress','shopify','woocommerce','stripe','brevo','buffer','notion']
   const wrap = document.createElement('div'); wrap.className = 'tools-wrap'
   const grid = document.createElement('div'); grid.className = 'tools-grid'
   tools.forEach((t,i) => {
