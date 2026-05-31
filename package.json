@@ -3,13 +3,9 @@
   "version": "1.0.0",
   "description": "PageLab — 10 agents IA autonomes",
   "scripts": {
-    "build": "echo 'Static site'"
-  },
-  "dependencies": {
-    "@supabase/supabase-js": "^2.45.0",
-    "ws": "^8.21.0"
+    "build": "echo 'Static site - no build needed'"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=18.0.0"
   }
 }

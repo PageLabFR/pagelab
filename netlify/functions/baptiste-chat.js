@@ -1,9 +1,5 @@
-const { createClient } = require('@supabase/supabase-js')
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+const SUPABASE_URL = process.env.SUPABASE_URL
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 const HEADERS = {
   'Content-Type': 'application/json',
@@ -14,6 +10,21 @@ const HEADERS = {
 
 const PLAN_LIMITS = { trial: 10, solo: 3, pro: 10, agence: 10, cancelled: 0 }
 
+async function db(method, table, body, query = '') {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  })
+  const text = await res.text()
+  return text ? JSON.parse(text) : null
+}
+
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: HEADERS, body: '' }
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers: HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) }
@@ -22,29 +33,20 @@ exports.handler = async (event) => {
     const { session, messages } = JSON.parse(event.body || '{}')
 
     let sessionData
-    try {
-      sessionData = JSON.parse(Buffer.from(session, 'base64url').toString())
-    } catch {
-      return { statusCode: 401, headers: HEADERS, body: JSON.stringify({ error: 'Session invalide' }) }
-    }
-    if (sessionData.exp < Date.now()) {
-      return { statusCode: 401, headers: HEADERS, body: JSON.stringify({ error: 'Session expirée' }) }
-    }
+    try { sessionData = JSON.parse(Buffer.from(session, 'base64url').toString()) }
+    catch { return { statusCode: 401, headers: HEADERS, body: JSON.stringify({ error: 'Session invalide' }) } }
+    if (sessionData.exp < Date.now()) return { statusCode: 401, headers: HEADERS, body: JSON.stringify({ error: 'Session expirée' }) }
 
     const { userId } = sessionData
 
-    const [
-      { data: user },
-      { data: agents },
-      { data: integrations },
-      { data: history }
-    ] = await Promise.all([
-      supabase.from('users').select('*').eq('id', userId).single(),
-      supabase.from('agents_config').select('*').eq('user_id', userId),
-      supabase.from('integrations').select('tool_name, is_connected').eq('user_id', userId),
-      supabase.from('tasks_history').select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(8)
+    const [users, agents, integrations, history] = await Promise.all([
+      db('GET', 'users', null, `?id=eq.${userId}&select=*`),
+      db('GET', 'agents_config', null, `?user_id=eq.${userId}&select=*`),
+      db('GET', 'integrations', null, `?user_id=eq.${userId}&select=tool_name,is_connected`),
+      db('GET', 'tasks_history', null, `?user_id=eq.${userId}&order=created_at.desc&limit=8&select=*`)
     ])
 
+    const user = users?.[0]
     const plan = user?.plan || 'trial'
     const agentLimit = PLAN_LIMITS[plan]
 
@@ -54,26 +56,22 @@ exports.handler = async (event) => {
       return `- ${a.agent_slug}: ${a.is_active ? 'ACTIF' : 'PAUSE'} | prochain: ${next} | dernier: ${last}`
     }).join('\n') || 'Aucun agent configuré'
 
-    const historySummary = (history || []).slice(0, 6).map(t =>
+    const historySummary = (history || []).map(t =>
       `- ${new Date(t.created_at).toLocaleDateString('fr-FR')} | ${t.agent_slug} | ${t.action_type} | ${t.status}`
     ).join('\n') || 'Aucune tâche récente'
 
     const systemPrompt = `Tu es Baptiste, coordinateur IA de PageLab pour ${user?.prenom || 'le client'} (secteur: ${user?.secteur || 'non précisé'}, plan: ${plan}, limite: ${agentLimit} agents).
 
-AGENTS ACTUELS:
+AGENTS:
 ${agentsSummary}
 
-INTÉGRATIONS: ${(integrations || []).map(i => `${i.tool_name}: ${i.is_connected ? 'connecté' : 'non connecté'}`).join(', ') || 'aucune'}
+INTÉGRATIONS: ${(integrations || []).map(i => `${i.tool_name}: ${i.is_connected ? 'connecté' : 'non'}`).join(', ') || 'aucune'}
 
-HISTORIQUE RÉCENT:
+HISTORIQUE:
 ${historySummary}
 
-RÈGLES:
-- Réponds en français, naturellement, max 150 mots
-- Tu peux ajouter une ACTION JSON sur la dernière ligne pour modifier les agents
-- Formats: {"action":"pause","agent":"slug"} | {"action":"activate","agent":"slug"} | {"action":"pause_all"} | {"action":"activate_all"}
-- N'invente jamais de données
-- Si plan solo (limite 3 agents), rappelle la limite si nécessaire`
+Réponds en français, max 150 mots. Tu peux ajouter sur la dernière ligne une ACTION JSON:
+{"action":"pause","agent":"slug"} | {"action":"activate","agent":"slug"} | {"action":"pause_all"} | {"action":"activate_all"}`
 
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -94,7 +92,6 @@ RÈGLES:
     const claudeData = await claudeRes.json()
     let response = claudeData.content[0].text.trim()
 
-    // Parse action
     let action = null
     let agentsUpdated = false
     const actionMatch = response.match(/(\{[^{}]*"action"[^{}]*\})\s*$/)
@@ -102,24 +99,23 @@ RÈGLES:
       try {
         action = JSON.parse(actionMatch[1])
         response = response.replace(actionMatch[1], '').trim()
-
         if (action.action === 'pause') {
-          await supabase.from('agents_config').update({ is_active: false }).eq('user_id', userId).eq('agent_slug', action.agent)
+          await db('PATCH', 'agents_config', { is_active: false }, `?user_id=eq.${userId}&agent_slug=eq.${action.agent}`)
           agentsUpdated = true
         } else if (action.action === 'activate') {
-          await supabase.from('agents_config').update({ is_active: true }).eq('user_id', userId).eq('agent_slug', action.agent)
+          await db('PATCH', 'agents_config', { is_active: true }, `?user_id=eq.${userId}&agent_slug=eq.${action.agent}`)
           agentsUpdated = true
         } else if (action.action === 'pause_all') {
-          await supabase.from('agents_config').update({ is_active: false }).eq('user_id', userId).neq('agent_slug', 'baptiste')
+          await db('PATCH', 'agents_config', { is_active: false }, `?user_id=eq.${userId}&agent_slug=neq.baptiste`)
           agentsUpdated = true
         } else if (action.action === 'activate_all') {
-          await supabase.from('agents_config').update({ is_active: true }).eq('user_id', userId).neq('agent_slug', 'baptiste')
+          await db('PATCH', 'agents_config', { is_active: true }, `?user_id=eq.${userId}&agent_slug=neq.baptiste`)
           agentsUpdated = true
         }
       } catch (e) { console.error('Action parse error:', e) }
     }
 
-    await supabase.from('tasks_history').insert({
+    await db('POST', 'tasks_history', {
       user_id: userId, agent_slug: 'baptiste', action_type: 'chat',
       result: { msg: (messages || []).slice(-1)[0]?.content?.slice(0, 80), action },
       status: 'success'
@@ -128,6 +124,6 @@ RÈGLES:
     return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ response, action, agentsUpdated }) }
   } catch (err) {
     console.error('baptiste-chat error:', err.message)
-    return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: 'Erreur serveur: ' + err.message }) }
+    return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: err.message }) }
   }
 }

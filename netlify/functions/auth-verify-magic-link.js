@@ -1,36 +1,38 @@
-const { createClient } = require('@supabase/supabase-js')
+const SUPABASE_URL = process.env.SUPABASE_URL
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
+const SITE_URL = process.env.SITE_URL || 'https://pagelab.fr'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+async function db(method, table, body, query = '') {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${query}`, {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  })
+  const text = await res.text()
+  return text ? JSON.parse(text) : null
+}
 
 exports.handler = async (event) => {
   const token = event.queryStringParameters?.token
-  const siteUrl = process.env.SITE_URL || 'https://pagelab.fr'
-
-  if (!token) {
-    return { statusCode: 302, headers: { Location: `${siteUrl}/login.html?error=missing` } }
-  }
+  if (!token) return { statusCode: 302, headers: { Location: `${SITE_URL}/login.html?error=missing` } }
 
   try {
-    const { data: link } = await supabase
-      .from('magic_links').select('*')
-      .eq('token', token).eq('used', false).single()
+    const links = await db('GET', 'magic_links', null, `?token=eq.${token}&used=eq.false&select=*`)
+    const link = links?.[0]
 
-    if (!link) {
-      return { statusCode: 302, headers: { Location: `${siteUrl}/login.html?error=invalid` } }
-    }
+    if (!link) return { statusCode: 302, headers: { Location: `${SITE_URL}/login.html?error=invalid` } }
+    if (new Date(link.expires_at) < new Date()) return { statusCode: 302, headers: { Location: `${SITE_URL}/login.html?error=expired` } }
 
-    if (new Date(link.expires_at) < new Date()) {
-      return { statusCode: 302, headers: { Location: `${siteUrl}/login.html?error=expired` } }
-    }
+    await db('PATCH', 'magic_links', { used: true }, `?id=eq.${link.id}`)
 
-    await supabase.from('magic_links').update({ used: true }).eq('id', link.id)
-
-    const { data: user } = await supabase
-      .from('users').select('id, prenom, plan, trial_ends_at')
-      .eq('email', link.email).single()
+    const users = await db('GET', 'users', null, `?email=eq.${encodeURIComponent(link.email)}&select=id,prenom,plan,trial_ends_at`)
+    const user = users?.[0]
+    if (!user) return { statusCode: 302, headers: { Location: `${SITE_URL}/login.html?error=server` } }
 
     const session = Buffer.from(JSON.stringify({
       userId: user.id,
@@ -41,12 +43,12 @@ exports.handler = async (event) => {
     })).toString('base64url')
 
     const dest = !user.prenom
-      ? `${siteUrl}/onboarding.html?s=${session}`
-      : `${siteUrl}/baptiste.html?s=${session}`
+      ? `${SITE_URL}/onboarding.html?s=${session}`
+      : `${SITE_URL}/baptiste.html?s=${session}`
 
     return { statusCode: 302, headers: { Location: dest } }
   } catch (err) {
     console.error('verify error:', err.message)
-    return { statusCode: 302, headers: { Location: `${siteUrl}/login.html?error=server` } }
+    return { statusCode: 302, headers: { Location: `${SITE_URL}/login.html?error=server` } }
   }
 }
