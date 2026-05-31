@@ -81,7 +81,7 @@ Réponds en français, max 150 mots. Tu peux ajouter sur la dernière ligne une 
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5',
         max_tokens: 600,
         system: systemPrompt,
         messages: messages || []
