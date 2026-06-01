@@ -3,6 +3,7 @@ Allow: /
 
 Disallow: /baptiste
 Disallow: /onboarding
+Disallow: /integrations
 Disallow: /activite
 Disallow: /api/
 

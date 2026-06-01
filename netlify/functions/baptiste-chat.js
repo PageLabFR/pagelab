@@ -39,11 +39,12 @@ exports.handler = async (event) => {
 
     const { userId } = sessionData
 
-    const [users, agents, integrations, history] = await Promise.all([
+    const [users, agents, integrations, history, pending] = await Promise.all([
       db('GET', 'users', null, `?id=eq.${userId}&select=*`),
       db('GET', 'agents_config', null, `?user_id=eq.${userId}&select=*`),
       db('GET', 'integrations', null, `?user_id=eq.${userId}&select=tool_name,is_connected`),
-      db('GET', 'tasks_history', null, `?user_id=eq.${userId}&order=created_at.desc&limit=8&select=*`)
+      db('GET', 'tasks_history', null, `?user_id=eq.${userId}&order=created_at.desc&limit=8&select=*`),
+      db('GET', 'pending_actions', null, `?user_id=eq.${userId}&status=eq.pending&order=created_at.desc&limit=10&select=agent_slug,summary`)
     ])
 
     const user = users?.[0]
@@ -67,10 +68,17 @@ ${agentsSummary}
 
 INTÉGRATIONS: ${(integrations || []).map(i => `${i.tool_name}: ${i.is_connected ? 'connecté' : 'non'}`).join(', ') || 'aucune'}
 
+ACTIONS EN ATTENTE DE VALIDATION (${(pending || []).length}):
+${(pending || []).map(p => `- ${p.agent_slug}: ${p.summary}`).join('\n') || 'Aucune action en attente'}
+
 HISTORIQUE:
 ${historySummary}
 
-Réponds en français, max 150 mots. Tu peux ajouter sur la dernière ligne une ACTION JSON:
+Règles importantes :
+- Rappelle au client qu'AUCUNE action sensible (envoi, publication, paiement) n'est exécutée sans sa validation. C'est lui le patron.
+- S'il y a des actions en attente, invite-le à les valider depuis le panneau au-dessus du chat.
+- Réponds en français, max 150 mots, ton clair et chaleureux. Utilise **gras** pour les points clés.
+- Tu peux ajouter sur la dernière ligne une ACTION JSON pour piloter les agents :
 {"action":"pause","agent":"slug"} | {"action":"activate","agent":"slug"} | {"action":"pause_all"} | {"action":"activate_all"}`
 
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {

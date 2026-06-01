@@ -64,8 +64,25 @@ a{color:inherit;text-decoration:none}
 
 /* MESSAGES */
 .messages{flex:1;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:14px}
-.messages::-webkit-scrollbar{width:4px}
 .messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.gains-banner{display:flex;align-items:center;gap:10px;padding:9px 18px;background:rgba(16,185,129,0.06);border-bottom:1px solid var(--border);font-size:13px;color:var(--muted2);flex-shrink:0}
+.gains-banner b{color:var(--green)}
+.sam-bar{display:flex;align-items:center;gap:9px;padding:9px 18px;border-bottom:1px solid var(--border);font-size:13px;flex-shrink:0}
+.sam-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sam-dot.ok{background:var(--green)}.sam-dot.warning{background:#f59e0b}.sam-dot.critical{background:#f87171}
+.sam-text{color:var(--muted2)}
+.validate-wrap{padding:0 18px;flex-shrink:0}
+.validate-card{background:var(--card);border:1px solid var(--vborder);border-radius:14px;padding:14px 16px;margin:12px 0}
+.validate-head{font-size:13px;font-weight:600;color:#c4b5fd;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.va-item{border-top:1px solid var(--border);padding:11px 0;display:flex;flex-direction:column;gap:9px}
+.va-item:first-of-type{border-top:none}
+.va-summary{font-size:13px;color:var(--text);line-height:1.5}
+.va-agent{font-size:11px;color:var(--muted)}
+.va-actions{display:flex;gap:8px}
+.va-btn{padding:7px 14px;border-radius:50px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s}
+.va-approve{background:var(--violet);color:#fff}.va-approve:hover{background:var(--vlight)}
+.va-reject{background:transparent;border:1px solid var(--border2);color:var(--muted2)}.va-reject:hover{border-color:#f87171;color:#f87171}
+.va-btn:disabled{opacity:.5;cursor:not-allowed}
 .msg{display:flex;align-items:flex-end;gap:10px;animation:fadeUp .3s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .msg-ava{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
@@ -107,7 +124,15 @@ a{color:inherit;text-decoration:none}
   .messages{padding:14px 12px}
   .bubble{max-width:calc(100vw - 80px)}
   .chat-header{padding:0 12px}
+  .sb-close{display:flex}
 }
+
+/* MOBILE SIDEBAR CLOSE + BACKDROP */
+.sb-close{display:none;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:transparent;border:1px solid var(--border);color:var(--muted2);cursor:pointer;margin-left:auto;flex-shrink:0;transition:all .15s}
+.sb-close:hover{border-color:var(--border2);color:var(--text)}
+.sb-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.sb-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;opacity:0;transition:opacity .3s}
+.sb-backdrop.open{display:block;opacity:1}
 </style>
 </head>
 <body>
@@ -117,11 +142,18 @@ a{color:inherit;text-decoration:none}
   <div class="sb-logo">
     <img src="/public/logo.png" alt="PageLab" onerror="this.style.display='none'">
     <span>PageLab</span>
+    <button class="sb-close" onclick="closeSidebar()" aria-label="Fermer le menu">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </div>
   <div id="planBadge"></div>
   <div class="sb-section">Votre équipe</div>
   <div id="agentsList"></div>
   <div class="sb-footer">
+    <a href="/integrations.html" class="sb-link" id="integrationsLink">
+      <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      Intégrations
+    </a>
     <a href="/activite.html" class="sb-link" id="activiteLink">
       <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       Historique complet
@@ -136,6 +168,9 @@ a{color:inherit;text-decoration:none}
     </a>
   </div>
 </div>
+
+<!-- BACKDROP MOBILE -->
+<div class="sb-backdrop" id="sbBackdrop" onclick="closeSidebar()"></div>
 
 <!-- MAIN -->
 <div class="main">
@@ -159,6 +194,17 @@ a{color:inherit;text-decoration:none}
     <div class="upgrade-text">⚡ Passez au plan Pro pour activer les 10 agents</div>
     <button class="upgrade-btn" onclick="upgrade()">Upgrader →</button>
   </div>
+
+  <div class="gains-banner" id="gainsBanner" style="display:none">
+    🎯 <span id="gainsText">Votre équipe se met en route…</span>
+  </div>
+
+  <div class="sam-bar" id="samBar" style="display:none">
+    <span class="sam-dot ok" id="samDot"></span>
+    <span class="sam-text" id="samText">Sam surveille votre équipe — tout va bien.</span>
+  </div>
+
+  <div class="validate-wrap" id="validateWrap"></div>
 
   <div class="messages" id="messages"></div>
 
@@ -218,6 +264,7 @@ if (sessionData?.plan) {
 
 // Update links with session
 document.getElementById('activiteLink').href = `/activite.html?s=${SESSION}`
+document.getElementById('integrationsLink').href = `/integrations.html?s=${SESSION}`
 document.getElementById('activiteHeaderLink').href = `/activite.html?s=${SESSION}`
 document.getElementById('billingLink').href = `/billing.html?s=${SESSION}`
 
@@ -261,6 +308,18 @@ function addSuggestions(items) {
 
 function scrollDown() { setTimeout(() => { msgs.scrollTop = msgs.scrollHeight }, 60) }
 
+// Met en forme le markdown léger renvoyé par Baptiste (gras, puces, sauts de ligne)
+function formatBaptiste(text) {
+  if (!text) return ''
+  let html = String(text)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+    .replace(/^[\s]*[-•]\s+(.+)$/gm, '<div style="display:flex;gap:7px;margin:2px 0"><span style="color:var(--violet)">•</span><span>$1</span></div>')
+    .replace(/\n{2,}/g, '<br><br>')
+    .replace(/\n/g, '<br>')
+  return html
+}
+
 async function sendWithText(text) {
   addUserMsg(text)
   conversationHistory.push({ role: 'user', content: text })
@@ -296,7 +355,7 @@ async function callBaptiste() {
     if (!res.ok || data.error) throw new Error(data.error || 'Erreur')
 
     const wrap = document.createElement('div'); wrap.className = 'msg'
-    wrap.innerHTML = `${botAvatar()}<div class="bubble bubble-bot">${data.response}</div>`
+    wrap.innerHTML = `${botAvatar()}<div class="bubble bubble-bot">${formatBaptiste(data.response)}</div>`
     msgs.appendChild(wrap); scrollDown()
     conversationHistory.push({ role: 'assistant', content: data.response })
 
@@ -328,7 +387,22 @@ async function upgrade() {
   } catch (err) { alert('Erreur lors de la redirection vers le paiement.') }
 }
 
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open') }
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar')
+  const bd = document.getElementById('sbBackdrop')
+  const isOpen = sb.classList.toggle('open')
+  bd.classList.toggle('open', isOpen)
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open')
+  document.getElementById('sbBackdrop').classList.remove('open')
+}
+// Fermer le menu en tapant un lien de navigation (mobile)
+document.querySelectorAll('.sidebar a').forEach(link => {
+  link.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar() })
+})
+// Fermer avec la touche Échap
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar() })
 
 // Handle payment success
 if (params.get('payment') === 'success') {
@@ -354,6 +428,91 @@ async function init() {
 // First message triggers real API
 conversationHistory.push({ role: 'user', content: 'Bonjour Baptiste, montre-moi un résumé de mon équipe et de ce qui s\'est passé cette semaine.' })
 init()
+
+// ---- Sam : statut de surveillance ----
+async function loadSam() {
+  try {
+    const res = await fetch(`/.netlify/functions/sam-alerts?s=${encodeURIComponent(SESSION)}`)
+    if (!res.ok) return
+    const data = await res.json()
+    const bar = document.getElementById('samBar')
+    const dot = document.getElementById('samDot')
+    const txt = document.getElementById('samText')
+    bar.style.display = 'flex'
+    dot.className = 'sam-dot ' + (data.status || 'ok')
+    if (!data.alerts || !data.alerts.length) {
+      txt.textContent = 'Sam surveille votre équipe — tout va bien.'
+    } else {
+      txt.innerHTML = `Sam a détecté ${data.alerts.length} point(s) d'attention : ` +
+        data.alerts.map(a => a.message).slice(0, 2).join(' · ')
+    }
+  } catch (e) { /* silencieux */ }
+}
+
+// ---- Actions en attente de validation ----
+async function loadPending() {
+  try {
+    const res = await fetch(`/.netlify/functions/actions-list?s=${encodeURIComponent(SESSION)}`)
+    if (!res.ok) return
+    const data = await res.json()
+    renderPending(data.actions || [])
+  } catch (e) { /* silencieux */ }
+}
+
+function renderPending(actions) {
+  const wrap = document.getElementById('validateWrap')
+  if (!actions.length) { wrap.innerHTML = ''; return }
+  const card = document.createElement('div'); card.className = 'validate-card'
+  card.innerHTML = `<div class="validate-head">🛡️ ${actions.length} action(s) attendent votre validation</div>`
+  actions.forEach(a => {
+    const item = document.createElement('div'); item.className = 'va-item'
+    item.innerHTML = `
+      <div>
+        <div class="va-summary">${a.summary}</div>
+        <div class="va-agent">par ${a.agent_slug}</div>
+      </div>
+      <div class="va-actions">
+        <button class="va-btn va-approve">✓ Valider</button>
+        <button class="va-btn va-reject">Refuser</button>
+      </div>`
+    const [approveBtn, rejectBtn] = item.querySelectorAll('.va-btn')
+    approveBtn.onclick = () => decide(a.id, 'approve', item)
+    rejectBtn.onclick = () => decide(a.id, 'reject', item)
+    card.appendChild(item)
+  })
+  wrap.innerHTML = ''; wrap.appendChild(card)
+}
+
+async function decide(actionId, kind, itemEl) {
+  const btns = itemEl.querySelectorAll('.va-btn')
+  btns.forEach(b => b.disabled = true)
+  try {
+    const res = await fetch(`/.netlify/functions/actions-${kind}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session: SESSION, actionId })
+    })
+    const data = await res.json()
+    if (kind === 'approve' && data.status === 'failed') {
+      addBotMsg(`⚠️ L'action n'a pas pu être exécutée : ${data.result?.error || 'erreur inconnue'}.`)
+    }
+    itemEl.remove()
+    loadPending(); loadSam()
+  } catch (e) {
+    btns.forEach(b => b.disabled = false)
+  }
+}
+
+// ---- Bandeau d'information (sans fausse métrique) ----
+function loadGains() {
+  const banner = document.getElementById('gainsBanner')
+  banner.style.display = 'flex'
+  document.getElementById('gainsText').textContent =
+    'Vos agents préparent des actions — validez-les pour qu’elles soient exécutées.'
+}
+
+loadSam(); loadPending(); loadGains()
+// Rafraîchit périodiquement
+setInterval(() => { loadSam(); loadPending() }, 60000)
 </script>
 </body>
 </html>

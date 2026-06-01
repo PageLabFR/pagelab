@@ -12,6 +12,9 @@
 [functions."cron-universal"]
   schedule = "0 8 * * *"
 
+[functions."agent-sam"]
+  schedule = "0 * * * *"
+
 [functions."baptiste-weekly-report"]
   schedule = "0 8 * * 1"
 
@@ -33,6 +36,11 @@
 [[redirects]]
   from = "/baptiste"
   to = "/baptiste.html"
+  status = 200
+
+[[redirects]]
+  from = "/integrations"
+  to = "/integrations.html"
   status = 200
 
 [[redirects]]

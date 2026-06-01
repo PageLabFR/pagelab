@@ -153,7 +153,9 @@ function scroll() { setTimeout(() => { chat.scrollTop = chat.scrollHeight }, 60)
 async function start() {
   disable()
   setProgress(1)
-  await botMsg('Bonjour ! Je suis Baptiste, votre coordinateur IA. Je configure votre équipe en quelques minutes.<br><br>Pour commencer, quel est votre <b>prénom</b> ?', 400)
+  await botMsg('Bonjour ! Je suis Baptiste, votre coordinateur IA. Je configure votre équipe en quelques minutes.', 400)
+  await botMsg('Avant tout, une chose importante : <b>vous gardez le contrôle</b>. Vos agents préparent le travail, mais rien d\'irréversible (envoi, publication, paiement) n\'est exécuté sans votre validation. Vous pouvez tout mettre en pause à tout moment. 🛡️')
+  await botMsg('Pour commencer, quel est votre <b>prénom</b> ?')
   step = 1; enable('Votre prénom...')
 }
 
@@ -240,7 +242,7 @@ async function finalizeOnboarding() {
     const data = await res.json()
     const agents = data.agentsActivated || ['baptiste', 'marc', 'leo']
 
-    await botMsg(`🎉 Parfait <b>${userName}</b> ! Votre équipe est prête.<br><br>Vos agents démarrent selon leur planning. Vous recevrez un récap chaque lundi matin.<br><br>Bienvenue dans PageLab ! 🚀`)
+    await botMsg(`🎉 Parfait <b>${userName}</b> ! Votre équipe est prête.<br><br>Vos agents démarrent selon leur planning, et <b>vous validez chaque action sensible avant qu'elle parte</b>. Vous recevrez un récap chaque lundi matin.<br><br>Bienvenue dans PageLab ! 🚀`)
 
     const actionsWrap = document.createElement('div'); actionsWrap.className = 'success-actions'
     const pillsWrap = document.createElement('div'); pillsWrap.className = 'pills'

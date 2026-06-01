@@ -1,34 +1,45 @@
-const { createClient } = require('@supabase/supabase-js')
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+// netlify/functions/agent-sophie.js
+// Sophie — Newsletter. Rédige une newsletter et la met EN ATTENTE.
+// Envoi réel via Brevo après validation.
+
+const L = require('./_lib')
 
 exports.handler = async (event) => {
-  if (event.headers['x-cron-secret'] !== process.env.CRON_SECRET) {
-    return { statusCode: 401, body: 'Unauthorized' }
-  }
-  const { userId, agentConfig } = JSON.parse(event.body || '{}')
-  console.log('Agent sophie running for user:', userId)
-  
+  if (!L.checkCron(event)) return { statusCode: 401, body: 'Unauthorized' }
+  const start = Date.now()
+  const { userId } = JSON.parse(event.body || '{}')
+
   try {
-    // Log the task
-    await supabase.from('tasks_history').insert({
-      user_id: userId,
-      agent_slug: 'sophie',
-      action_type: 'agent_run',
-      result: { message: 'Agent sophie executé avec succès', config: agentConfig },
-      status: 'success'
-    })
+    const users = await L.db('GET', 'users', null, `?id=eq.${userId}&select=*`)
+    const user = users?.[0]
 
-    // Update next_run_at
-    const d = new Date()
-    d.setDate(d.getDate() + 1)
-    d.setHours(9, 0, 0, 0)
-    await supabase.from('agents_config')
-      .update({ last_run_at: new Date().toISOString(), next_run_at: d.toISOString() })
-      .eq('user_id', userId).eq('agent_slug', 'sophie')
+    const brevoKey = await L.getIntegrationKey(userId, 'brevo')
+    if (!brevoKey) {
+      await L.logTask(userId, 'sophie', 'skip', 'skipped', { reason: 'no brevo' })
+      return { statusCode: 200, body: JSON.stringify({ skipped: true }) }
+    }
 
-    return { statusCode: 200, body: JSON.stringify({ success: true, agent: 'sophie' }) }
+    const monthLabel = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+    const prompt = `Tu es Sophie, en charge de la newsletter de ${user?.prenom || 'un professionnel'} (secteur: ${user?.secteur || 'général'}).
+Rédige la newsletter de ${monthLabel}. Réponds STRICTEMENT en JSON :
+{"subject":"...","html":"<h1>...</h1><p>...</p>"}
+Ton chaleureux et professionnel, 200-300 mots, sans chiffres inventés, en français.`
+    const raw = await L.callClaude(prompt, { max_tokens: 1500 })
+    let nl
+    try { nl = JSON.parse(raw.replace(/```json|```/g, '').trim()) } catch { throw new Error('JSON newsletter non parsable') }
+    if (!nl.subject || !nl.html) throw new Error('Newsletter incomplète')
+
+    await L.queueAction(userId, 'sophie', 'send_newsletter_brevo',
+      `Envoyer la newsletter : « ${nl.subject} »`,
+      { subject: nl.subject, html: nl.html },
+      `newsletter-${monthLabel}`)
+
+    await L.reschedule(userId, 'sophie', L.firstOfNextMonth8h())
+    await L.logTask(userId, 'sophie', 'newsletter_drafted', 'success', { subject: nl.subject }, Date.now() - start)
+    return { statusCode: 200, body: JSON.stringify({ success: true, subject: nl.subject }) }
   } catch (err) {
-    console.error('Agent sophie error:', err.message)
+    console.error('Sophie error:', err.message)
+    await L.logTask(userId, 'sophie', 'error', 'error', { error: err.message })
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) }
   }
 }

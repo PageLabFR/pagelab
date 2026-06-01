@@ -1,6 +1,19 @@
+const crypto = require('crypto')
+
 const SUPABASE_URL = process.env.SUPABASE_URL
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY
 const SITE_URL = process.env.SITE_URL || 'https://pagelab.fr'
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+
+// Chiffrement AES-256-GCM, même format que integrations-save (iv:tag:ciphertext hex)
+function encrypt(plain) {
+  if (!ENCRYPTION_KEY || ENCRYPTION_KEY.length !== 64) throw new Error('ENCRYPTION_KEY manquante/invalide')
+  const key = Buffer.from(ENCRYPTION_KEY, 'hex')
+  const iv = crypto.randomBytes(12)
+  const c = crypto.createCipheriv('aes-256-gcm', key, iv)
+  const enc = Buffer.concat([c.update(String(plain), 'utf8'), c.final()])
+  return `${iv.toString('hex')}:${c.getAuthTag().toString('hex')}:${enc.toString('hex')}`
+}
 
 const HEADERS = {
   'Content-Type': 'application/json',
@@ -69,7 +82,7 @@ exports.handler = async (event) => {
 
     for (const [tool, key] of Object.entries(apiKeys || {})) {
       if (!key) continue
-      await db('POST', 'integrations', { user_id: userId, tool_name: tool, api_key: key, is_connected: true })
+      await db('POST', 'integrations', { user_id: userId, tool_name: tool, api_key: encrypt(key), is_connected: true })
     }
 
     const agentSet = new Set(['alex', 'marc', 'leo'])

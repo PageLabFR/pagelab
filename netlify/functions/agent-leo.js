@@ -1,34 +1,46 @@
-const { createClient } = require('@supabase/supabase-js')
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY)
+// netlify/functions/agent-leo.js
+// Léo — SEO & Blog. Génère un article et le met EN ATTENTE. Publication
+// WordPress réelle uniquement après validation (dans actions-approve).
+
+const L = require('./_lib')
 
 exports.handler = async (event) => {
-  if (event.headers['x-cron-secret'] !== process.env.CRON_SECRET) {
-    return { statusCode: 401, body: 'Unauthorized' }
-  }
-  const { userId, agentConfig } = JSON.parse(event.body || '{}')
-  console.log('Agent leo running for user:', userId)
-  
+  if (!L.checkCron(event)) return { statusCode: 401, body: 'Unauthorized' }
+  const start = Date.now()
+  const { userId } = JSON.parse(event.body || '{}')
+
   try {
-    // Log the task
-    await supabase.from('tasks_history').insert({
-      user_id: userId,
-      agent_slug: 'leo',
-      action_type: 'agent_run',
-      result: { message: 'Agent leo executé avec succès', config: agentConfig },
-      status: 'success'
-    })
+    const users = await L.db('GET', 'users', null, `?id=eq.${userId}&select=*`)
+    const user = users?.[0]
 
-    // Update next_run_at
-    const d = new Date()
-    d.setDate(d.getDate() + 1)
-    d.setHours(9, 0, 0, 0)
-    await supabase.from('agents_config')
-      .update({ last_run_at: new Date().toISOString(), next_run_at: d.toISOString() })
-      .eq('user_id', userId).eq('agent_slug', 'leo')
+    const wpKey = await L.getIntegrationKey(userId, 'wordpress')
+    if (!wpKey) {
+      await L.logTask(userId, 'leo', 'skip', 'skipped', { reason: 'no wordpress' })
+      return { statusCode: 200, body: JSON.stringify({ skipped: true }) }
+    }
 
-    return { statusCode: 200, body: JSON.stringify({ success: true, agent: 'leo' }) }
+    const prompt = `Tu es Léo, rédacteur SEO pour ${user?.prenom || 'un professionnel'} (secteur: ${user?.secteur || 'général'}).
+Propose UN article de blog optimisé SEO en français, utile pour ses clients potentiels.
+Réponds STRICTEMENT en JSON valide, sans texte autour :
+{"title":"...","slug":"...","metaDescription":"...","html":"<h2>...</h2><p>...</p>"}
+Contraintes : 500-700 mots dans "html", titres <h2>/<h3>, ton professionnel, pas d'invention de chiffres.`
+    const raw = await L.callClaude(prompt, { max_tokens: 2000 })
+    let article
+    try { article = JSON.parse(raw.replace(/```json|```/g, '').trim()) }
+    catch { throw new Error('Réponse IA non parsable en JSON') }
+    if (!article.title || !article.html) throw new Error('Article incomplet')
+
+    await L.queueAction(userId, 'leo', 'publish_wordpress_post',
+      `Publier l'article : « ${article.title} »`,
+      { title: article.title, slug: article.slug || null, metaDescription: article.metaDescription || '', html: article.html },
+      article.slug || article.title)
+
+    await L.reschedule(userId, 'leo', L.nextMonday8h())
+    await L.logTask(userId, 'leo', 'article_drafted', 'success', { title: article.title }, Date.now() - start)
+    return { statusCode: 200, body: JSON.stringify({ success: true, title: article.title }) }
   } catch (err) {
-    console.error('Agent leo error:', err.message)
+    console.error('Leo error:', err.message)
+    await L.logTask(userId, 'leo', 'error', 'error', { error: err.message })
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) }
   }
 }

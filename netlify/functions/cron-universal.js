@@ -46,6 +46,18 @@ exports.handler = async () => {
       }
     }
 
+    // Notifie sur WhatsApp les utilisateurs concernés (best-effort, n'interrompt pas le cron)
+    const notifiedUsers = [...new Set(due.map(d => d.users?.id).filter(Boolean))]
+    for (const uid of notifiedUsers) {
+      try {
+        await fetch(`${siteUrl}/.netlify/functions/whatsapp-notify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-cron-secret': process.env.CRON_SECRET },
+          body: JSON.stringify({ userId: uid })
+        })
+      } catch (e) { console.error('whatsapp-notify fail:', e.message) }
+    }
+
     return { statusCode: 200, body: JSON.stringify({ ran: results.length, results }) }
   } catch (err) {
     console.error('Cron error:', err.message)
