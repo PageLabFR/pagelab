@@ -78,8 +78,49 @@ a{color:inherit;text-decoration:none}
 .va-item:first-of-type{border-top:none}
 .va-summary{font-size:13px;color:var(--text);line-height:1.5}
 .va-agent{font-size:11px;color:var(--muted)}
-.va-actions{display:flex;gap:8px}
+.va-top{display:flex;gap:10px;align-items:flex-start}
+.va-ava{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.va-ava-fb{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+/* SIDEBAR DROITE (Sam + agents actifs) */
+.rsidebar{width:240px;background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;transition:transform .3s}
+.rsidebar::-webkit-scrollbar{width:3px}
+.rsidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.rs-section{padding:16px}
+.rs-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.sam-card{display:flex;gap:11px;align-items:center;padding:12px;border-radius:14px;background:linear-gradient(145deg,rgba(220,38,38,0.12),rgba(0,0,0,0.2));border:1px solid rgba(220,38,38,0.25);margin-bottom:6px}
+.sam-card img,.sam-card .sam-fb{width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.sam-fb{display:flex;align-items:center;justify-content:center;background:#dc2626;color:#fff;font-weight:700;font-size:18px}
+.sam-card-name{font-size:14px;font-weight:700;color:var(--text)}
+.sam-card-status{font-size:11px;color:var(--green);display:flex;align-items:center;gap:5px}
+.sam-card-status.warn{color:#f59e0b}.sam-card-status.crit{color:#f87171}
+.sam-card-status::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor}
+.ragent{display:flex;gap:10px;align-items:center;padding:9px 10px;border-radius:11px;cursor:pointer;transition:background .15s}
+.ragent:hover{background:rgba(255,255,255,0.04)}
+.ragent img,.ragent .rag-fb{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.rag-fb{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.rag-info{flex:1;min-width:0}
+.rag-name{font-size:13px;font-weight:600;color:var(--text)}
+.rag-role{font-size:11px;color:var(--muted2)}
+.rag-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.rag-dot.off{background:var(--muted)}
+.rs-toggle{display:none}
+/* MODAL AGENT */
+.agent-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;align-items:center;justify-content:center;padding:20px}
+.agent-modal-bg.open{display:flex}
+.agent-modal{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:0;width:100%;max-width:440px;overflow:hidden}
+.am-head{padding:24px;display:flex;gap:14px;align-items:center;border-bottom:1px solid var(--border)}
+.am-head img,.am-head .am-fb{width:56px;height:56px;border-radius:14px;object-fit:cover;flex-shrink:0}
+.am-fb{display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px}
+.am-name{font-size:19px;font-weight:800;font-family:'Bricolage Grotesque',sans-serif}
+.am-role{font-size:13px;color:var(--muted2)}
+.am-body{padding:22px 24px}
+.am-desc{font-size:14px;color:#c0c0d8;line-height:1.7;margin-bottom:18px}
+.am-feat{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#bbbbd8;margin-bottom:10px}
+.am-feat-i{color:var(--green);flex-shrink:0}
+.am-close{width:100%;padding:13px;background:var(--violet);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;margin-top:8px;transition:background .2s}
+.am-close:hover{background:var(--vlight)}
 .va-btn{padding:7px 14px;border-radius:50px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .15s}
+.va-actions{display:flex;gap:8px}
 .va-approve{background:var(--violet);color:#fff}.va-approve:hover{background:var(--vlight)}
 .va-reject{background:transparent;border:1px solid var(--border2);color:var(--muted2)}.va-reject:hover{border-color:#f87171;color:#f87171}
 .va-btn:disabled{opacity:.5;cursor:not-allowed}
@@ -125,6 +166,19 @@ a{color:inherit;text-decoration:none}
   .bubble{max-width:calc(100vw - 80px)}
   .chat-header{padding:0 12px}
   .sb-close{display:flex}
+  .rsidebar{position:fixed;right:0;top:0;bottom:0;z-index:100;transform:translateX(100%);width:260px}
+  .rsidebar.open{transform:translateX(0)}
+  .rs-toggle-btn{display:flex !important}
+}
+/* Bouton "mon équipe" : visible seulement sur mobile/tablette */
+.rs-toggle-btn{display:none;color:var(--muted2)}
+.rs-toggle-btn:hover{color:var(--violet)}
+@media(min-width:1100px){ .rs-toggle-btn{display:none} }
+@media(min-width:769px) and (max-width:1099px){
+  /* tablette : sidebar droite repliable aussi */
+  .rsidebar{position:fixed;right:0;top:0;bottom:0;z-index:100;transform:translateX(100%);width:260px}
+  .rsidebar.open{transform:translateX(0)}
+  .rs-toggle-btn{display:flex}
 }
 
 /* MOBILE SIDEBAR CLOSE + BACKDROP */
@@ -184,6 +238,9 @@ a{color:inherit;text-decoration:none}
       </div>
     </div>
     <div class="ch-right">
+      <button class="icon-btn rs-toggle-btn" onclick="toggleRSidebar()" title="Mon équipe" style="background:none;border:none;cursor:pointer;padding:0">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </button>
       <a href="/activite.html" class="icon-btn" id="activiteHeaderLink" title="Historique">
         <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
       </a>
@@ -218,6 +275,30 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- SIDEBAR DROITE : Sam + agents actifs -->
+<div class="rsidebar" id="rsidebar">
+  <div class="rs-section">
+    <div class="rs-title">🛡️ Surveillance</div>
+    <div class="sam-card" id="samCard" style="cursor:pointer">
+      <img src="/public/agents/Sam.png" alt="Sam" onerror="this.outerHTML='<div class=sam-fb>S</div>'">
+      <div>
+        <div class="sam-card-name">Sam</div>
+        <div class="sam-card-status" id="samCardStatus">Tout va bien</div>
+      </div>
+    </div>
+  </div>
+  <div class="rs-section" style="border-top:1px solid var(--border)">
+    <div class="rs-title">Agents actifs</div>
+    <div id="ragentsList"></div>
+  </div>
+</div>
+<div class="sb-backdrop" id="rsBackdrop" onclick="closeRSidebar()"></div>
+
+<!-- MODAL DÉTAIL AGENT -->
+<div class="agent-modal-bg" id="agentModalBg" onclick="if(event.target.id==='agentModalBg')closeAgentModal()">
+  <div class="agent-modal" id="agentModal"></div>
+</div>
+
 <script>
 const params = new URLSearchParams(location.search)
 const SESSION = params.get('s')
@@ -230,27 +311,32 @@ try { sessionData = JSON.parse(atob(SESSION.replace(/-/g,'+').replace(/_/g,'/'))
 if (sessionData && sessionData.exp < Date.now()) location.href = '/login.html?error=expired'
 
 const AGENTS = [
-  {s:'baptiste',n:'Baptiste',r:'Coordinateur',c:'#7c3aed'},
-  {s:'leo',n:'Léo',r:'SEO & Blog',c:'#2563eb'},
-  {s:'sophie',n:'Sophie',r:'Newsletter',c:'#db2777'},
-  {s:'marc',n:'Marc',r:'Relances',c:'#d97706'},
-  {s:'alex',n:'Alex',r:'Social Media',c:'#059669'},
-  {s:'julie',n:'Julie',r:'Prospection',c:'#0891b2'},
-  {s:'hugo',n:'Hugo',r:'Avis Google',c:'#dc2626'},
-  {s:'emma',n:'Emma',r:'Veille',c:'#6366f1'},
-  {s:'lucas',n:'Lucas',r:'Comptabilité',c:'#65a30d'},
-  {s:'nina',n:'Nina',r:'Fiches produits',c:'#9333ea'},
+  {s:'baptiste',n:'Baptiste',r:'Coordinateur',c:'#7c3aed',d:'Votre bras droit. Baptiste coordonne toute l\'équipe : vous lui parlez, il répartit le travail entre les agents et vous tient informé. Rien d\'important ne se décide sans passer par lui.',f:['Pilote tous les autres agents','Répond à vos questions en langage naturel','Vous montre les actions à valider']},
+  {s:'leo',n:'Léo',r:'SEO & Blog',c:'#2563eb',d:'Léo rédige des articles de blog optimisés pour le référencement Google, adaptés à votre secteur. Il prépare chaque article et vous le soumet avant publication.',f:['Génère des articles SEO complets','Publie sur votre WordPress après validation','Choisit des sujets pertinents pour vos clients']},
+  {s:'sophie',n:'Sophie',r:'Newsletter',c:'#db2777',d:'Sophie écrit votre newsletter mensuelle et la prépare pour envoi à votre liste de contacts via Brevo. Vous validez avant chaque envoi.',f:['Rédige la newsletter chaque mois','Envoie via Brevo après votre OK','Ton adapté à votre activité']},
+  {s:'marc',n:'Marc',r:'Relances',c:'#d97706',d:'Marc détecte vos factures impayées sur Stripe et prépare des emails de relance polis et fermes. Chaque relance vous est montrée avant envoi — vous gardez la main.',f:['Repère les factures en retard sur Stripe','Rédige des relances personnalisées','N\'envoie rien sans votre validation']},
+  {s:'alex',n:'Alex',r:'Social Media',c:'#059669',d:'Alex génère des posts LinkedIn engageants pour votre activité et les prépare pour publication via Buffer.',f:['Crée des posts adaptés à votre secteur','Programme via Buffer après validation','Garde un ton authentique']},
+  {s:'julie',n:'Julie',r:'Prospection',c:'#0891b2',d:'Julie prépare des emails de premier contact personnalisés pour vos prospects. Vous validez chaque envoi.',f:['Rédige des emails de prospection','Personnalise chaque message','Envoi uniquement après votre accord']},
+  {s:'hugo',n:'Hugo',r:'Rapports',c:'#dc2626',d:'Hugo compile chaque semaine le travail de toute l\'équipe dans un rapport clair, et peut l\'archiver dans votre Notion.',f:['Synthèse hebdomadaire de l\'activité','Archive dans Notion','Vous tient au courant par email']},
+  {s:'emma',n:'Emma',r:'Veille',c:'#6366f1',d:'Emma surveille votre secteur et vos concurrents, et vous envoie une synthèse de veille régulière avec des pistes à explorer.',f:['Veille concurrentielle','Synthèse des tendances','Idées d\'action pour votre business']},
+  {s:'lucas',n:'Lucas',r:'Comptabilité',c:'#65a30d',d:'Lucas lit vos paiements Stripe et vous prépare un récap comptable mensuel clair. Lecture seule : il ne modifie jamais rien.',f:['Récap des paiements du mois','Lecture seule, zéro risque','Rapport envoyé automatiquement']},
+  {s:'nina',n:'Nina',r:'Fiches produits',c:'#9333ea',d:'Nina repère les produits sans description dans votre boutique et rédige des fiches vendeuses. Vous validez avant mise à jour.',f:['Détecte les fiches incomplètes','Rédige des descriptions vendeuses','Met à jour la boutique après validation']},
 ]
 
-// Build sidebar agents (static for now, real status from API)
+// Sam, le gardien (séparé : ce n'est pas un agent de production)
+const SAM = {s:'Sam',n:'Sam',r:'Sécurité & surveillance',c:'#dc2626',d:'Sam veille sur toute votre équipe en permanence. Il vérifie que les agents fonctionnent correctement, surveille les anomalies, et met automatiquement un agent en pause s\'il détecte un problème. C\'est votre garde-fou.',f:['Surveille les erreurs en temps réel','Met un agent en pause en cas d\'anomalie (coupe-circuit)','Vous alerte et vous rassure chaque jour']}
+
+// Build sidebar agents (gauche) — cliquables pour ouvrir le détail
 const list = document.getElementById('agentsList')
 AGENTS.forEach(a => {
   const row = document.createElement('div'); row.className = 'agent-row'
+  row.style.cursor = 'pointer'
   row.innerHTML = `
     <img src="/public/agents/${a.s}.png" alt="${a.n}" style="border:2px solid ${a.c}44" onerror="this.outerHTML='<div class=agent-row-fb style=background:${a.c}22;color:${a.c}>${a.n[0]}</div>'">
     <div class="ar-info"><div class="ar-name">${a.n}</div><div class="ar-role">${a.r}</div></div>
     <div class="ar-dot on"></div>
   `
+  row.onclick = () => openAgentModal(a)
   list.appendChild(row)
 })
 
@@ -312,6 +398,11 @@ function scrollDown() { setTimeout(() => { msgs.scrollTop = msgs.scrollHeight },
 function formatBaptiste(text) {
   if (!text) return ''
   let html = String(text)
+    // Filet de sécurité : retire tout bloc JSON d'action qui aurait échappé au backend
+    .replace(/\{[^{}]*"action"[^{}]*\}/g, '')
+    .replace(/```json[\s\S]*?```/g, '')
+    .replace(/```[\s\S]*?```/g, '')
+    .trim()
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
     .replace(/^[\s]*[-•]\s+(.+)$/gm, '<div style="display:flex;gap:7px;margin:2px 0"><span style="color:var(--violet)">•</span><span>$1</span></div>')
@@ -397,12 +488,65 @@ function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open')
   document.getElementById('sbBackdrop').classList.remove('open')
 }
+
+// ---- Sidebar droite (mobile : ouverture/fermeture) ----
+function toggleRSidebar() {
+  const rs = document.getElementById('rsidebar')
+  const bd = document.getElementById('rsBackdrop')
+  const isOpen = rs.classList.toggle('open')
+  bd.classList.toggle('open', isOpen)
+}
+function closeRSidebar() {
+  document.getElementById('rsidebar').classList.remove('open')
+  document.getElementById('rsBackdrop').classList.remove('open')
+}
+
+// ---- Modal détail d'un agent (ou Sam) ----
+function openAgentModal(a) {
+  const m = document.getElementById('agentModal')
+  const feats = (a.f || []).map(f => `<div class="am-feat"><span class="am-feat-i">✓</span><span>${f}</span></div>`).join('')
+  m.innerHTML = `
+    <div class="am-head">
+      <img src="/public/agents/${a.s}.png" alt="${a.n}" style="border:2px solid ${a.c}66" onerror="this.outerHTML='<div class=am-fb style=background:${a.c}22;color:${a.c}>${a.n[0]}</div>'">
+      <div><div class="am-name">${a.n}</div><div class="am-role">${a.r}</div></div>
+    </div>
+    <div class="am-body">
+      <p class="am-desc">${a.d || ''}</p>
+      ${feats}
+      <button class="am-close" onclick="closeAgentModal()">Fermer</button>
+    </div>`
+  document.getElementById('agentModalBg').classList.add('open')
+}
+function closeAgentModal() { document.getElementById('agentModalBg').classList.remove('open') }
+
+// ---- Construction de la sidebar droite (agents actifs) ----
+function buildRightAgents() {
+  const c = document.getElementById('ragentsList')
+  if (!c) return
+  c.innerHTML = ''
+  // Agents actifs connus côté session (sinon tous affichés actifs par défaut)
+  AGENTS.forEach(a => {
+    const row = document.createElement('div'); row.className = 'ragent'
+    row.innerHTML = `
+      <img src="/public/agents/${a.s}.png" alt="${a.n}" onerror="this.outerHTML='<div class=rag-fb style=background:${a.c}22;color:${a.c}>${a.n[0]}</div>'">
+      <div class="rag-info"><div class="rag-name">${a.n}</div><div class="rag-role">${a.r}</div></div>
+      <div class="rag-dot on"></div>`
+    row.onclick = () => openAgentModal(a)
+    c.appendChild(row)
+  })
+}
+buildRightAgents()
+// Carte Sam cliquable -> son détail
+document.getElementById('samCard').onclick = () => openAgentModal(SAM)
+
 // Fermer le menu en tapant un lien de navigation (mobile)
 document.querySelectorAll('.sidebar a').forEach(link => {
   link.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar() })
 })
-// Fermer avec la touche Échap
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar() })
+// Fermer avec la touche Échap (menu, sidebar droite, modal)
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeSidebar(); closeRSidebar(); closeAgentModal() }
+})
 
 // Handle payment success
 if (params.get('payment') === 'success') {
@@ -446,6 +590,15 @@ async function loadSam() {
       txt.innerHTML = `Sam a détecté ${data.alerts.length} point(s) d'attention : ` +
         data.alerts.map(a => a.message).slice(0, 2).join(' · ')
     }
+    // Met à jour aussi la carte Sam dans la sidebar droite
+    const cardStatus = document.getElementById('samCardStatus')
+    if (cardStatus) {
+      const st = data.status || 'ok'
+      cardStatus.className = 'sam-card-status' + (st === 'critical' ? ' crit' : st === 'warning' ? ' warn' : '')
+      cardStatus.textContent = st === 'ok' ? 'Tout va bien'
+        : st === 'warning' ? `${data.alerts.length} point(s) d'attention`
+        : `${data.alerts.length} alerte(s) critique(s)`
+    }
   } catch (e) { /* silencieux */ }
 }
 
@@ -459,17 +612,25 @@ async function loadPending() {
   } catch (e) { /* silencieux */ }
 }
 
+function agentInfo(slug) {
+  return AGENTS.find(a => a.s === slug) || { s: slug, n: slug, r: '', c: '#7c3aed' }
+}
+
 function renderPending(actions) {
   const wrap = document.getElementById('validateWrap')
   if (!actions.length) { wrap.innerHTML = ''; return }
   const card = document.createElement('div'); card.className = 'validate-card'
   card.innerHTML = `<div class="validate-head">🛡️ ${actions.length} action(s) attendent votre validation</div>`
   actions.forEach(a => {
+    const ag = agentInfo(a.agent_slug)
     const item = document.createElement('div'); item.className = 'va-item'
     item.innerHTML = `
-      <div>
-        <div class="va-summary">${a.summary}</div>
-        <div class="va-agent">par ${a.agent_slug}</div>
+      <div class="va-top">
+        <img class="va-ava" src="/public/agents/${ag.s}.png" alt="${ag.n}" style="border:2px solid ${ag.c}55" onerror="this.outerHTML='<div class=va-ava-fb style=background:${ag.c}22;color:${ag.c}>${ag.n[0]}</div>'">
+        <div>
+          <div class="va-summary">${a.summary}</div>
+          <div class="va-agent">proposé par <b style="color:${ag.c}">${ag.n}</b> · ${ag.r}</div>
+        </div>
       </div>
       <div class="va-actions">
         <button class="va-btn va-approve">✓ Valider</button>
