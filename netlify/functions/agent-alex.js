@@ -7,7 +7,7 @@ const L = require('./_lib')
 exports.handler = async (event) => {
   if (!L.checkCron(event)) return { statusCode: 401, body: 'Unauthorized' }
   const start = Date.now()
-  const { userId } = JSON.parse(event.body || '{}')
+  const { userId, agentConfig } = JSON.parse(event.body || '{}')
 
   try {
     const users = await L.db('GET', 'users', null, `?id=eq.${userId}&select=*`)
@@ -19,8 +19,10 @@ exports.handler = async (event) => {
       return { statusCode: 200, body: JSON.stringify({ skipped: true }) }
     }
 
+    const brief = agentConfig?.brief ? `\nThème imposé par le client : "${agentConfig.brief}". Tous les posts doivent porter sur ce thème.` : ''
     const prompt = `Tu es Alex, social media manager pour ${user?.prenom || 'un professionnel'} (secteur: ${user?.secteur || 'général'}).
-Propose 3 posts LinkedIn courts et engageants en français. Réponds STRICTEMENT en JSON :
+Propose 3 posts LinkedIn courts et engageants en français.${brief}
+Réponds STRICTEMENT en JSON :
 {"posts":["texte post 1","texte post 2","texte post 3"]}
 Chaque post : 2-4 phrases, ton authentique, pas de hashtags excessifs (max 3), aucun chiffre inventé.`
     const raw = await L.callClaude(prompt, { max_tokens: 1000 })

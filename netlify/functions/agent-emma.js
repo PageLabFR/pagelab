@@ -15,8 +15,9 @@ exports.handler = async (event) => {
     const user = users?.[0]
 
     const competitors = Array.isArray(agentConfig?.competitors) ? agentConfig.competitors : []
+    const brief = agentConfig?.brief ? `\nAngle demandé par le client : "${agentConfig.brief}". Oriente la veille là-dessus.` : ''
     const prompt = `Tu es Emma, en charge de la veille pour ${user?.prenom || 'un professionnel'} (secteur: ${user?.secteur || 'général'}).
-${competitors.length ? `Concurrents suivis : ${competitors.join(', ')}.` : ''}
+${competitors.length ? `Concurrents suivis : ${competitors.join(', ')}.` : ''}${brief}
 Rédige une courte synthèse de veille (tendances, points d'attention, idées d'action) pour la semaine, en français, 150-200 mots, avec des puces "•". N'invente aucun fait précis ni chiffre : reste sur des angles et questions à explorer.`
     const synthesis = await L.callClaude(prompt, { max_tokens: 800 })
 

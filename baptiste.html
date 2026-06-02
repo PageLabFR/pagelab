@@ -124,6 +124,9 @@ a{color:inherit;text-decoration:none}
 .va-approve{background:var(--violet);color:#fff}.va-approve:hover{background:var(--vlight)}
 .va-reject{background:transparent;border:1px solid var(--border2);color:var(--muted2)}.va-reject:hover{border-color:#f87171;color:#f87171}
 .va-btn:disabled{opacity:.5;cursor:not-allowed}
+.va-preview-btn{align-self:flex-start;background:transparent;border:none;color:var(--violet);font-size:12px;font-weight:600;cursor:pointer;padding:4px 0;font-family:'Inter',sans-serif}
+.va-preview-btn:hover{text-decoration:underline}
+.va-preview{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:13px;color:#c0c0d8;line-height:1.6;max-height:240px;overflow-y:auto;margin:4px 0}
 .msg{display:flex;align-items:flex-end;gap:10px;animation:fadeUp .3s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .msg-ava{width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0}
@@ -459,6 +462,22 @@ async function callBaptiste() {
         setTimeout(() => notice.remove(), 3000)
       }, 200)
     }
+
+    // Si Baptiste a déclenché un agent, on rafraîchit le panneau de validation
+    if (data.runResult) {
+      const rr = data.runResult.result || {}
+      const drafted = rr.drafted ?? rr.result?.drafted
+      setTimeout(() => {
+        const notice = document.createElement('div')
+        notice.style.cssText = 'font-size:12px;color:var(--violet);text-align:center;padding:6px;animation:fadeUp .3s ease'
+        notice.textContent = drafted > 0
+          ? `✓ ${drafted} proposition(s) ajoutée(s) — à valider ci-dessus`
+          : '✓ Agent exécuté'
+        msgs.appendChild(notice); scrollDown()
+        setTimeout(() => notice.remove(), 4000)
+      }, 200)
+      loadPending(); loadSam()
+    }
   } catch (err) {
     typingWrap.remove()
     const wrap = document.createElement('div'); wrap.className = 'msg'
@@ -616,6 +635,15 @@ function agentInfo(slug) {
   return AGENTS.find(a => a.s === slug) || { s: slug, n: slug, r: '', c: '#7c3aed' }
 }
 
+// Extrait un aperçu lisible du contenu selon le type d'action
+function previewContent(a) {
+  const p = a.payload || {}
+  if (p.body) return p.body                                   // relance / prospection
+  if (p.html) return p.html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() // article / newsletter / fiche
+  if (p.text) return p.text                                   // post social
+  return null
+}
+
 function renderPending(actions) {
   const wrap = document.getElementById('validateWrap')
   if (!actions.length) { wrap.innerHTML = ''; return }
@@ -623,6 +651,7 @@ function renderPending(actions) {
   card.innerHTML = `<div class="validate-head">🛡️ ${actions.length} action(s) attendent votre validation</div>`
   actions.forEach(a => {
     const ag = agentInfo(a.agent_slug)
+    const preview = previewContent(a)
     const item = document.createElement('div'); item.className = 'va-item'
     item.innerHTML = `
       <div class="va-top">
@@ -632,6 +661,7 @@ function renderPending(actions) {
           <div class="va-agent">proposé par <b style="color:${ag.c}">${ag.n}</b> · ${ag.r}</div>
         </div>
       </div>
+      ${preview ? `<button class="va-preview-btn">👁 Voir l'aperçu</button><div class="va-preview" style="display:none">${preview.replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div>` : ''}
       <div class="va-actions">
         <button class="va-btn va-approve">✓ Valider</button>
         <button class="va-btn va-reject">Refuser</button>
@@ -639,6 +669,15 @@ function renderPending(actions) {
     const [approveBtn, rejectBtn] = item.querySelectorAll('.va-btn')
     approveBtn.onclick = () => decide(a.id, 'approve', item)
     rejectBtn.onclick = () => decide(a.id, 'reject', item)
+    const prevBtn = item.querySelector('.va-preview-btn')
+    if (prevBtn) {
+      const prevBox = item.querySelector('.va-preview')
+      prevBtn.onclick = () => {
+        const open = prevBox.style.display === 'block'
+        prevBox.style.display = open ? 'none' : 'block'
+        prevBtn.textContent = open ? "👁 Voir l'aperçu" : "✕ Masquer l'aperçu"
+      }
+    }
     card.appendChild(item)
   })
   wrap.innerHTML = ''; wrap.appendChild(card)

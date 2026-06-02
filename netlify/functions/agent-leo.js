@@ -7,7 +7,7 @@ const L = require('./_lib')
 exports.handler = async (event) => {
   if (!L.checkCron(event)) return { statusCode: 401, body: 'Unauthorized' }
   const start = Date.now()
-  const { userId } = JSON.parse(event.body || '{}')
+  const { userId, agentConfig } = JSON.parse(event.body || '{}')
 
   try {
     const users = await L.db('GET', 'users', null, `?id=eq.${userId}&select=*`)
@@ -19,8 +19,9 @@ exports.handler = async (event) => {
       return { statusCode: 200, body: JSON.stringify({ skipped: true }) }
     }
 
+    const brief = agentConfig?.brief ? `\nSujet imposé par le client : "${agentConfig.brief}". Traite précisément ce sujet.` : ''
     const prompt = `Tu es Léo, rédacteur SEO pour ${user?.prenom || 'un professionnel'} (secteur: ${user?.secteur || 'général'}).
-Propose UN article de blog optimisé SEO en français, utile pour ses clients potentiels.
+Propose UN article de blog optimisé SEO en français, utile pour ses clients potentiels.${brief}
 Réponds STRICTEMENT en JSON valide, sans texte autour :
 {"title":"...","slug":"...","metaDescription":"...","html":"<h2>...</h2><p>...</p>"}
 Contraintes : 500-700 mots dans "html", titres <h2>/<h3>, ton professionnel, pas d'invention de chiffres.`

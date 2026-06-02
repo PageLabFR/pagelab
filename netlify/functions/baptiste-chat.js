@@ -57,9 +57,18 @@ exports.handler = async (event) => {
       return `- ${a.agent_slug}: ${a.is_active ? 'ACTIF' : 'PAUSE'} | prochain: ${next} | dernier: ${last}`
     }).join('\n') || 'Aucun agent configuré'
 
-    const historySummary = (history || []).map(t =>
-      `- ${new Date(t.created_at).toLocaleDateString('fr-FR')} | ${t.agent_slug} | ${t.action_type} | ${t.status}`
-    ).join('\n') || 'Aucune tâche récente'
+    const historySummary = (history || []).map(t => {
+      // On expose le résultat chiffré pour que Baptiste ne sur-interprète pas.
+      const r = t.result || {}
+      let detail = ''
+      if (typeof r.drafted === 'number' || typeof r.overdue === 'number')
+        detail = ` (factures en retard: ${r.overdue ?? '?'}, relances préparées: ${r.drafted ?? 0})`
+      else if (typeof r.count === 'number') detail = ` (${r.count} préparé(s))`
+      else if (r.reason) detail = ` (ignoré: ${r.reason})`
+      else if (r.title) detail = ` (« ${String(r.title).slice(0, 40)} »)`
+      else if (r.error) detail = ` (erreur: ${String(r.error).slice(0, 50)})`
+      return `- ${new Date(t.created_at).toLocaleDateString('fr-FR')} | ${t.agent_slug} | ${t.action_type} | ${t.status}${detail}`
+    }).join('\n') || 'Aucune tâche récente'
 
     const systemPrompt = `Tu es Baptiste, coordinateur IA de PageLab pour ${user?.prenom || 'le client'} (secteur: ${user?.secteur || 'non précisé'}, plan: ${plan}, limite: ${agentLimit} agents).
 
@@ -78,9 +87,12 @@ Règles importantes :
 - Rappelle au client qu'AUCUNE action sensible (envoi, publication, paiement) n'est exécutée sans sa validation. C'est lui le patron.
 - S'il y a des actions en attente, invite-le à les valider depuis le panneau au-dessus du chat.
 - Si un agent a tourné mais n'a rien trouvé à faire (ex: action "skip", ou "relances_prepared" avec 0 résultat), dis-le clairement et positivement (ex: "Marc a vérifié tes factures : aucune en retard, tout est à jour ✅"). Un agent qui ne trouve rien fait quand même son travail.
+- Tu peux DÉCLENCHER un agent à la demande quand le client le demande (ex: "écris un article", "fais des posts", "vérifie mes factures").
+  IMPORTANT pour le contenu créatif (Léo article, Alex posts, Sophie newsletter) : si le client n'a PAS précisé le SUJET/THÈME, demande-le-lui d'abord en une phrase, NE lance pas l'agent tout de suite. Une fois le thème connu, lance l'agent en passant le thème dans "brief". Après le lancement, préviens que le résultat apparaîtra dans le panneau de validation pour qu'il le relise avant publication.
 - Réponds en français, max 150 mots, ton clair et chaleureux. Utilise **gras** pour les points clés.
-- Tu peux ajouter sur la dernière ligne une ACTION JSON pour piloter les agents :
-{"action":"pause","agent":"slug"} | {"action":"activate","agent":"slug"} | {"action":"pause_all"} | {"action":"activate_all"}`
+- Tu peux ajouter sur la dernière ligne UNE seule ACTION JSON pour piloter les agents :
+{"action":"pause","agent":"slug"} | {"action":"activate","agent":"slug"} | {"action":"pause_all"} | {"action":"activate_all"} | {"action":"run","agent":"slug","brief":"le thème demandé par le client"}
+Agents déclenchables (slug) : marc, leo, sophie, alex, julie, nina, emma, lucas, hugo. N'ajoute le JSON "run" QUE si tu as le thème (ou si l'agent n'a pas besoin de thème comme marc/lucas).`
 
     const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -103,7 +115,9 @@ Règles importantes :
 
     let action = null
     let agentsUpdated = false
-    const actionMatch = response.match(/(\{[^{}]*"action"[^{}]*\})\s*$/)
+    let runResult = null
+    // Capture un objet JSON d'action en fin de message (tolère un brief avec guillemets simples)
+    const actionMatch = response.match(/(\{[\s\S]*?"action"[\s\S]*?\})\s*$/)
     if (actionMatch) {
       try {
         action = JSON.parse(actionMatch[1])
@@ -120,6 +134,16 @@ Règles importantes :
         } else if (action.action === 'activate_all') {
           await db('PATCH', 'agents_config', { is_active: true }, `?user_id=eq.${userId}&agent_slug=neq.baptiste`)
           agentsUpdated = true
+        } else if (action.action === 'run' && action.agent) {
+          // Déclenche l'agent à la demande (prépare des actions à valider, n'envoie rien)
+          const siteUrl = process.env.SITE_URL || 'https://pagelab.fr'
+          try {
+            const r = await fetch(`${siteUrl}/.netlify/functions/agent-run`, {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ session, agent: action.agent, brief: action.brief || null })
+            })
+            runResult = await r.json().catch(() => ({}))
+          } catch (e) { runResult = { error: e.message } }
         }
       } catch (e) { console.error('Action parse error:', e) }
     }
@@ -130,7 +154,7 @@ Règles importantes :
       status: 'success'
     })
 
-    return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ response, action, agentsUpdated }) }
+    return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ response, action, agentsUpdated, runResult }) }
   } catch (err) {
     console.error('baptiste-chat error:', err.message)
     return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: err.message }) }

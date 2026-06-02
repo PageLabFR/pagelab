@@ -38,7 +38,7 @@ exports.handler = async (event) => {
 
     const { userId } = sessionData
     const rows = await db('GET', 'pending_actions', null,
-      `?user_id=eq.${userId}&status=eq.pending&order=created_at.desc&limit=50&select=id,agent_slug,action_type,summary,created_at`)
+      `?user_id=eq.${userId}&status=eq.pending&order=created_at.desc&limit=50&select=id,agent_slug,action_type,summary,payload,created_at`)
 
     return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ actions: rows || [] }) }
   } catch (err) {

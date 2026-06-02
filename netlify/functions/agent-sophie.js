@@ -7,7 +7,7 @@ const L = require('./_lib')
 exports.handler = async (event) => {
   if (!L.checkCron(event)) return { statusCode: 401, body: 'Unauthorized' }
   const start = Date.now()
-  const { userId } = JSON.parse(event.body || '{}')
+  const { userId, agentConfig } = JSON.parse(event.body || '{}')
 
   try {
     const users = await L.db('GET', 'users', null, `?id=eq.${userId}&select=*`)
@@ -20,8 +20,9 @@ exports.handler = async (event) => {
     }
 
     const monthLabel = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+    const brief = agentConfig?.brief ? `\nThème imposé par le client : "${agentConfig.brief}". Centre la newsletter sur ce sujet.` : ''
     const prompt = `Tu es Sophie, en charge de la newsletter de ${user?.prenom || 'un professionnel'} (secteur: ${user?.secteur || 'général'}).
-Rédige la newsletter de ${monthLabel}. Réponds STRICTEMENT en JSON :
+Rédige la newsletter de ${monthLabel}.${brief} Réponds STRICTEMENT en JSON :
 {"subject":"...","html":"<h1>...</h1><p>...</p>"}
 Ton chaleureux et professionnel, 200-300 mots, sans chiffres inventés, en français.`
     const raw = await L.callClaude(prompt, { max_tokens: 1500 })
