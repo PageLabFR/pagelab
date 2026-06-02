@@ -116,12 +116,15 @@ Agents déclenchables (slug) : marc, leo, sophie, alex, julie, nina, emma, lucas
     let action = null
     let agentsUpdated = false
     let runResult = null
-    // Capture un objet JSON d'action en fin de message (tolère un brief avec guillemets simples)
-    const actionMatch = response.match(/(\{[\s\S]*?"action"[\s\S]*?\})\s*$/)
+    // Capture un objet JSON d'action n'importe où dans le message (pas seulement en fin),
+    // y compris s'il est entouré de ```. On retire les fences d'abord.
+    const cleaned = response.replace(/```json/gi, '').replace(/```/g, '')
+    const actionMatch = cleaned.match(/(\{[^{}]*?"action"\s*:\s*"[^"]+?"[^{}]*?\})/)
     if (actionMatch) {
       try {
         action = JSON.parse(actionMatch[1])
-        response = response.replace(actionMatch[1], '').trim()
+        // Retire le JSON du texte affiché (dans la version originale et nettoyée)
+        response = response.replace(actionMatch[1], '').replace(/```json/gi,'').replace(/```/g,'').trim()
         if (action.action === 'pause') {
           await db('PATCH', 'agents_config', { is_active: false }, `?user_id=eq.${userId}&agent_slug=eq.${action.agent}`)
           agentsUpdated = true
