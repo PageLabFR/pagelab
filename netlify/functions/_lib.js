@@ -79,7 +79,10 @@ async function getIntegrationKey(userId, toolName) {
 }
 
 // --- Crée une action en attente de validation (anti-doublon par dedupeKey) ---
-async function queueAction(userId, agentSlug, actionType, summary, payload, dedupeKey = null) {
+// Types d'action considérés "sûrs" pour un éventuel mode auto.
+// Les envois/publications publics restent TOUJOURS soumis à validation, même en auto,
+// SAUF si le client a explicitement activé l'auto pour cet agent (opt-in).
+async function queueAction(userId, agentSlug, actionType, summary, payload, dedupeKey = null, autonomy = 'validate') {
   if (dedupeKey) {
     const existing = await db('GET', 'pending_actions', null,
       `?user_id=eq.${userId}&agent_slug=eq.${agentSlug}&status=neq.rejected&order=created_at.desc&limit=100&select=payload,status`)
@@ -87,9 +90,12 @@ async function queueAction(userId, agentSlug, actionType, summary, payload, dedu
     if (seen.has(dedupeKey)) return false
     payload = { ...payload, dedupeKey }
   }
+  // En mode 'auto' (opt-in du client pour cet agent), l'action est créée déjà approuvée :
+  // le flux d'exécution la traitera sans attendre de clic. En 'validate' (défaut), reste pending.
+  const status = autonomy === 'auto' ? 'approved' : 'pending'
   await db('POST', 'pending_actions', {
     user_id: userId, agent_slug: agentSlug, action_type: actionType,
-    summary, payload, status: 'pending'
+    summary, payload, status
   })
   return true
 }

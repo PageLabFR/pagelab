@@ -62,7 +62,8 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, headers: HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) }
 
   try {
-    const { session, prenom, secteur, painPoints, tools, apiKeys } = JSON.parse(event.body || '{}')
+    const { session, prenom, secteur, painPoints, tools, apiKeys, autonomy } = JSON.parse(event.body || '{}')
+    const autonomyMode = autonomy === 'auto_safe' ? 'auto_safe' : 'validate'
 
     let sessionData
     try { sessionData = JSON.parse(Buffer.from(session, 'base64url').toString()) }
@@ -94,7 +95,7 @@ exports.handler = async (event) => {
     for (const slug of ['baptiste', ...toActivate]) {
       await db('POST', 'agents_config', {
         user_id: userId, agent_slug: slug, is_active: true,
-        config: { secteur, prenom }, next_run_at: scheduleFor(slug)
+        config: { secteur, prenom, autonomy: autonomyMode }, next_run_at: scheduleFor(slug)
       })
     }
 
