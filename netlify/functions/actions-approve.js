@@ -88,17 +88,20 @@ const EXECUTORS = {
     return { campaignId: camp.id }
   },
 
-  async schedule_buffer_post(p, ctx) {
-    const key = await L.getIntegrationKey(ctx.userId, 'buffer')
-    if (!key) throw new Error('Buffer non connecté')
-    const profileId = ctx.config?.buffer_profile_id
-    if (!profileId) throw new Error('buffer_profile_id manquant en config')
-    const body = new URLSearchParams({ text: p.text, 'profile_ids[]': profileId })
-    const res = await L.fetchRetry(`https://api.bufferapp.com/1/updates/create.json?access_token=${encodeURIComponent(key)}`, {
-      method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString()
+  async publish_social_zernio(p, ctx) {
+    const key = await L.getIntegrationKey(ctx.userId, 'zernio')
+    if (!key) throw new Error('Zernio non connecté — connecte tes réseaux dans Intégrations')
+    // Comptes sociaux connectés, stockés en config : zernio_accounts = [{platform, accountId}]
+    const accounts = ctx.config?.zernio_accounts
+    if (!Array.isArray(accounts) || !accounts.length) throw new Error('Aucun compte social connecté dans Zernio')
+    const platforms = accounts.map(a => ({ platform: a.platform, accountId: a.accountId }))
+    const res = await L.fetchRetry('https://zernio.com/api/v1/posts', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: p.text, platforms })
     })
-    if (!res.ok) throw new Error(`Buffer: ${await res.text()}`)
-    return { scheduled: true }
+    if (!res.ok) throw new Error(`Zernio: ${await res.text()}`)
+    return { published: true, platforms: platforms.map(p => p.platform) }
   },
 
   async update_shopify_product(p, ctx) {
