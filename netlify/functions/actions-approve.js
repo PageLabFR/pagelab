@@ -91,17 +91,16 @@ const EXECUTORS = {
   async publish_social_zernio(p, ctx) {
     const key = await L.getIntegrationKey(ctx.userId, 'zernio')
     if (!key) throw new Error('Zernio non connecté — connecte tes réseaux dans Intégrations')
-    // Comptes sociaux connectés, stockés en config : zernio_accounts = [{platform, accountId}]
     const accounts = ctx.config?.zernio_accounts
     if (!Array.isArray(accounts) || !accounts.length) throw new Error('Aucun compte social connecté dans Zernio')
     const platforms = accounts.map(a => ({ platform: a.platform, accountId: a.accountId }))
     const res = await L.fetchRetry('https://zernio.com/api/v1/posts', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content: p.text, platforms })
+      body: JSON.stringify({ content: p.text, platforms, publishNow: true })
     })
     if (!res.ok) throw new Error(`Zernio: ${await res.text()}`)
-    return { published: true, platforms: platforms.map(p => p.platform) }
+    return { published: true, platforms: platforms.map(x => x.platform) }
   },
 
   async update_shopify_product(p, ctx) {

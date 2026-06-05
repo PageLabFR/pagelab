@@ -44,11 +44,23 @@ exports.handler = async (event) => {
 
     const { userId } = s
 
-    // Récupère la config de l'agent et y injecte le brief de l'utilisateur (thème du post/article...)
+    // Récupère la config de l'agent. Si l'agent n'a jamais été configuré, on le crée
+    // avec une config par défaut au lieu de refuser (un agent peut tourner sans réglage).
     const cfgRows = await L.db('GET', 'agents_config', null,
       `?user_id=eq.${userId}&agent_slug=eq.${slug}&select=config,is_active`)
-    const cfg = cfgRows?.[0]
-    if (!cfg) return { statusCode: 404, headers: HEADERS, body: JSON.stringify({ error: 'Agent non configuré' }) }
+    let cfg = cfgRows?.[0]
+    if (!cfg) {
+      // Récupère secteur/prenom de l'utilisateur pour une config minimale cohérente
+      const urows = await L.db('GET', 'users', null, `?id=eq.${userId}&select=prenom,secteur`)
+      const u = urows?.[0] || {}
+      const newConfig = { secteur: u.secteur || '', prenom: u.prenom || '', autonomy: 'validate' }
+      try {
+        await L.db('POST', 'agents_config', {
+          user_id: userId, agent_slug: slug, is_active: true, config: newConfig
+        })
+      } catch (e) { /* si déjà créé entre-temps, on continue */ }
+      cfg = { config: newConfig, is_active: true }
+    }
 
     const mergedConfig = { ...(cfg.config || {}) }
     if (brief && String(brief).trim()) mergedConfig.brief = String(brief).trim()

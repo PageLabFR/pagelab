@@ -13,12 +13,7 @@ exports.handler = async (event) => {
     const users = await L.db('GET', 'users', null, `?id=eq.${userId}&select=*`)
     const user = users?.[0]
 
-    const brevoKey = await L.getIntegrationKey(userId, 'brevo')
-    if (!brevoKey) {
-      await L.logTask(userId, 'sophie', 'skip', 'skipped', { reason: 'no brevo' })
-      return { statusCode: 200, body: JSON.stringify({ skipped: true }) }
-    }
-
+    // On génère TOUJOURS la newsletter (aperçu visible). Brevo n'est requis qu'à l'envoi.
     const monthLabel = new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
     const brief = agentConfig?.brief ? `\nThème imposé par le client : "${agentConfig.brief}". Centre la newsletter sur ce sujet.` : ''
     const prompt = `Tu es Sophie, en charge de la newsletter de ${user?.prenom || 'un professionnel'} (secteur: ${user?.secteur || 'général'}).

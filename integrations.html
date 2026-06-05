@@ -58,6 +58,12 @@ h1{font-size:28px;margin-bottom:8px}
 .modal{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:28px;width:100%;max-width:440px}
 .modal h3{font-size:18px;margin-bottom:6px}
 .modal-sub{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:18px}
+.guide-box{background:var(--bg2,#0d0d1a);border:1px solid var(--border,rgba(255,255,255,.08));border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.guide-title{font-size:12px;font-weight:700;color:var(--violet,#7c3aed);margin-bottom:10px}
+.guide-steps{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}
+.guide-steps li{font-size:13px;color:var(--muted2,#9898b8);line-height:1.5}
+.format-hint{font-size:12px;color:var(--muted2,#9898b8);margin-top:9px;line-height:1.5}
+.format-hint b{color:var(--text,#eee)}
 .modal label{display:block;font-size:12px;color:var(--muted2);margin-bottom:7px;font-weight:500}
 .modal input{width:100%;padding:12px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;font-size:14px;color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
 .modal input:focus{border-color:var(--violet)}
@@ -94,13 +100,17 @@ h1{font-size:28px;margin-bottom:8px}
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <h3 id="modalTitle">Connecter</h3>
-    <p class="modal-sub" id="modalSub"></p>
-    <label for="keyInput">Clé API</label>
-    <input type="password" id="keyInput" placeholder="Collez votre clé ici" autocomplete="off">
+    <div class="guide-box" id="guideBox">
+      <div class="guide-title">📍 Où trouver ta clé :</div>
+      <ol class="guide-steps" id="guideSteps"></ol>
+    </div>
+    <label for="keyInput">Ta clé</label>
+    <input type="text" id="keyInput" placeholder="Collez votre clé ici" autocomplete="off" spellcheck="false">
+    <div class="format-hint" id="formatHint"></div>
     <div class="modal-err" id="modalErr"></div>
     <div class="modal-actions">
       <button class="btn btn-outline" style="flex:1" onclick="closeModal()">Annuler</button>
-      <button class="btn btn-solid" style="flex:1" id="modalSave" onclick="saveKey()">Enregistrer</button>
+      <button class="btn btn-solid" style="flex:1" id="modalSave" onclick="saveKey()">Connecter</button>
     </div>
   </div>
 </div>
@@ -112,15 +122,43 @@ if (!SESSION) location.href = '/login.html'
 
 document.getElementById('backLink').href = `/baptiste.html?s=${SESSION}`
 
-// Catalogue des intégrations supportées (aligné sur l'onboarding)
+// Catalogue enrichi : pour chaque outil, un guide clair "où trouver la clé" + le format exact attendu.
 const CATALOG = [
-  { slug:'wordpress',   name:'WordPress',   cat:'SEO & Blog (Léo)',        icon:'📝', help:'WordPress → Utilisateurs → Profil → Clés d\'application → Ajouter une clé.' },
-  { slug:'stripe',      name:'Stripe',      cat:'Relances & compta (Marc, Lucas)', icon:'💳', help:'dashboard.stripe.com → Développeurs → Clés API → Révéler la clé secrète.' },
-  { slug:'brevo',       name:'Brevo',       cat:'Newsletter (Sophie)',     icon:'✉️', help:'app.brevo.com → Mon compte → SMTP & API → Clés API → Générer.' },
-  { slug:'buffer',      name:'Buffer',      cat:'Réseaux sociaux (Alex)',  icon:'📱', help:'buffer.com → Settings → Apps & Integrations → Access Token.' },
-  { slug:'shopify',     name:'Shopify',     cat:'Fiches produits (Nina)',  icon:'🛍️', help:'Admin Shopify → Apps → Développer des apps → Accès API.' },
-  { slug:'woocommerce', name:'WooCommerce', cat:'Fiches produits (Nina)',  icon:'🛒', help:'WooCommerce → Réglages → Avancé → REST API → Ajouter une clé.' },
-  { slug:'notion',      name:'Notion',      cat:'Organisation',            icon:'📓', help:'notion.so → Settings → Connections → New integration → copier le Secret.' },
+  { slug:'stripe', name:'Stripe', cat:'Relances impayés (Marc) + Compta (Lucas)', icon:'💳',
+    steps:['Va sur dashboard.stripe.com', 'Active le mode souhaité (Test ou Live) en haut à droite', 'Menu Développeurs → Clés API', 'Révèle puis copie la « Clé secrète »'],
+    placeholder:'sk_live_51AbC... (ou sk_test_...)',
+    format:'Commence par <b>sk_live_</b> ou <b>sk_test_</b>',
+    validate:(k)=> /^sk_(live|test)_/.test(k) || 'La clé doit commencer par sk_live_ ou sk_test_' },
+
+  { slug:'wordpress', name:'WordPress', cat:'Articles SEO (Léo)', icon:'📝',
+    steps:['Sur ton site WordPress, va dans Utilisateurs → Profil', 'Tout en bas : « Mots de passe d\'application »', 'Saisis un nom (ex: PageLab) → Ajouter', 'Copie le mot de passe (24 caractères)'],
+    placeholder:'https://monsite.fr|monidentifiant:abcd1234efgh5678ijkl9012',
+    format:'Format : <b>https://tonsite.com|identifiant:motdepasse</b> (sans espaces dans le mot de passe). ⚠️ Nécessite un WordPress auto-hébergé (.org), pas un site WordPress.com gratuit.',
+    validate:(k)=> (k.includes('|') && k.includes(':') && k.startsWith('http')) || 'Format attendu : https://site.com|identifiant:motdepasse' },
+
+  { slug:'brevo', name:'Brevo', cat:'Newsletter (Sophie)', icon:'✉️',
+    steps:['Crée un compte sur brevo.com', 'Va dans le menu (ton nom) → SMTP & API', 'Onglet « Clés API » → Générer une nouvelle clé', 'Copie la clé (commence par xkeysib-)'],
+    placeholder:'xkeysib-a1b2c3d4...',
+    format:'Commence par <b>xkeysib-</b>. (Le numéro de ta liste de contacts sera demandé ensuite.)',
+    validate:(k)=> k.startsWith('xkeysib-') || 'La clé Brevo commence par xkeysib-' },
+
+  { slug:'zernio', name:'Zernio (réseaux sociaux)', cat:'LinkedIn, Insta, Facebook (Alex)', icon:'📱',
+    steps:['Crée un compte sur zernio.com', 'Onglet « Connections » → connecte ton LinkedIn / Insta / Facebook', 'Onglet « API Keys » → crée une clé', 'Copie la clé (commence par sk_)'],
+    placeholder:'sk_86d38ba34c5d...',
+    format:'Commence par <b>sk_</b>. On te demandera ensuite de relier ton compte (1 clic).',
+    validate:(k)=> k.startsWith('sk_') || 'La clé Zernio commence par sk_' },
+
+  { slug:'notion', name:'Notion', cat:'Rapports (Hugo)', icon:'📓',
+    steps:['Va sur notion.so/my-integrations', 'New integration → donne un nom', 'Copie le « Internal Integration Secret »', 'Partage ta page Notion avec l\'intégration'],
+    placeholder:'secret_xxxxx ou ntn_xxxxx',
+    format:'Commence par <b>secret_</b> ou <b>ntn_</b>.',
+    validate:(k)=> (k.startsWith('secret_')||k.startsWith('ntn_')) || 'Le secret Notion commence par secret_ ou ntn_' },
+
+  { slug:'shopify', name:'Shopify', cat:'Fiches produits (Nina)', icon:'🛍️',
+    steps:['Admin Shopify → Réglages → Apps et canaux de vente', 'Développer des apps → Créer une app', 'Configurer les accès API Admin', 'Installer l\'app → copier le token (shpat_)'],
+    placeholder:'tienne-boutique.myshopify.com|shpat_xxxxx',
+    format:'Format : <b>boutique.myshopify.com|shpat_xxxxx</b>',
+    validate:(k)=> (k.includes('|') && k.includes('shpat_')) || 'Format : boutique.myshopify.com|shpat_...' },
 ]
 
 let statusMap = {}   // { slug: true/false }
@@ -178,8 +216,13 @@ function openModal(slug) {
   activeSlug = slug
   const it = CATALOG.find(x => x.slug === slug)
   document.getElementById('modalTitle').textContent = (statusMap[slug] ? 'Mettre à jour ' : 'Connecter ') + it.name
-  document.getElementById('modalSub').textContent = it.help
+  // Guide étapes
+  document.getElementById('guideSteps').innerHTML = (it.steps || []).map(s => `<li>${s}</li>`).join('')
+  // Indice de format
+  document.getElementById('formatHint').innerHTML = it.format ? `💡 ${it.format}` : ''
+  // Placeholder concret
   document.getElementById('keyInput').value = ''
+  document.getElementById('keyInput').placeholder = it.placeholder || 'Collez votre clé ici'
   document.getElementById('modalErr').style.display = 'none'
   document.getElementById('modalBg').classList.add('open')
   document.getElementById('keyInput').focus()
@@ -191,9 +234,15 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 async function saveKey() {
   const key = document.getElementById('keyInput').value.trim()
   const err = document.getElementById('modalErr')
-  if (!key) { err.textContent = 'Veuillez coller une clé.'; err.style.display = 'block'; return }
+  const it = CATALOG.find(x => x.slug === activeSlug)
+  if (!key) { err.textContent = 'Colle ta clé d\'abord.'; err.style.display = 'block'; return }
+  // Validation de format AVANT envoi (évite les erreurs silencieuses)
+  if (it.validate) {
+    const v = it.validate(key)
+    if (v !== true) { err.textContent = '⚠️ ' + v; err.style.display = 'block'; return }
+  }
   const btn = document.getElementById('modalSave')
-  btn.disabled = true; btn.textContent = 'Enregistrement...'
+  btn.disabled = true; btn.textContent = 'Connexion...'
   try {
     const res = await fetch('/.netlify/functions/integrations-save', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -204,10 +253,10 @@ async function saveKey() {
     statusMap[activeSlug] = true
     closeModal(); render()
   } catch (e) {
-    err.textContent = "Impossible d'enregistrer pour le moment. Réessayez."
+    err.textContent = "Impossible d'enregistrer pour le moment. Vérifie ta clé et réessaie."
     err.style.display = 'block'
   } finally {
-    btn.disabled = false; btn.textContent = 'Enregistrer'
+    btn.disabled = false; btn.textContent = 'Connecter'
   }
 }
 
