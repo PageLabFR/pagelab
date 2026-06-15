@@ -1,169 +1,147 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Blog — PageLab · Automatisez votre business avec l'IA</title>
-<meta name="description" content="Guides, conseils et ressources pour automatiser votre business avec des agents IA. Artisans, PME, entrepreneurs.">
-<link rel="icon" type="image/png" href="/logo.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Conseils pour artisans du bâtiment | PageLab</title>
+<meta name="description" content="Impayés, devis, visibilité Google, facturation 2026 : nos guides concrets pour les artisans du bâtiment qui veulent gagner du temps et de l'argent.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://pagelab.fr/blog.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/legal.css">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#06060a;--bg2:#0c0c12;--card:#12121e;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);--violet:#7c3aed;--violet-light:#9d5ff3;--violet-dim:rgba(124,58,237,.1);--green:#10b981;--muted:#6b6b8a;--muted2:#9898b8;--text:#f0f0f8}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.02em}
-a{color:inherit;text-decoration:none}
-nav{padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(6,6,10,.95);position:sticky;top:0;z-index:50;backdrop-filter:blur(20px)}
-.nav-logo{display:flex;align-items:center;gap:10px}
-.nav-logo img{width:32px;height:32px;object-fit:contain}
-.nav-logo span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px}
-.nav-cta{padding:8px 20px;background:var(--violet);border-radius:50px;font-size:14px;font-weight:600;color:#fff;transition:background .2s}
-.nav-cta:hover{background:var(--violet-light)}
-.page{max-width:1100px;margin:0 auto;padding:80px 32px 100px}
-.blog-hero{text-align:center;margin-bottom:72px}
-.eyebrow{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--violet);margin-bottom:16px}
-h1{font-size:clamp(36px,5vw,56px);margin-bottom:16px}
-.hero-sub{font-size:18px;color:var(--muted2);max-width:480px;margin:0 auto;line-height:1.7}
-.blog-filters{display:flex;gap:8px;justify-content:center;margin-bottom:48px;flex-wrap:wrap}
-.filter-btn{padding:8px 20px;border:1px solid var(--border2);border-radius:50px;font-size:13px;font-weight:500;color:var(--muted2);cursor:pointer;transition:all .2s;background:transparent;font-family:'Inter',sans-serif}
-.filter-btn.active,.filter-btn:hover{border-color:var(--violet);color:var(--text);background:var(--violet-dim)}
-.featured-post{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:48px;transition:border-color .2s}
-.featured-post:hover{border-color:var(--border2)}
-.featured-img{height:300px;background:linear-gradient(135deg,#0e0e1e,#1a0a2e);display:flex;align-items:center;justify-content:center;font-size:80px}
-.featured-content{padding:40px 40px 40px 0}
-.featured-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--violet);margin-bottom:12px}
-.featured-title{font-size:26px;font-weight:800;color:var(--text);line-height:1.3;margin-bottom:14px}
-.featured-excerpt{font-size:15px;color:var(--muted2);line-height:1.7;margin-bottom:24px}
-.featured-meta{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--muted)}
-.read-more{color:var(--violet);font-weight:500;font-size:14px;display:inline-flex;align-items:center;gap:5px;transition:color .2s}
-.read-more:hover{color:var(--violet-light)}
-.posts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.post-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius,16px);overflow:hidden;transition:border-color .2s,transform .2s;display:flex;flex-direction:column}
-.post-card:hover{border-color:var(--border2);transform:translateY(-4px)}
-.post-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:48px;border-bottom:1px solid var(--border)}
-.post-content{padding:22px;flex:1;display:flex;flex-direction:column}
-.post-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--violet);margin-bottom:8px}
-.post-title{font-size:16px;font-weight:700;color:var(--text);line-height:1.4;margin-bottom:10px;font-family:'Bricolage Grotesque',sans-serif}
-.post-excerpt{font-size:13px;color:var(--muted2);line-height:1.65;flex:1;margin-bottom:16px}
-.post-footer{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--muted)}
-.newsletter-box{background:linear-gradient(135deg,var(--violet-dim),transparent);border:1px solid var(--violet-dim);border-radius:20px;padding:48px;text-align:center;margin-top:80px}
-.newsletter-title{font-size:28px;font-weight:800;margin-bottom:12px}
-.newsletter-sub{font-size:16px;color:var(--muted2);margin-bottom:28px}
-.newsletter-form{display:flex;gap:12px;max-width:440px;margin:0 auto;flex-wrap:wrap}
-.newsletter-input{flex:1;min-width:200px;padding:13px 18px;background:var(--card);border:1px solid var(--border2);border-radius:50px;font-size:14px;color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
-.newsletter-input:focus{border-color:var(--violet)}
-.newsletter-input::placeholder{color:var(--muted)}
-.newsletter-btn{padding:13px 24px;background:var(--violet);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .2s;white-space:nowrap}
-.newsletter-btn:hover{background:var(--violet-light)}
-@media(max-width:768px){
-  .posts-grid{grid-template-columns:1fr}
-  .featured-post{grid-template-columns:1fr}
-  .featured-img{height:200px}
-  .featured-content{padding:24px}
-  .page{padding:48px 20px 80px}
-  nav{padding:0 20px}
-}
+.blog-hero{text-align:center;padding:50px 24px 20px}
+.blog-hero h1{font-size:40px;margin-bottom:12px}
+.blog-hero p{color:var(--muted2);font-size:17px;max-width:560px;margin:0 auto}
+.cats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:26px 0 10px}
+.cat{background:var(--card);border:1px solid var(--border2);border-radius:30px;padding:7px 16px;font-size:13px;color:var(--muted2);cursor:pointer}
+.cat.active,.cat:hover{background:var(--vdim);border-color:var(--vborder);color:var(--vlight)}
+.posts{max-width:980px;margin:0 auto;padding:30px 24px 80px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.post{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:.2s;cursor:pointer}
+.post:hover{border-color:var(--vborder);transform:translateY(-3px)}
+.post .thumb{height:120px;background:linear-gradient(135deg,var(--violet),#4f46e5);display:flex;align-items:center;justify-content:center;font-size:40px}
+.post .pbody{padding:18px 20px}
+.post .ptag{display:inline-block;background:var(--vdim);color:var(--vlight);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:10px}
+.post h3{font-size:17px;line-height:1.3;margin-bottom:8px}
+.post p{font-size:13.5px;color:var(--muted2);margin:0}
+.post .pmeta{font-size:12px;color:var(--muted);margin-top:12px}
+.featured{grid-column:1 / -1;display:flex;background:var(--card);border:1px solid var(--vborder)}
+.featured .thumb{width:240px;height:auto;flex-shrink:0;font-size:60px}
+@media(max-width:760px){.posts{grid-template-columns:1fr}.featured{flex-direction:column}.featured .thumb{width:100%;height:120px}}
 </style>
 </head>
 <body>
-<nav>
-  <a href="/index.html" class="nav-logo">
-    <img src="/logo.png" alt="PageLab" onerror="this.style.display='none'">
-    <span>PageLab</span>
-  </a>
-  <a href="/register.html" class="nav-cta">Essai gratuit →</a>
+
+<nav class="nav">
+  <a href="/" class="logo"><span class="mark">⬡</span> PageLab</a>
+  <div class="links">
+    <a href="/#agents">Les agents</a>
+    <a href="/conformite-2026.html">Conformité 2026</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/connexion.html" class="cta">Connexion</a>
+  </div>
 </nav>
-<div class="page">
-  <div class="blog-hero">
-    <div class="eyebrow">Blog PageLab</div>
-    <h1>Automatisez votre business<br>avec l'IA</h1>
-    <p class="hero-sub">Guides pratiques, cas clients et conseils pour les artisans, PME et entrepreneurs qui veulent gagner du temps.</p>
-  </div>
-  <div class="blog-filters">
-    <button class="filter-btn active">Tous</button>
-    <button class="filter-btn">Guide pratique</button>
-    <button class="filter-btn">SEO</button>
-    <button class="filter-btn">Relances</button>
-    <button class="filter-btn">Social Media</button>
-    <button class="filter-btn">Cas clients</button>
-  </div>
-  <a href="/blog/automatiser-relances-artisan.html" class="featured-post">
-    <div class="featured-img">🔧</div>
-    <div class="featured-content">
-      <div class="featured-tag">⭐ Article à la une · Guide pratique</div>
-      <h2 class="featured-title">Comment automatiser vos relances impayées en tant qu'artisan</h2>
-      <p class="featured-excerpt">Les relances d'impayés sont l'une des tâches les plus pénibles pour un artisan. Voici comment Marc, l'agent de relance, peut prendre le relais : détection des factures en retard, séquence d'emails de relance, et validation par vous avant chaque envoi. On détaille le fonctionnement étape par étape.</p>
-      <div class="featured-meta">
-        <span>30 mai 2025</span>
-        <span>5 min de lecture</span>
-        <a href="/blog/automatiser-relances-artisan.html" class="read-more">Lire l'article →</a>
-      </div>
-    </div>
-  </a>
-  <div class="posts-grid">
-    <a href="/blog/seo-automatique-pme.html" class="post-card">
-      <div class="post-img" style="background:linear-gradient(135deg,#0a1628,#0d2040)">📝</div>
-      <div class="post-content">
-        <div class="post-tag">SEO</div>
-        <div class="post-title">Publier des articles SEO automatiquement : le guide pour les PME</div>
-        <div class="post-excerpt">Léo publie 4 articles optimisés par mois sur votre WordPress. Découvrez comment il choisit les sujets et optimise pour Google.</div>
-        <div class="post-footer"><span>28 mai 2025 · 7 min</span><span class="read-more" style="color:var(--violet)">Lire →</span></div>
-      </div>
-    </a>
-    <a href="/blog/agents-ia-vs-freelance.html" class="post-card">
-      <div class="post-img" style="background:linear-gradient(135deg,#0a1a0a,#0d280d)">🤖</div>
-      <div class="post-content">
-        <div class="post-tag">Comparatif</div>
-        <div class="post-title">Agents IA vs freelance : ce que vous économisez vraiment</div>
-        <div class="post-excerpt">Embaucher pour le marketing coûte cher. Voici, chiffres à l'appui, le type de tâches qu'une équipe d'agents peut prendre en charge quand le budget d'un poste n'est pas là.</div>
-        <div class="post-footer"><span>25 mai 2025 · 6 min</span><span class="read-more" style="color:var(--violet)">Lire →</span></div>
-      </div>
-    </a>
-    <a href="#" class="post-card">
-      <div class="post-img" style="background:linear-gradient(135deg,#1a0a28,#2a0a3a)">📱</div>
-      <div class="post-content">
-        <div class="post-tag">Social Media</div>
-        <div class="post-title">Poster sur LinkedIn tous les jours sans y passer une minute</div>
-        <div class="post-excerpt">Alex génère et publie du contenu adapté à votre secteur 3 fois par semaine. Voici comment il crée des posts qui engagent.</div>
-        <div class="post-footer"><span>22 mai 2025 · 4 min</span><span class="read-more" style="color:var(--violet)">Lire →</span></div>
-      </div>
-    </a>
-    <a href="#" class="post-card">
-      <div class="post-img" style="background:linear-gradient(135deg,#1a0f00,#2a1800)">🛡️</div>
-      <div class="post-content">
-        <div class="post-tag">Guide pratique</div>
-        <div class="post-title">Garder le contrôle : pourquoi rien ne s'envoie sans votre validation</div>
-        <div class="post-excerpt">Confier des tâches à des agents IA ne veut pas dire perdre la main. On explique le principe de validation : chaque action sensible vous est présentée avant exécution.</div>
-        <div class="post-footer"><span>Guide · 3 min</span><span class="read-more" style="color:var(--violet)">Lire →</span></div>
-      </div>
-    </a>
-    <a href="#" class="post-card">
-      <div class="post-img" style="background:linear-gradient(135deg,#001a1a,#002828)">📊</div>
-      <div class="post-content">
-        <div class="post-tag">Comptabilité</div>
-        <div class="post-title">Récap comptable automatique : ce que Lucas génère chaque mois</div>
-        <div class="post-excerpt">Un PDF de récapitulatif de toutes vos transactions Stripe, catégorisé et envoyé le 1er de chaque mois. Automatiquement.</div>
-        <div class="post-footer"><span>18 mai 2025 · 5 min</span><span class="read-more" style="color:var(--violet)">Lire →</span></div>
-      </div>
-    </a>
-    <a href="#" class="post-card">
-      <div class="post-img" style="background:linear-gradient(135deg,#1a1a00,#2a2800)">🔍</div>
-      <div class="post-content">
-        <div class="post-tag">Veille</div>
-        <div class="post-title">Surveiller ses concurrents automatiquement avec Emma</div>
-        <div class="post-excerpt">Emma scrute chaque semaine les sites de vos concurrents et vous alerte sur leurs nouveautés. Plus jamais de surprise.</div>
-        <div class="post-footer"><span>15 mai 2025 · 4 min</span><span class="read-more" style="color:var(--violet)">Lire →</span></div>
-      </div>
-    </a>
-  </div>
-  <div class="newsletter-box">
-    <h2 class="newsletter-title">Restez informé</h2>
-    <p class="newsletter-sub">Recevez nos nouveaux guides et astuces chaque semaine. Pas de spam, désabonnement en 1 clic.</p>
-    <div class="newsletter-form">
-      <input type="email" class="newsletter-input" placeholder="votre@email.fr">
-      <button class="newsletter-btn" onclick="this.textContent='✓ Inscrit !'">S'inscrire →</button>
-    </div>
+
+<div class="blog-hero">
+  <div class="kicker" style="justify-content:center">Le blog des artisans du bâtiment</div>
+  <h1>Gagnez du temps. Gagnez de l'argent.</h1>
+  <p>Des guides concrets, sans blabla, pour relancer vos impayés, faire vos devis plus vite, être trouvé sur Google et passer la réforme 2026 sans stress.</p>
+  <div class="cats">
+    <span class="cat active">Tous</span>
+    <span class="cat">Impayés</span>
+    <span class="cat">Devis &amp; factures</span>
+    <span class="cat">Visibilité Google</span>
+    <span class="cat">Réforme 2026</span>
+    <span class="cat">Trésorerie</span>
   </div>
 </div>
+
+<div class="posts">
+
+  <article class="post featured">
+    <div class="thumb">📄</div>
+    <div class="pbody">
+      <span class="ptag">Réforme 2026</span>
+      <h3>Facturation électronique 2026 : le guide simple pour les artisans du bâtiment</h3>
+      <p>Ce qui devient obligatoire, à quelles dates, et ce que vous devez vraiment faire — expliqué sans jargon comptable.</p>
+      <div class="pmeta">Guide complet · 5 min de lecture</div>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="thumb">💸</div>
+    <div class="pbody">
+      <span class="ptag">Impayés</span>
+      <h3>Client qui ne paie pas : la méthode pour récupérer votre argent (sans vous fâcher)</h3>
+      <p>Relances, pénalités légales de 40 €, mise en demeure : le process complet, étape par étape.</p>
+      <div class="pmeta">4 min de lecture</div>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="thumb">⭐</div>
+    <div class="pbody">
+      <span class="ptag">Visibilité Google</span>
+      <h3>Passer de 10 à 50 avis Google quand on est artisan</h3>
+      <p>87 % des clients lisent les avis avant d'appeler. Voici comment en récolter sans y penser.</p>
+      <div class="pmeta">3 min de lecture</div>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="thumb">📝</div>
+    <div class="pbody">
+      <span class="ptag">Devis &amp; factures</span>
+      <h3>Le devis bâtiment qui se signe : 7 erreurs qui font fuir vos clients</h3>
+      <p>Un devis non relancé = un client perdu. Comment rédiger et relancer pour signer +20 %.</p>
+      <div class="pmeta">4 min de lecture</div>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="thumb">🔍</div>
+    <div class="pbody">
+      <span class="ptag">Visibilité Google</span>
+      <h3>Être trouvé sur « plombier + votre ville » : le guide du référencement local</h3>
+      <p>90 % des gens cherchent un artisan sur Google. Voici comment apparaître en premier.</p>
+      <div class="pmeta">5 min de lecture</div>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="thumb">📊</div>
+    <div class="pbody">
+      <span class="ptag">Trésorerie</span>
+      <h3>Pourquoi 1 artisan du bâtiment sur 4 fait faillite (et comment l'éviter)</h3>
+      <p>Le piège du « je paie avant d'être payé » et les réflexes simples pour garder la tête hors de l'eau.</p>
+      <div class="pmeta">4 min de lecture</div>
+    </div>
+  </article>
+
+  <article class="post">
+    <div class="thumb">⏱️</div>
+    <div class="pbody">
+      <span class="ptag">Organisation</span>
+      <h3>13 heures par semaine sur la paperasse : comment récupérer vos soirées</h3>
+      <p>Les tâches répétitives qu'on peut automatiser dès aujourd'hui pour rentrer chez soi plus tôt.</p>
+      <div class="pmeta">4 min de lecture</div>
+    </div>
+  </article>
+
+</div>
+
+<footer class="foot">
+  <div class="flinks">
+    <a href="/">Accueil</a>
+    <a href="/mentions-legales.html">Mentions légales</a>
+    <a href="/confidentialite.html">Confidentialité</a>
+    <a href="/cgv.html">CGV</a>
+    <a href="/contact.html">Contact</a>
+  </div>
+  <p>© 2026 PageLab — L'équipe IA des artisans du bâtiment.</p>
+</footer>
+
 </body>
 </html>
