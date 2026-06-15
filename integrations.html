@@ -2,265 +2,294 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Intégrations — PageLab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Connexions — PageLab</title>
+<meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="/public/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#07070f;--bg2:#0d0d1a;--card:#12121f;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--violet:#7c3aed;--vlight:#9d5ff3;--vdim:rgba(124,58,237,0.1);--vborder:rgba(124,58,237,0.25);--green:#10b981;--amber:#f59e0b;--muted:#6b6b8a;--muted2:#9898b8;--text:#eeeef8}
+:root{--bg:#07070f;--bg2:#0d0d1a;--bg3:#111120;--card:#12121f;--card2:#16162a;
+--border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.12);
+--violet:#7c3aed;--vlight:#9d5ff3;--vdim:rgba(124,58,237,.1);--vborder:rgba(124,58,237,.28);--indigo:#4f46e5;
+--text:#eeeef8;--muted:#55556a;--muted2:#8888a8;--green:#10b981;--gdim:rgba(16,185,129,.13);
+--amber:#f59e0b;--red:#f87171;--rdim:rgba(248,113,113,.13);--blue:#60a5fa;--bdim:rgba(96,165,250,.13)}
 html{-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
-h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.025em}
-a{color:inherit;text-decoration:none}
-.page{max-width:860px;margin:0 auto;padding:32px 20px 80px}
-.back{display:inline-flex;align-items:center;gap:7px;font-size:14px;color:var(--muted2);margin-bottom:28px;transition:color .2s}
-.back:hover{color:var(--violet)}
-.back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
-h1{font-size:28px;margin-bottom:8px}
-.page-sub{font-size:15px;color:var(--muted2);margin-bottom:28px;line-height:1.6}
-.summary{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
-.sum-card{flex:1;min-width:130px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
-.sum-num{font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:800;line-height:1}
-.sum-num.ok{color:var(--green)}
-.sum-num.todo{color:var(--muted2)}
-.sum-label{font-size:12px;color:var(--muted2);margin-top:4px}
-.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:18px}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dot.on{background:var(--green)}
-.dot.off{background:var(--muted)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.int-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px;transition:border-color .2s}
-.int-card:hover{border-color:var(--border2)}
-.int-top{display:flex;align-items:center;gap:12px}
-.int-icon{width:44px;height:44px;border-radius:11px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.int-meta{flex:1;min-width:0}
-.int-name{font-size:15px;font-weight:600}
-.int-cat{font-size:12px;color:var(--muted2)}
-.int-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:50px;white-space:nowrap}
-.int-status.on{color:var(--green);background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2)}
-.int-status.off{color:var(--muted2);background:var(--bg2);border:1px solid var(--border)}
-.int-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.int-key{font-size:12px;color:var(--muted);font-family:monospace;letter-spacing:1px}
-.btn{padding:8px 16px;border-radius:50px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;border:none;transition:all .2s;white-space:nowrap}
-.btn-solid{background:var(--violet);color:#fff}
-.btn-solid:hover{background:var(--vlight)}
-.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--muted2)}
-.btn-outline:hover{border-color:var(--violet);color:var(--text)}
-.note{margin-top:26px;display:flex;gap:10px;padding:16px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;font-size:13px;color:var(--muted2);line-height:1.6}
-.note-icon{font-size:18px;flex-shrink:0}
-.loading{text-align:center;padding:50px 20px;color:var(--muted2)}
-/* MODAL */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center;padding:20px}
-.modal-bg.open{display:flex}
-.modal{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:28px;width:100%;max-width:440px}
-.modal h3{font-size:18px;margin-bottom:6px}
-.modal-sub{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:18px}
-.guide-box{background:var(--bg2,#0d0d1a);border:1px solid var(--border,rgba(255,255,255,.08));border-radius:12px;padding:14px 16px;margin-bottom:18px}
-.guide-title{font-size:12px;font-weight:700;color:var(--violet,#7c3aed);margin-bottom:10px}
-.guide-steps{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px}
-.guide-steps li{font-size:13px;color:var(--muted2,#9898b8);line-height:1.5}
-.format-hint{font-size:12px;color:var(--muted2,#9898b8);margin-top:9px;line-height:1.5}
-.format-hint b{color:var(--text,#eee)}
-.modal label{display:block;font-size:12px;color:var(--muted2);margin-bottom:7px;font-weight:500}
-.modal input{width:100%;padding:12px 14px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;font-size:14px;color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:border-color .2s}
-.modal input:focus{border-color:var(--violet)}
-.modal-actions{display:flex;gap:10px;margin-top:20px}
-.modal-err{display:none;color:#f87171;font-size:13px;margin-top:10px}
-@media(max-width:680px){.grid{grid-template-columns:1fr}}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh}
+h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.02em}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none;color:inherit}
+a{color:var(--vlight);text-decoration:none}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;max-height:0;transform:translateY(-8px)}to{opacity:1;max-height:600px;transform:translateY(0)}}
+@keyframes checkPop{0%{transform:scale(0)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* topbar */
+.top{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--border);
+position:sticky;top:0;background:rgba(7,7,15,.85);backdrop-filter:blur(12px);z-index:20}
+.top .l{display:flex;align-items:center;gap:11px}
+.back{color:var(--muted2);font-size:14px;display:flex;align-items:center;gap:6px}
+.back:hover{color:var(--text)}
+.logo{display:flex;align-items:center;gap:8px;font-family:'Bricolage Grotesque';font-weight:800;font-size:16px;color:var(--text)}
+.logo .mark{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--violet),var(--indigo));display:flex;align-items:center;justify-content:center;font-size:14px}
+
+.wrap{max-width:680px;margin:0 auto;padding:34px 20px 80px}
+.head{margin-bottom:8px}
+.head h1{font-size:30px;margin-bottom:8px}
+.head p{color:var(--muted2);font-size:15px;max-width:520px}
+
+/* progression globale */
+.prog-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin:22px 0 26px;display:flex;align-items:center;gap:14px}
+.prog-ring{position:relative;width:46px;height:46px;flex-shrink:0}
+.prog-ring svg{transform:rotate(-90deg)}
+.prog-ring .t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'Bricolage Grotesque'}
+.prog-txt .a{font-size:14px;font-weight:600}
+.prog-txt .b{font-size:13px;color:var(--muted2)}
+
+/* carte intégration */
+.intg{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;animation:fadeUp .5s ease backwards}
+.intg-head{display:flex;align-items:center;gap:14px;padding:18px;cursor:pointer;transition:.15s}
+.intg-head:hover{background:var(--card2)}
+.intg-ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.intg-info{flex:1;min-width:0}
+.intg-info .n{font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px}
+.intg-info .d{font-size:13px;color:var(--muted2);margin-top:2px}
+.intg-info .agents{font-size:11.5px;color:var(--muted);margin-top:4px}
+.status{font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;flex-shrink:0;display:flex;align-items:center;gap:6px}
+.status.off{background:var(--card2);color:var(--muted2)}
+.status.on{background:var(--gdim);color:var(--green)}
+.status .chk{display:inline-block;animation:checkPop .4s ease}
+.chevron{color:var(--muted);font-size:15px;transition:transform .25s;flex-shrink:0}
+.intg.open .chevron{transform:rotate(180deg)}
+
+/* corps déployé */
+.intg-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border)}
+.intg.open .intg-body{display:block;animation:slideDown .3s ease}
+.steps{margin:16px 0}
+.step{display:flex;gap:11px;margin-bottom:11px;font-size:13.5px;color:#c9c9de;line-height:1.5}
+.step .num{width:22px;height:22px;border-radius:50%;background:var(--vdim);color:var(--vlight);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step a{font-weight:600}
+.field label{display:block;font-size:12.5px;color:var(--muted2);margin-bottom:6px}
+.field .row{display:flex;gap:9px}
+.field input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Inter';font-size:14px;font-family:ui-monospace,monospace}
+.field input:focus{outline:none;border-color:var(--vlight)}
+.field input.ok{border-color:var(--green)}
+.field input.bad{border-color:var(--red)}
+.field .save{background:var(--violet);color:#fff;border-radius:10px;padding:0 20px;font-weight:600;font-size:14px;white-space:nowrap}
+.field .save:hover{background:var(--vlight)}
+.field .save:disabled{opacity:.5;cursor:not-allowed}
+.field .hint{font-size:12px;margin-top:7px;min-height:16px}
+.field .hint.err{color:var(--red)}
+.field .hint.good{color:var(--green)}
+.connected-box{display:flex;align-items:center;justify-content:space-between;background:var(--gdim);border:1px solid rgba(16,185,129,.25);border-radius:11px;padding:12px 15px;margin-top:6px}
+.connected-box .k{font-family:ui-monospace,monospace;font-size:13px;color:var(--green)}
+.connected-box .del{font-size:12px;color:var(--muted2);cursor:pointer}
+.connected-box .del:hover{color:var(--red)}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
+.soon-tag{font-size:10px;font-weight:700;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);padding:2px 8px;border-radius:20px}
+.info-note{background:var(--bdim);border:1px solid rgba(96,165,250,.2);border-radius:10px;padding:11px 13px;font-size:12.5px;color:#bcd;margin-top:10px;line-height:1.5}
+@media(max-width:560px){
+  .wrap{padding:24px 14px 60px}.head h1{font-size:25px}
+  .intg-info .agents{display:none}
+  .field .row{flex-direction:column}.field .save{padding:12px}
+}
 </style>
 </head>
 <body>
-<div class="page">
-  <a href="#" class="back" id="backLink">
-    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    Baptiste
-  </a>
-  <h1>Intégrations</h1>
-  <p class="page-sub">Voici les outils connectés à votre équipe. Vos agents ne peuvent agir que sur les services que vous avez reliés — vous gardez la main à tout moment.</p>
 
-  <div class="summary" id="summary"></div>
-
-  <div class="legend">
-    <span><span class="dot on"></span> Connecté</span>
-    <span><span class="dot off"></span> Non connecté</span>
+<div class="top">
+  <div class="l">
+    <a href="/dashboard.html" class="back">← Retour</a>
   </div>
-
-  <div id="grid" class="grid"><div class="loading">Chargement de vos intégrations...</div></div>
-
-  <div class="note">
-    <div class="note-icon">🔒</div>
-    <div>Vos clés API sont chiffrées (AES-256) et ne sont jamais affichées en clair, même ici. PageLab ne stocke que ce qui est nécessaire pour faire fonctionner vos agents, et vous pouvez déconnecter un outil à tout moment.</div>
-  </div>
+  <a href="/dashboard.html" class="logo"><span class="mark">⬡</span> PageLab</a>
 </div>
 
-<!-- MODAL CONNEXION -->
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <h3 id="modalTitle">Connecter</h3>
-    <div class="guide-box" id="guideBox">
-      <div class="guide-title">📍 Où trouver ta clé :</div>
-      <ol class="guide-steps" id="guideSteps"></ol>
+<div class="wrap">
+  <div class="head">
+    <h1>Connexions</h1>
+    <p>Branchez vos outils pour que vos agents travaillent avec vos vraies données. Vos clés sont chiffrées — personne ne peut les lire, même pas nous.</p>
+  </div>
+
+  <div class="prog-card">
+    <div class="prog-ring">
+      <svg width="46" height="46"><circle cx="23" cy="23" r="19" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="4"/>
+      <circle id="progCircle" cx="23" cy="23" r="19" fill="none" stroke="#7c3aed" stroke-width="4" stroke-linecap="round" stroke-dasharray="119" stroke-dashoffset="119"/></svg>
+      <div class="t" id="progPct">0%</div>
     </div>
-    <label for="keyInput">Ta clé</label>
-    <input type="text" id="keyInput" placeholder="Collez votre clé ici" autocomplete="off" spellcheck="false">
-    <div class="format-hint" id="formatHint"></div>
-    <div class="modal-err" id="modalErr"></div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" style="flex:1" onclick="closeModal()">Annuler</button>
-      <button class="btn btn-solid" style="flex:1" id="modalSave" onclick="saveKey()">Connecter</button>
+    <div class="prog-txt">
+      <div class="a" id="progTitle">Aucun outil connecté pour l'instant</div>
+      <div class="b" id="progSub">Connectez au moins Stripe pour que Marc relance vos impayés.</div>
     </div>
   </div>
+
+  <div id="intgList"></div>
 </div>
 
 <script>
-const params = new URLSearchParams(location.search)
-const SESSION = params.get('s')
-if (!SESSION) location.href = '/login.html'
-
-document.getElementById('backLink').href = `/baptiste.html?s=${SESSION}`
-
-// Catalogue enrichi : pour chaque outil, un guide clair "où trouver la clé" + le format exact attendu.
-const CATALOG = [
-  { slug:'stripe', name:'Stripe', cat:'Relances impayés (Marc) + Compta (Lucas)', icon:'💳',
-    steps:['Va sur dashboard.stripe.com', 'Active le mode souhaité (Test ou Live) en haut à droite', 'Menu Développeurs → Clés API', 'Révèle puis copie la « Clé secrète »'],
-    placeholder:'sk_live_51AbC... (ou sk_test_...)',
-    format:'Commence par <b>sk_live_</b> ou <b>sk_test_</b>',
-    validate:(k)=> /^sk_(live|test)_/.test(k) || 'La clé doit commencer par sk_live_ ou sk_test_' },
-
-  { slug:'wordpress', name:'WordPress', cat:'Articles SEO (Léo)', icon:'📝',
-    steps:['Sur ton site WordPress, va dans Utilisateurs → Profil', 'Tout en bas : « Mots de passe d\'application »', 'Saisis un nom (ex: PageLab) → Ajouter', 'Copie le mot de passe (24 caractères)'],
-    placeholder:'https://monsite.fr|monidentifiant:abcd1234efgh5678ijkl9012',
-    format:'Format : <b>https://tonsite.com|identifiant:motdepasse</b> (sans espaces dans le mot de passe). ⚠️ Nécessite un WordPress auto-hébergé (.org), pas un site WordPress.com gratuit.',
-    validate:(k)=> (k.includes('|') && k.includes(':') && k.startsWith('http')) || 'Format attendu : https://site.com|identifiant:motdepasse' },
-
-  { slug:'brevo', name:'Brevo', cat:'Newsletter (Sophie)', icon:'✉️',
-    steps:['Crée un compte sur brevo.com', 'Va dans le menu (ton nom) → SMTP & API', 'Onglet « Clés API » → Générer une nouvelle clé', 'Copie la clé (commence par xkeysib-)'],
-    placeholder:'xkeysib-a1b2c3d4...',
-    format:'Commence par <b>xkeysib-</b>. (Le numéro de ta liste de contacts sera demandé ensuite.)',
-    validate:(k)=> k.startsWith('xkeysib-') || 'La clé Brevo commence par xkeysib-' },
-
-  { slug:'zernio', name:'Zernio (réseaux sociaux)', cat:'LinkedIn, Insta, Facebook (Alex)', icon:'📱',
-    steps:['Crée un compte sur zernio.com', 'Onglet « Connections » → connecte ton LinkedIn / Insta / Facebook', 'Onglet « API Keys » → crée une clé', 'Copie la clé (commence par sk_)'],
-    placeholder:'sk_86d38ba34c5d...',
-    format:'Commence par <b>sk_</b>. On te demandera ensuite de relier ton compte (1 clic).',
-    validate:(k)=> k.startsWith('sk_') || 'La clé Zernio commence par sk_' },
-
-  { slug:'notion', name:'Notion', cat:'Rapports (Hugo)', icon:'📓',
-    steps:['Va sur notion.so/my-integrations', 'New integration → donne un nom', 'Copie le « Internal Integration Secret »', 'Partage ta page Notion avec l\'intégration'],
-    placeholder:'secret_xxxxx ou ntn_xxxxx',
-    format:'Commence par <b>secret_</b> ou <b>ntn_</b>.',
-    validate:(k)=> (k.startsWith('secret_')||k.startsWith('ntn_')) || 'Le secret Notion commence par secret_ ou ntn_' },
-
-  { slug:'shopify', name:'Shopify', cat:'Fiches produits (Nina)', icon:'🛍️',
-    steps:['Admin Shopify → Réglages → Apps et canaux de vente', 'Développer des apps → Créer une app', 'Configurer les accès API Admin', 'Installer l\'app → copier le token (shpat_)'],
-    placeholder:'tienne-boutique.myshopify.com|shpat_xxxxx',
-    format:'Format : <b>boutique.myshopify.com|shpat_xxxxx</b>',
-    validate:(k)=> (k.includes('|') && k.includes('shpat_')) || 'Format : boutique.myshopify.com|shpat_...' },
-]
-
-let statusMap = {}   // { slug: true/false }
-let activeSlug = null
-
-async function load() {
-  // On tente de récupérer le statut réel via une fonction backend.
-  // Si elle n'existe pas encore, on dégrade proprement vers "non connecté".
-  try {
-    const res = await fetch(`/.netlify/functions/integrations-status?s=${encodeURIComponent(SESSION)}`)
-    if (res.ok) {
-      const data = await res.json()
-      // Format attendu : { connected: ["wordpress","stripe"] }
-      ;(data.connected || []).forEach(s => { statusMap[s] = true })
-    }
-  } catch (e) { /* fallback silencieux */ }
-  render()
+const API='/.netlify/functions';
+function getSession(){return localStorage.getItem('pl_session')||sessionStorage.getItem('pl_session')}
+if(!getSession() && !new URLSearchParams(location.search).get('demo')){
+  window.location.href='/connexion.html';
 }
 
-function render() {
-  const grid = document.getElementById('grid')
-  grid.innerHTML = ''
-  let nbOn = 0
-  CATALOG.forEach(it => {
-    const on = !!statusMap[it.slug]
-    if (on) nbOn++
-    const card = document.createElement('div'); card.className = 'int-card'
-    card.innerHTML = `
-      <div class="int-top">
-        <div class="int-icon">${it.icon}</div>
-        <div class="int-meta">
-          <div class="int-name">${it.name}</div>
-          <div class="int-cat">${it.cat}</div>
+// Définition des intégrations (BTP-first). 'available' = brancheable maintenant.
+const TOOLS=[
+  {slug:'stripe',name:'Stripe',ico:'💳',color:'var(--vlight)',bg:'var(--vdim)',
+   desc:'Pour détecter et relancer vos factures impayées.',agents:'Utilisé par Marc (impayés) et Lucas (trésorerie)',
+   available:true,placeholder:'sk_live_...',
+   validate:k=>k.startsWith('sk_')&&k.length>20,
+   format:'Commence par "sk_live_" ou "sk_test_"',
+   steps:[
+     'Connectez-vous à votre compte sur <a href="https://dashboard.stripe.com/apikeys" target="_blank" rel="noopener">dashboard.stripe.com</a>',
+     'Allez dans Développeurs → Clés API',
+     'Copiez votre <b>clé secrète</b> (Secret key)',
+     'Collez-la ci-dessous'
+   ]},
+  {slug:'wordpress',name:'Site WordPress',ico:'🌐',color:'var(--blue)',bg:'var(--bdim)',
+   desc:'Pour publier des articles qui vous rendent visible sur Google.',agents:'Utilisé par Hugo (visibilité)',
+   available:true,placeholder:'https://monsite.fr|user:xxxx xxxx xxxx',
+   validate:k=>k.includes('|')&&k.includes('http'),
+   format:'Format : https://votresite.fr|identifiant:mot_de_passe_application',
+   steps:[
+     'Sur votre WordPress : Utilisateurs → Profil',
+     'Section "Mots de passe d\'application", créez-en un nouveau',
+     'Notez l\'identifiant et le mot de passe généré',
+     'Entrez : <b>https://votresite.fr|identifiant:motdepasse</b>'
+   ]},
+  {slug:'brevo',name:'Brevo (emails clients)',ico:'✉️',color:'var(--amber)',bg:'var(--adim, rgba(245,158,11,.13))',
+   desc:'Pour garder le contact avec vos clients par email.',agents:'Utilisé par Emma (relances clients)',
+   available:true,placeholder:'xkeysib-...',
+   validate:k=>k.length>20,
+   format:'Votre clé API Brevo (commence souvent par "xkeysib-")',
+   steps:[
+     'Connectez-vous sur <a href="https://app.brevo.com" target="_blank" rel="noopener">app.brevo.com</a>',
+     'Allez dans Paramètres → Clés API (SMTP & API)',
+     'Créez ou copiez une clé API',
+     'Collez-la ci-dessous'
+   ]},
+  {slug:'google_my_business',name:'Google (avis)',ico:'⭐',color:'var(--amber)',bg:'rgba(245,158,11,.13)',
+   desc:'Pour suivre et collecter vos avis Google automatiquement.',agents:'Utilisé par Emma (avis Google)',
+   available:false,
+   note:"La connexion Google arrive très bientôt. En attendant, Emma prépare déjà vos demandes d'avis par SMS/email avec votre lien Google."},
+];
+
+let connected=[];
+
+function maskKey(slug){return '•••• •••• connecté'}
+
+function render(){
+  const list=document.getElementById('intgList');
+  list.innerHTML='';
+  TOOLS.forEach((t,i)=>{
+    const isOn=connected.includes(t.slug);
+    const el=document.createElement('div');
+    el.className='intg';el.style.animationDelay=(i*60)+'ms';el.id='intg-'+t.slug;
+    const stepsHtml=(t.steps||[]).map((s,n)=>`<div class="step"><span class="num">${n+1}</span><span>${s}</span></div>`).join('');
+    el.innerHTML=`
+      <div class="intg-head" onclick="toggle('${t.slug}')">
+        <div class="intg-ico" style="background:${t.bg};color:${t.color}">${t.ico}</div>
+        <div class="intg-info">
+          <div class="n">${t.name} ${!t.available?'<span class="soon-tag">BIENTÔT</span>':''}</div>
+          <div class="d">${t.desc}</div>
+          <div class="agents">${t.agents||''}</div>
         </div>
-        <div class="int-status ${on?'on':'off'}">${on?'● Connecté':'○ Non connecté'}</div>
+        ${isOn?'<span class="status on"><span class="chk">✓</span> Connecté</span>'
+              :(t.available?'<span class="status off">Non connecté</span>':'')}
+        ${t.available?'<span class="chevron">▾</span>':''}
       </div>
-      <div class="int-row">
-        <div class="int-key">${on?'•••• •••• ••••':'Aucune clé enregistrée'}</div>
-        ${on
-          ? `<button class="btn btn-outline" onclick="openModal('${it.slug}')">Mettre à jour</button>`
-          : `<button class="btn btn-solid" onclick="openModal('${it.slug}')">Connecter</button>`}
-      </div>
-    `
-    grid.appendChild(card)
-  })
-  // Résumé
-  const sum = document.getElementById('summary')
-  sum.innerHTML = `
-    <div class="sum-card"><div class="sum-num ok">${nbOn}</div><div class="sum-label">outils connectés</div></div>
-    <div class="sum-card"><div class="sum-num todo">${CATALOG.length - nbOn}</div><div class="sum-label">disponibles à connecter</div></div>
-  `
+      <div class="intg-body">
+        ${isOn?`
+          <div class="connected-box">
+            <span class="k">✓ ${t.name} est connecté</span>
+            <span class="del" onclick="disconnect('${t.slug}')">Déconnecter</span>
+          </div>`
+        :(t.available?`
+          <div class="steps">${stepsHtml}</div>
+          <div class="field">
+            <label>Votre clé ${t.name}</label>
+            <div class="row">
+              <input type="text" id="key-${t.slug}" placeholder="${t.placeholder||''}" oninput="checkFormat('${t.slug}')" autocomplete="off" spellcheck="false">
+              <button class="save" id="save-${t.slug}" onclick="saveKey('${t.slug}')" disabled>Connecter</button>
+            </div>
+            <div class="hint" id="hint-${t.slug}">${t.format||''}</div>
+          </div>`
+        :`<div class="info-note">${t.note||''}</div>`)}
+      </div>`;
+    list.appendChild(el);
+  });
+  updateProgress();
 }
 
-function openModal(slug) {
-  activeSlug = slug
-  const it = CATALOG.find(x => x.slug === slug)
-  document.getElementById('modalTitle').textContent = (statusMap[slug] ? 'Mettre à jour ' : 'Connecter ') + it.name
-  // Guide étapes
-  document.getElementById('guideSteps').innerHTML = (it.steps || []).map(s => `<li>${s}</li>`).join('')
-  // Indice de format
-  document.getElementById('formatHint').innerHTML = it.format ? `💡 ${it.format}` : ''
-  // Placeholder concret
-  document.getElementById('keyInput').value = ''
-  document.getElementById('keyInput').placeholder = it.placeholder || 'Collez votre clé ici'
-  document.getElementById('modalErr').style.display = 'none'
-  document.getElementById('modalBg').classList.add('open')
-  document.getElementById('keyInput').focus()
+function toggle(slug){
+  const el=document.getElementById('intg-'+slug);
+  if(el)el.classList.toggle('open');
 }
-function closeModal() { document.getElementById('modalBg').classList.remove('open'); activeSlug = null }
-document.getElementById('modalBg').addEventListener('click', e => { if (e.target.id === 'modalBg') closeModal() })
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal() })
 
-async function saveKey() {
-  const key = document.getElementById('keyInput').value.trim()
-  const err = document.getElementById('modalErr')
-  const it = CATALOG.find(x => x.slug === activeSlug)
-  if (!key) { err.textContent = 'Colle ta clé d\'abord.'; err.style.display = 'block'; return }
-  // Validation de format AVANT envoi (évite les erreurs silencieuses)
-  if (it.validate) {
-    const v = it.validate(key)
-    if (v !== true) { err.textContent = '⚠️ ' + v; err.style.display = 'block'; return }
+function checkFormat(slug){
+  const t=TOOLS.find(x=>x.slug===slug);
+  const inp=document.getElementById('key-'+slug);
+  const btn=document.getElementById('save-'+slug);
+  const hint=document.getElementById('hint-'+slug);
+  const v=inp.value.trim();
+  if(!v){inp.className='';btn.disabled=true;hint.className='hint';hint.textContent=t.format;return}
+  if(t.validate(v)){inp.className='ok';btn.disabled=false;hint.className='hint good';hint.textContent='✓ Format correct';}
+  else{inp.className='bad';btn.disabled=true;hint.className='hint err';hint.textContent=t.format;}
+}
+
+function saveKey(slug){
+  const inp=document.getElementById('key-'+slug);
+  const btn=document.getElementById('save-'+slug);
+  const key=inp.value.trim();
+  const s=getSession();
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  if(!s){ // mode démo
+    setTimeout(()=>{connected.push(slug);render();},600);return;
   }
-  const btn = document.getElementById('modalSave')
-  btn.disabled = true; btn.textContent = 'Connexion...'
-  try {
-    const res = await fetch('/.netlify/functions/integrations-save', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session: SESSION, tool: activeSlug, key })
-    })
-    const data = await res.json()
-    if (!res.ok || data.error) throw new Error(data.error || 'Erreur')
-    statusMap[activeSlug] = true
-    closeModal(); render()
-  } catch (e) {
-    err.textContent = "Impossible d'enregistrer pour le moment. Vérifie ta clé et réessaie."
-    err.style.display = 'block'
-  } finally {
-    btn.disabled = false; btn.textContent = 'Connecter'
-  }
+  fetch(API+'/integrations-save',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({session:s,tool:slug,key})})
+    .then(r=>r.json()).then(d=>{
+      if(d.error){btn.innerHTML='Connecter';btn.disabled=false;
+        const h=document.getElementById('hint-'+slug);h.className='hint err';h.textContent=d.error;return}
+      if(!connected.includes(slug))connected.push(slug);
+      render();
+    }).catch(()=>{btn.innerHTML='Connecter';btn.disabled=false;
+      const h=document.getElementById('hint-'+slug);h.className='hint err';h.textContent='Erreur réseau, réessayez.';});
 }
 
-load()
+function disconnect(slug){
+  const s=getSession();
+  connected=connected.filter(x=>x!==slug);
+  render();
+  if(s){fetch(API+'/integrations-disconnect',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({session:s,tool:slug})}).catch(()=>{});}
+}
+
+function updateProgress(){
+  const avail=TOOLS.filter(t=>t.available).length;
+  const done=connected.length;
+  const pct=avail?Math.round(done/avail*100):0;
+  document.getElementById('progPct').textContent=pct+'%';
+  const circ=document.getElementById('progCircle');
+  const circ_len=119;circ.style.strokeDashoffset=circ_len-(circ_len*pct/100);
+  const title=document.getElementById('progTitle');
+  const sub=document.getElementById('progSub');
+  if(done===0){title.textContent='Aucun outil connecté pour l\'instant';sub.textContent='Connectez au moins Stripe pour que Marc relance vos impayés.';}
+  else if(done<avail){title.textContent=done+' outil'+(done>1?'s':'')+' connecté'+(done>1?'s':'')+' 👍';sub.textContent='Continuez pour activer tous vos agents.';}
+  else{title.textContent='Tout est connecté ! 🎉';sub.textContent='Vos agents tournent à plein régime.';}
+}
+
+// Charge le statut réel
+function loadStatus(){
+  const s=getSession();
+  if(!s){render();return;}
+  fetch(API+'/integrations-status?s='+encodeURIComponent(s))
+    .then(r=>r.json()).then(d=>{connected=d.connected||[];render();})
+    .catch(()=>render());
+}
+loadStatus();
 </script>
 </body>
 </html>
