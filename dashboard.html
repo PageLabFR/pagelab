@@ -45,6 +45,11 @@ position:sticky;top:0;height:100vh;overflow-y:auto;transition:transform .25s}
 .sam-card .t{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--green)}
 .sam-card .s{font-size:11.5px;color:var(--green);opacity:.8;margin-top:3px}
 .side-foot{padding-top:12px;margin-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.soon-mini{font-size:9px;font-weight:700;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);padding:2px 6px;border-radius:10px}
+.connexions-btn{display:flex;align-items:center;gap:10px;margin-top:12px;padding:13px 14px;background:var(--vdim);border:1px solid var(--vborder);border-radius:12px;font-size:14px;font-weight:600;color:var(--vlight);transition:.18s;cursor:pointer}
+.connexions-btn:hover{background:rgba(124,58,237,.18);transform:translateY(-1px)}
+.connexions-btn .arrow{margin-left:auto;transition:transform .18s}
+.connexions-btn:hover .arrow{transform:translateX(3px)}
 .side-foot a{display:block;padding:5px 8px;color:var(--muted2)}
 .side-foot a:hover{color:var(--text)}
 
@@ -196,13 +201,21 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
     <div class="agent-item" data-view="emma" onclick="showView('emma',this)">
       <span class="gly" style="background:var(--adim);color:var(--amber)">★</span><span class="nm">Emma</span><span class="dot"></span>
     </div>
+    <div class="agent-item" data-view="hugo" onclick="showView('hugo',this)">
+      <span class="gly" style="background:var(--bdim);color:var(--blue)">⚲</span><span class="nm">Hugo</span><span class="dot"></span>
+    </div>
+    <div class="agent-item" data-view="alex" onclick="showView('alex',this)">
+      <span class="gly" style="background:var(--vdim);color:var(--vlight)">◈</span><span class="nm">Alex</span><span class="soon-mini">bientôt</span>
+    </div>
     <div class="sam-card">
       <div class="t">🛡 Sam surveille</div>
       <div class="s">Tout va bien</div>
     </div>
+    <a href="/integrations.html" class="connexions-btn">
+      <span>🔌</span><span>Mes connexions</span><span class="arrow">→</span>
+    </a>
     <div class="side-foot">
       <a href="#" onclick="startCheckout();return false;" style="color:var(--vlight);font-weight:600">⭐ Passer en illimité</a>
-      <a href="/integrations.html">Connexions</a>
       <a href="/contact.html">Aide</a>
       <a onclick="logout()" style="cursor:pointer">Déconnexion</a>
     </div>
@@ -363,25 +376,61 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
         </div>
       </div>
 
+      <!-- ATELIER HUGO (SEO / visibilité) -->
+      <div class="workspace" id="view-hugo">
+        <div class="ws-head"><div class="gly" style="background:var(--bdim);color:var(--blue)">⚲</div><div><div class="nm">Hugo</div><div class="rl">Votre visibilité sur Google</div></div></div>
+        <div class="ai-box">
+          <div class="t">🤖 Hugo écrit vos articles de blog</div>
+          <div class="m" style="margin-bottom:10px">Un article bien écrit vous fait remonter sur Google quand un client cherche votre métier. Donnez un sujet, Hugo rédige un article optimisé prêt à publier sur votre site.</div>
+          <input id="hugo-brief" placeholder="Sujet de l'article (ex : comment choisir son chauffe-eau)" style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-family:'Inter';font-size:14px">
+          <div class="acts" style="margin-top:10px"><button class="v" id="hugo-gen-btn" onclick="hugoGenerate()">Générer l'article</button></div>
+        </div>
+        <div id="hugo-result"></div>
+        <div class="ws-label">Connexion WordPress</div>
+        <div id="hugo-wp" style="font-size:13px;color:var(--muted2)">Connectez votre site WordPress dans « Mes connexions » pour publier en un clic. Sinon, Hugo génère l'article et vous le copiez-collez.</div>
+      </div>
+
+      <!-- ATELIER ALEX (réseaux sociaux — bientôt) -->
+      <div class="workspace" id="view-alex">
+        <div class="ws-head"><div class="gly" style="background:var(--vdim);color:var(--vlight)">◈</div><div><div class="nm">Alex <span class="soon-mini">bientôt</span></div><div class="rl">Vos posts LinkedIn, rédigés pour vous</div></div></div>
+        <div class="ai-box">
+          <div class="t">🤖 Alex rédige votre post LinkedIn</div>
+          <div class="m" style="margin-bottom:10px">Décrivez ce que vous voulez raconter (un chantier réussi, une astuce, une actu). Alex en fait un post LinkedIn prêt à publier. Vous le copiez-collez sur LinkedIn.</div>
+          <textarea id="alex-brief" placeholder="Ex : on vient de finir la rénovation complète d'une salle de bain à Versailles, douche italienne et carrelage grand format, le client est ravi. Je veux montrer mon savoir-faire et donner envie aux gens de faire appel à moi." style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-family:'Inter';font-size:14px;min-height:90px;resize:vertical"></textarea>
+          <div class="acts" style="margin-top:10px"><button class="v" id="alex-gen-btn" onclick="alexGenerate()">Générer le post</button></div>
+        </div>
+        <div id="alex-result"></div>
+        <div style="font-size:12.5px;color:var(--muted);margin-top:10px">💡 La publication automatique (LinkedIn + Facebook via Zernio) arrive bientôt. Pour l'instant, Alex rédige et vous publiez en copier-coller.</div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<!-- MODAL VALIDATION -->
+<!-- MODAL VALIDATION (revue groupée) -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <span class="modal-close" onclick="closeValidation()">✕</span>
     <h3>À valider</h3>
-    <p class="msub">Vérifiez avant l'envoi. Rien ne part sans vous.</p>
+    <p class="msub">Cochez ce que vous voulez envoyer. Rien ne part sans vous.</p>
     <div id="modalContent">
-      <div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l'instant. Dès que tes agents préparent une action, elle apparaît ici.</div>
+      <div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l'instant. Dès que vos agents préparent une action, elle apparaît ici.</div>
     </div>
     <div class="mbtns" id="modalBtns" style="display:none">
-      <button class="ok" onclick="doValidate()">✓ Valider l'envoi</button>
-      <button class="no" onclick="refuseAction()">Refuser</button>
+      <button class="ok" id="btnValidateSel" onclick="validateSelection()">✓ Valider la sélection</button>
+      <button class="no" onclick="validateAll()">Tout valider</button>
     </div>
   </div>
 </div>
+<style>
+.review-item{display:flex;gap:11px;padding:12px;border:1px solid var(--border);border-radius:11px;margin-bottom:10px;align-items:flex-start}
+.review-item .chk{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border2);background:var(--bg2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px}
+.review-item .chk.on{background:var(--violet);border-color:var(--violet);color:#fff}
+.review-item .ri-body{flex:1;min-width:0}
+.review-item .ri-head{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;margin-bottom:5px}
+.review-item .ri-gly{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.review-item .ri-preview{font-size:12.5px;color:var(--muted2);line-height:1.5;max-height:80px;overflow-y:auto;white-space:pre-line;background:var(--bg2);border-radius:8px;padding:8px 10px}
+</style>
 
 <!-- ONBOARDING -->
 <div class="onb" id="onb">
@@ -553,8 +602,54 @@ function emmaLink(){
     }).catch(()=>out.textContent='Erreur réseau.');
 }
 
+// --- Hugo : génération d'article SEO ---
+function hugoGenerate(){
+  const s=getSession();
+  const brief=document.getElementById('hugo-brief').value.trim();
+  const btn=document.getElementById('hugo-gen-btn');
+  const res=document.getElementById('hugo-result');
+  if(!brief){res.innerHTML='<div style="color:var(--amber);font-size:13px;padding:8px">Donne un sujet d\'article 🙂</div>';return;}
+  if(!s){res.innerHTML='<div style="color:var(--muted2);font-size:13px;padding:8px">Connecte-toi pour générer.</div>';return;}
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  fetch(API+'/hugo-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,brief})})
+    .then(r=>r.json()).then(d=>{
+      btn.innerHTML='Générer l\'article';btn.disabled=false;
+      if(d.error){res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">'+d.error+'</div>';return;}
+      const tmp=document.createElement('div');tmp.innerHTML=d.html;const plain=(tmp.textContent||'');
+      res.innerHTML='<div class="ws-label">'+d.title+'</div>'+
+        '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:14px;line-height:1.6;color:#c9c9de;max-height:340px;overflow-y:auto">'+d.html+'</div>'+
+        '<div class="acts" style="margin:12px 0"><button class="v" onclick="copyText(`'+plain.replace(/`/g,"'").replace(/\\/g,'')+'`,this)">Copier le texte</button><button class="e" onclick="hugoGenerate()">Régénérer</button></div>';
+      res.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }).catch(()=>{btn.innerHTML='Générer l\'article';btn.disabled=false;res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">Erreur réseau.</div>';});
+}
+
+// --- Alex : génération post LinkedIn ---
+function alexGenerate(){
+  const s=getSession();
+  const brief=document.getElementById('alex-brief').value.trim();
+  const btn=document.getElementById('alex-gen-btn');
+  const res=document.getElementById('alex-result');
+  if(!brief){res.innerHTML='<div style="color:var(--amber);font-size:13px;padding:8px">Décris ce que tu veux raconter 🙂</div>';return;}
+  if(!s){res.innerHTML='<div style="color:var(--muted2);font-size:13px;padding:8px">Connecte-toi pour générer.</div>';return;}
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  fetch(API+'/alex-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,brief})})
+    .then(r=>r.json()).then(d=>{
+      btn.innerHTML='Générer le post';btn.disabled=false;
+      if(d.error){res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">'+d.error+'</div>';return;}
+      res.innerHTML='<div class="ws-label">Votre post LinkedIn</div>'+
+        '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:14px;line-height:1.65;color:#e0e0ef;white-space:pre-wrap">'+d.post.replace(/</g,'&lt;')+'</div>'+
+        '<div class="acts" style="margin:12px 0"><button class="v" onclick="copyText(`'+d.post.replace(/`/g,"'").replace(/\\/g,'')+'`,this)">Copier le post</button><button class="e" onclick="alexGenerate()">Régénérer</button></div>';
+      res.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }).catch(()=>{btn.innerHTML='Générer le post';btn.disabled=false;res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">Erreur réseau.</div>';});
+}
+
+// --- Copier dans le presse-papier ---
+function copyText(txt,btn){
+  navigator.clipboard.writeText(txt).then(()=>{const o=btn.textContent;btn.textContent='✓ Copié !';setTimeout(()=>btn.textContent=o,1800);}).catch(()=>{});
+}
+
 // Quel outil alimente quel agent
-const AGENT_NEEDS={marc:'stripe',lucas:'stripe',leo:'wordpress',emma:'brevo'};
+const AGENT_NEEDS={marc:'stripe',lucas:'stripe'};
 
 // --- Onglets Lucas (trésorerie / stock) ---
 function lucasTab(t){
@@ -627,7 +722,7 @@ function updateValidateBadge(n){
 }
 
 // --- Navigation entre vues ---
-const titles={home:'Bonjour 👋',marc:'Marc · Impayés',leo:'Léo · Devis & factures',lucas:'Lucas · Trésorerie',emma:'Emma · Avis Google'};
+const titles={home:'Bonjour 👋',marc:'Marc · Impayés',leo:'Léo · Devis & factures',lucas:'Lucas · Trésorerie',emma:'Emma · Avis Google',hugo:'Hugo · Visibilité',alex:'Alex · Réseaux sociaux'};
 function showView(v,el){
   document.querySelectorAll('.workspace').forEach(w=>w.classList.remove('active'));
   document.getElementById('view-'+v).classList.add('active');
@@ -644,73 +739,86 @@ function showView(v,el){
 function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlayBg').classList.add('show')}
 function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlayBg').classList.remove('show')}
 
-// --- Validation modal ---
+// --- Validation : revue groupée (cases + tout valider) ---
+let selectedActions=new Set();
 function openValidation(){
   const btns=document.getElementById('modalBtns');
-  if(PENDING.length>0){
-    pendingIndex=0;
-    renderPendingAction();
-    if(btns)btns.style.display='flex';
-  }else{
-    document.getElementById('modalContent').innerHTML='<div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l\'instant. Dès que tes agents préparent une action, elle apparaît ici.</div>';
+  const content=document.getElementById('modalContent');
+  if(PENDING.length===0){
+    content.innerHTML='<div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l\'instant. Dès que vos agents préparent une action, elle apparaît ici.</div>';
     if(btns)btns.style.display='none';
-  }
-  document.getElementById('modalBg').classList.add('open');
-}
-function renderPendingAction(){
-  const a=PENDING[pendingIndex];
-  if(!a)return;
-  const labels={marc:['€','var(--red)','var(--rdim)'],leo:['▤','var(--blue)','var(--bdim)'],
-    lucas:['◷','var(--green)','var(--gdim)'],emma:['★','var(--amber)','var(--adim)']};
-  const lb=labels[a.agent_slug]||['◆','var(--vlight)','var(--vdim)'];
-  const p=a.payload||{};
-  const preview=p.body||p.message||p.content||a.summary||'(aperçu indisponible)';
-  const subject=p.subject?('Objet : '+p.subject+'\n\n'):'';
-  document.getElementById('modalContent').innerHTML=
-    '<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">'+
-    '<span style="width:30px;height:30px;border-radius:8px;background:'+lb[2]+';color:'+lb[1]+';display:flex;align-items:center;justify-content:center;font-weight:700">'+lb[0]+'</span>'+
-    '<span style="font-size:13px;font-weight:600">'+(a.agent_slug||'Agent')+' · '+(a.summary||a.action_type)+'</span></div>'+
-    '<div class="preview">'+subject+String(preview).replace(/</g,'&lt;')+'</div>'+
-    (PENDING.length>1?'<div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:6px">'+(pendingIndex+1)+' / '+PENDING.length+'</div>':'');
-}
-function closeValidation(){document.getElementById('modalBg').classList.remove('open')}
-function doValidate(){
-  const s=getSession();
-  const a=PENDING[pendingIndex];
-  // Mode démo (pas de session ou pas d'action réelle) : comportement visuel simple
-  if(!s||!a){
-    closeValidation();
-    const b=document.getElementById('valBadge');
-    if(b){let n=Math.max(0,(parseInt(b.textContent)||1)-1);updateValidateBadge(n);}
-    addBotMsg("C'est envoyé ✅ Je m'occupe du suivi.");
+    document.getElementById('modalBg').classList.add('open');
     return;
   }
-  // Validation réelle via actions-approve (exécute l'envoi)
-  const okBtn=document.querySelector('.modal .ok');
-  okBtn.textContent='Envoi…';okBtn.disabled=true;
-  fetch(API+'/actions-approve',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,actionId:a.id})})
-    .then(r=>r.json()).then(d=>{
-      okBtn.textContent='✓ Valider l\'envoi';okBtn.disabled=false;
-      PENDING.splice(pendingIndex,1);
-      updateValidateBadge(PENDING.length);
-      if(PENDING.length>0){pendingIndex=0;renderPendingAction();}
-      else closeValidation();
-      addBotMsg(d.error?("Hmm, souci à l'envoi : "+d.error):"C'est envoyé ✅ Je m'occupe du suivi.");
-    }).catch(()=>{
-      okBtn.textContent='✓ Valider l\'envoi';okBtn.disabled=false;
-      addBotMsg("Erreur réseau, réessaie dans un instant.");
-    });
+  // tout coché par défaut
+  selectedActions=new Set(PENDING.map(a=>a.id));
+  renderReviewList();
+  if(btns)btns.style.display='flex';
+  document.getElementById('modalBg').classList.add('open');
 }
-function refuseAction(){
-  const s=getSession();const a=PENDING[pendingIndex];
-  if(s&&a){
-    fetch(API+'/actions-reject',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({session:s,actionId:a.id})}).catch(()=>{});
-    PENDING.splice(pendingIndex,1);updateValidateBadge(PENDING.length);
-    if(PENDING.length>0){pendingIndex=0;renderPendingAction();return;}
+function renderReviewList(){
+  const labels={marc:['€','var(--red)','var(--rdim)'],leo:['▤','var(--blue)','var(--bdim)'],
+    lucas:['◷','var(--green)','var(--gdim)'],emma:['★','var(--amber)','var(--adim)'],
+    hugo:['⚲','var(--blue)','var(--bdim)'],alex:['◈','var(--vlight)','var(--vdim)']};
+  const html=PENDING.map(a=>{
+    const lb=labels[a.agent_slug]||['◆','var(--vlight)','var(--vdim)'];
+    const p=a.payload||{};
+    const preview=(p.subject?('Objet : '+p.subject+'\n'):'')+(p.body||p.message||p.content||a.summary||'(aperçu indisponible)');
+    const on=selectedActions.has(a.id);
+    return '<div class="review-item">'+
+      '<div class="chk'+(on?' on':'')+'" onclick="toggleAction(\''+a.id+'\',this)">'+(on?'✓':'')+'</div>'+
+      '<div class="ri-body">'+
+        '<div class="ri-head"><span class="ri-gly" style="background:'+lb[2]+';color:'+lb[1]+'">'+lb[0]+'</span>'+(a.summary||a.action_type)+'</div>'+
+        '<div class="ri-preview">'+String(preview).slice(0,400).replace(/</g,'&lt;')+'</div>'+
+      '</div></div>';
+  }).join('');
+  document.getElementById('modalContent').innerHTML=html;
+  updateSelCount();
+}
+function toggleAction(id,el){
+  if(selectedActions.has(id)){selectedActions.delete(id);el.classList.remove('on');el.textContent='';}
+  else{selectedActions.add(id);el.classList.add('on');el.textContent='✓';}
+  updateSelCount();
+}
+function updateSelCount(){
+  const b=document.getElementById('btnValidateSel');
+  if(b)b.textContent='✓ Valider la sélection ('+selectedActions.size+')';
+}
+function closeValidation(){document.getElementById('modalBg').classList.remove('open')}
+
+function validateAll(){
+  selectedActions=new Set(PENDING.map(a=>a.id));
+  validateSelection();
+}
+function validateSelection(){
+  const s=getSession();
+  const ids=[...selectedActions];
+  if(ids.length===0){addBotMsg("Coche au moins une action 🙂");return;}
+  const okBtn=document.getElementById('btnValidateSel');
+  const allBtn=document.querySelector('#modalBtns .no');
+  okBtn.textContent='Envoi…';okBtn.disabled=true;if(allBtn)allBtn.disabled=true;
+  if(!s){ // démo
+    PENDING=PENDING.filter(a=>!selectedActions.has(a.id));
+    updateValidateBadge(PENDING.length);closeValidation();
+    addBotMsg(ids.length+" action(s) validée(s) ✅");
+    okBtn.disabled=false;if(allBtn)allBtn.disabled=false;okBtn.textContent='✓ Valider la sélection';
+    return;
   }
-  closeValidation();
+  // Envoi réel séquentiel via actions-approve
+  let done=0,errors=0;
+  Promise.all(ids.map(id=>
+    fetch(API+'/actions-approve',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({session:s,actionId:id})})
+      .then(r=>r.json()).then(d=>{if(d.error)errors++;else done++;}).catch(()=>errors++)
+  )).then(()=>{
+    PENDING=PENDING.filter(a=>!selectedActions.has(a.id));
+    selectedActions.clear();
+    updateValidateBadge(PENDING.length);
+    okBtn.disabled=false;if(allBtn)allBtn.disabled=false;okBtn.textContent='✓ Valider la sélection';
+    closeValidation();
+    if(done)addBotMsg(done+" action(s) envoyée(s) ✅"+(errors?(' · '+errors+' en erreur, je réessaierai.'):' Je m\'occupe du suivi.'));
+    else addBotMsg("Souci à l'envoi, réessaie dans un instant.");
+  });
 }
 
 // --- Chat Baptiste (branché sur baptiste-chat.js) ---
