@@ -44,8 +44,9 @@ exports.handler = async (event) => {
     const { userId } = sessionData
 
     // --- Profil ---
-    const users = await db('GET', 'users', null, `?id=eq.${userId}&limit=1&select=prenom,metier,ville,plan`)
+    const users = await db('GET', 'users', null, `?id=eq.${userId}&limit=1&select=prenom,metier,secteur,ville,plan`)
     const user = (users && users[0]) || {}
+    const metier = user.metier || user.secteur || null
 
     // --- Actions en attente (badge + modal) ---
     const actions = await db('GET', 'pending_actions', null,
@@ -75,7 +76,7 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: HEADERS,
       body: JSON.stringify({
-        profile: { prenom: user.prenom || null, metier: user.metier || null, ville: user.ville || null, plan: user.plan || 'trial' },
+        profile: { prenom: user.prenom || null, metier: metier, ville: user.ville || null, plan: user.plan || 'trial' },
         pendingCount: actions.length,
         actions,
         connected,

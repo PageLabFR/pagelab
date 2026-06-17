@@ -22,3 +22,9 @@ alter table public.magic_links add column if not exists created_at timestamptz d
 
 -- Vérif rapide
 -- select column_name from information_schema.columns where table_name='users';
+
+-- ════════════════════════════════════════════════════════════
+-- AJOUT (paiement Stripe) — à lancer aussi
+-- ════════════════════════════════════════════════════════════
+alter table public.users add column if not exists stripe_customer_id text;
+alter table public.users add column if not exists subscription_status text default 'trial';

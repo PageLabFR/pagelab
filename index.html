@@ -100,6 +100,41 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
   .hero-visual{max-width:420px;margin:0 auto}
 }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "PageLab",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "L'équipe d'agents IA des artisans du bâtiment : relance des impayés, devis, trésorerie et avis Google. Vous validez d'un clic.",
+  "url": "https://pagelab.fr",
+  "offers": {
+    "@type": "Offer",
+    "price": "19",
+    "priceCurrency": "EUR",
+    "description": "Abonnement mensuel, tous les agents inclus, essai 14 jours"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "PageLab",
+    "url": "https://pagelab.fr",
+    "email": "contact@pagelab.fr"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"PageLab, c'est compliqué à utiliser ?","acceptedAnswer":{"@type":"Answer","text":"Non. Les agents préparent le travail, vous validez d'un clic. Aucune formation nécessaire, c'est pensé pour être utilisé depuis le chantier."}},
+    {"@type":"Question","name":"Mes données sont-elles en sécurité ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Vos clés et données sont chiffrées. Nous ne revendons jamais vos données et ne les utilisons pas pour entraîner des modèles."}},
+    {"@type":"Question","name":"PageLab gère-t-il la facturation électronique 2026 ?","acceptedAnswer":{"@type":"Answer","text":"PageLab prépare vos factures au format conforme et se connecte à une plateforme agréée pour la transmission, afin de vous préparer à la réforme de septembre 2026."}},
+    {"@type":"Question","name":"Combien ça coûte ?","acceptedAnswer":{"@type":"Answer","text":"Un seul abonnement à 19€/mois pour les premiers artisans (offre fondateur), tous les agents inclus, sans engagement, avec 14 jours d'essai gratuit."}}
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -316,6 +351,49 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
   </div>
 </section>
 
+<!-- FAQ -->
+<style>
+.faq-sec{padding:70px 0;border-top:1px solid var(--border)}
+.faq-list{max-width:720px;margin:30px auto 0}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden}
+.faq-q2{padding:18px 22px;font-weight:600;font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.faq-q2 .plus{color:var(--vlight);font-size:22px;transition:transform .25s;flex-shrink:0}
+.faq-item.open .plus{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--muted2);font-size:14.5px;line-height:1.6}
+.faq-item.open .faq-a{max-height:240px}
+.faq-a div{padding:0 22px 18px}
+</style>
+<section class="faq-sec">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="kick">On répond franchement</div>
+      <h2>Les questions qu'on nous pose</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q2">C'est compliqué à utiliser ? <span class="plus">+</span></div>
+        <div class="faq-a"><div>Non, c'est l'inverse. Vos agents préparent tout le travail, vous validez d'un clic. Pas de formation, pas de manuel. C'est pensé pour être utilisé en 2 minutes depuis votre téléphone, même entre deux chantiers.</div></div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q2">Mes données sont-elles en sécurité ? <span class="plus">+</span></div>
+        <div class="faq-a"><div>Oui. Vos clés et informations sont chiffrées. On ne revend jamais vos données et on ne les utilise pas pour entraîner des IA. Vos données vous appartiennent, point.</div></div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q2">Et la réforme de la facturation 2026 ? <span class="plus">+</span></div>
+        <div class="faq-a"><div>PageLab prépare vos factures au format électronique conforme et se connecte à une plateforme agréée pour la transmission. On vous guide pas à pas vers l'échéance de septembre 2026, sans jargon.</div></div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q2">Combien ça coûte ? <span class="plus">+</span></div>
+        <div class="faq-a"><div>Un seul abonnement à 19€/mois pour les premiers artisans (offre fondateur, ce tarif reste acquis). Tous les agents inclus, sans engagement, avec 14 jours d'essai gratuit et sans carte bancaire pour commencer.</div></div>
+      </div>
+      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
+        <div class="faq-q2">Je ne suis pas du tout à l'aise avec l'informatique… <span class="plus">+</span></div>
+        <div class="faq-a"><div>Aucun souci. Pour les premiers artisans, je vous accompagne personnellement à l'installation, par téléphone. Vous n'êtes jamais seul devant l'écran.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA FINAL -->
 <style>
 .final{background:linear-gradient(135deg,var(--violet2),var(--indigo));margin:0 24px 60px;border-radius:24px;padding:60px 30px;text-align:center;max-width:1140px;margin-left:auto;margin-right:auto}
@@ -385,7 +463,7 @@ function animateCount(el){
   const id=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(id)}el.textContent=txt.replace(/[\d]+/,cur)},28);
 }
 const statObs=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{if(e.isIntersecting){const n=e.target.querySelector('.num');if(n&&!n.dataset.done){n.dataset.done=1;/*animateCount(n)*/}statObs.unobserve(e.target)}});
+  entries.forEach(e=>{if(e.isIntersecting){const n=e.target.querySelector('.num');if(n&&!n.dataset.done){n.dataset.done=1;animateCount(n)}statObs.unobserve(e.target)}});
 },{threshold:.5});
 document.querySelectorAll('.stat-big').forEach(el=>statObs.observe(el));
 </script>

@@ -90,7 +90,7 @@ exports.handler = async (event) => {
         session,          // <- la session encodée (à passer en ?s= aux autres fonctions)
         userId: user.id,
         isNew,
-        onboarded: !!(user.metier && user.prenom)
+        onboarded: !!((user.metier || user.secteur) && user.prenom)
       })
     }
   } catch (err) {

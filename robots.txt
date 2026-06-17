@@ -1,10 +1,7 @@
 User-agent: *
 Allow: /
-
-Disallow: /baptiste
-Disallow: /onboarding
-Disallow: /integrations
-Disallow: /activite
-Disallow: /api/
+Disallow: /dashboard.html
+Disallow: /connexion.html
+Disallow: /integrations.html
 
 Sitemap: https://pagelab.fr/sitemap.xml

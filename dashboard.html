@@ -115,6 +115,8 @@ position:sticky;top:0;background:rgba(7,7,15,.85);backdrop-filter:blur(12px);z-i
 .add-btn{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border2);
 border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:auto}
 .add-btn:hover{border-color:var(--vlight)}
+.subtab{background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:8px 16px;font-size:13.5px;font-weight:500;color:var(--muted2);transition:.15s}
+.subtab.active{background:var(--vdim);border-color:var(--vborder);color:var(--vlight)}
 .bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin:6px 0}
 .bar-chart .bar{flex:1;border-radius:4px 4px 0 0}
 .progress{height:7px;background:var(--bg3);border-radius:20px;overflow:hidden}
@@ -199,6 +201,7 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
       <div class="s">Tout va bien</div>
     </div>
     <div class="side-foot">
+      <a href="#" onclick="startCheckout();return false;" style="color:var(--vlight);font-weight:600">⭐ Passer en illimité</a>
       <a href="/integrations.html">Connexions</a>
       <a href="/contact.html">Aide</a>
       <a onclick="logout()" style="cursor:pointer">Déconnexion</a>
@@ -221,9 +224,9 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
       <!-- VUE ACCUEIL -->
       <div class="workspace active" id="view-home">
         <div class="stat-row">
-          <div class="stat-card"><div class="l">Récupéré ce mois</div><div class="v" style="color:var(--green)">1 850 €</div></div>
-          <div class="stat-card"><div class="l">En attente</div><div class="v" style="color:var(--red)">3 200 €</div></div>
-          <div class="stat-card"><div class="l">Note Google</div><div class="v">4,8 ★</div></div>
+          <div class="stat-card"><div class="l">Récupéré ce mois</div><div class="v" id="home-recovered" style="color:var(--green)">—</div></div>
+          <div class="stat-card"><div class="l">En attente</div><div class="v" id="home-pending" style="color:var(--red)">—</div></div>
+          <div class="stat-card"><div class="l">À valider</div><div class="v" id="home-tovalidate">—</div></div>
         </div>
 
         <div class="baptiste">
@@ -232,7 +235,7 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
             <div style="flex:1"><div class="nm">Baptiste</div><div class="st">● coordinateur</div></div>
           </div>
           <div class="chat-msgs" id="chatMsgs">
-            <div class="msg bot">Salut <span id="userName">!</span> 👋 Voici ta semaine : Marc a relancé 4 factures et récupéré <b>1 850 €</b>. Léo a préparé 2 devis qui t'attendent. Tout roule de mon côté 👍</div>
+            <div class="msg bot">Salut <span id="userName">!</span> 👋 Je suis Baptiste, je coordonne ton équipe. Connecte tes outils et je mets Marc, Léo, Lucas et Emma au travail. Dis-moi ce dont tu as besoin 👍</div>
           </div>
           <div class="chat-input">
             <button class="mic" title="Parler" onclick="alert('Mode vocal bientôt disponible')">🎤</button>
@@ -246,116 +249,117 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
       <div class="workspace" id="view-marc">
         <div class="ws-head"><div class="gly" style="background:var(--rdim);color:var(--red)">€</div><div><div class="nm">Marc</div><div class="rl">Récupère l'argent qu'on vous doit</div></div></div>
         <div class="stat-row">
-          <div class="stat-card"><div class="l">À récupérer</div><div class="v" style="color:var(--red)">3 200 €</div></div>
-          <div class="stat-card"><div class="l">Récupéré (mois)</div><div class="v" style="color:var(--green)">1 850 €</div></div>
-          <div class="stat-card"><div class="l">Relances en cours</div><div class="v">4</div></div>
+          <div class="stat-card"><div class="l">À récupérer</div><div class="v" id="marc-torecover" style="color:var(--red)">—</div></div>
+          <div class="stat-card"><div class="l">Récupéré (mois)</div><div class="v" id="marc-recovered" style="color:var(--green)">—</div></div>
+          <div class="stat-card"><div class="l">Relances en cours</div><div class="v" id="marc-pending">—</div></div>
         </div>
         <div class="ws-label">Vos factures</div>
-        <div class="list">
-          <div class="list-row"><div class="info"><div class="n">Dupont SARL</div><div class="sub">1 200 € · échue il y a 18j</div></div><span class="tag red">retard 18j</span></div>
-          <div class="list-row"><div class="info"><div class="n">M. Martin</div><div class="sub">2 000 € · relancé hier</div></div><span class="tag amber">relancé</span></div>
-          <div class="list-row"><div class="info"><div class="n">Garage Léon</div><div class="sub">850 € · payé le 2 mars</div></div><span class="tag green">payé</span></div>
+        <div class="list" id="marc-invoices">
+          <div class="list-row"><div class="info"><div class="n" style="color:var(--muted2)">Connectez Stripe pour voir vos factures</div></div></div>
         </div>
-        <div class="ai-box">
-          <div class="t">🤖 Marc a préparé une relance</div>
-          <div class="m">Relance n°2 pour Dupont SARL (1 200 €) avec rappel de la pénalité légale de 40 €. Prête à envoyer.</div>
-          <div class="acts"><button class="v" onclick="openValidation()">Valider l'envoi</button><button class="e">Modifier</button></div>
+        <div class="ai-box" id="marc-aibox">
+          <div class="t">🤖 Marc prépare vos relances</div>
+          <div class="m">Dès qu'une facture est en retard, Marc rédige la relance (avec la pénalité légale de 40 €) et la met dans « À valider ». Vous l'envoyez d'un clic.</div>
         </div>
         <div class="ws-label">Historique de Marc</div>
-        <div class="hist">
-          <div class="hist-item"><span class="d">hier 14h</span><span class="x">Relance envoyée à M. Martin · validée</span></div>
-          <div class="hist-item"><span class="d">2 mars</span><span class="x">Garage Léon a payé après relance n°1</span></div>
-          <div class="hist-item"><span class="d">28 fév</span><span class="x">3 factures analysées, 1 retard détecté</span></div>
+        <div class="hist" id="marc-hist">
+          <div class="hist-item"><span class="d">—</span><span class="x">Les relances de Marc apparaîtront ici</span></div>
         </div>
       </div>
 
       <!-- ATELIER LÉO -->
       <div class="workspace" id="view-leo">
-        <div class="ws-head"><div class="gly" style="background:var(--bdim);color:var(--blue)">▤</div><div><div class="nm">Léo</div><div class="rl">Vos devis et factures, faits pour vous</div></div>
-          <button class="add-btn">+ Nouveau devis</button></div>
-        <div class="ai-box" style="background:var(--gdim);border-color:rgba(16,185,129,.25)">
-          <div class="t" style="color:var(--green)">✓ Conforme réforme 2026</div>
-          <div class="m" style="color:#bdc">Vos factures sont préparées au format électronique conforme à la réforme de septembre 2026.</div>
-        </div>
-        <div class="ws-label">Devis récents</div>
-        <div class="list">
-          <div class="list-row"><div class="info"><div class="n">Réno salle de bain · Mme Roche</div><div class="sub">3 400 € · envoyé il y a 2j</div></div><span class="tag amber">à relancer</span></div>
-          <div class="list-row"><div class="info"><div class="n">Chaudière · M. Bernard</div><div class="sub">1 800 € · signé</div></div><span class="tag green">accepté</span></div>
-          <div class="list-row"><div class="info"><div class="n">Plomberie · Café du Coin</div><div class="sub">920 € · brouillon</div></div><span class="tag grey">brouillon</span></div>
-        </div>
+        <div class="ws-head"><div class="gly" style="background:var(--bdim);color:var(--blue)">▤</div><div><div class="nm">Léo</div><div class="rl">Vos devis, générés en 30 secondes</div></div></div>
         <div class="ai-box">
-          <div class="t">🤖 Léo a rédigé un devis depuis votre photo</div>
-          <div class="m">À partir de la photo du chantier "Café du Coin", j'ai pré-rempli un devis de 920 € (main d'œuvre + matériaux). À vérifier.</div>
-          <div class="acts"><button class="v">Voir le devis</button><button class="e">Régénérer</button></div>
+          <div class="t">🤖 Décrivez le chantier, Léo fait le devis</div>
+          <div class="m" style="margin-bottom:10px">Tapez en quelques mots ce qu'il y a à faire. Léo génère un devis chiffré, prêt à ajuster.</div>
+          <textarea id="leo-brief" placeholder="Ex : rénovation salle de bain 6m², dépose ancienne baignoire, pose douche italienne, carrelage mural et sol, plomberie" style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-family:'Inter';font-size:14px;min-height:70px;resize:vertical"></textarea>
+          <div class="acts" style="margin-top:10px"><button class="v" id="leo-gen-btn" onclick="leoGenerate()">Générer le devis</button></div>
         </div>
+        <div id="leo-result"></div>
         <div class="ws-label">Historique de Léo</div>
-        <div class="hist">
-          <div class="hist-item"><span class="d">aujourd'hui</span><span class="x">Devis Café du Coin généré depuis photo</span></div>
-          <div class="hist-item"><span class="d">hier</span><span class="x">Devis Mme Roche envoyé · relance dans 3j</span></div>
-          <div class="hist-item"><span class="d">1 mars</span><span class="x">M. Bernard a signé le devis chaudière</span></div>
+        <div class="hist" id="leo-hist">
+          <div class="hist-item"><span class="d">—</span><span class="x">Vos devis générés apparaîtront ici</span></div>
         </div>
       </div>
 
       <!-- ATELIER LUCAS -->
       <div class="workspace" id="view-lucas">
-        <div class="ws-head"><div class="gly" style="background:var(--gdim);color:var(--green)">◷</div><div><div class="nm">Lucas</div><div class="rl">Votre trésorerie, en clair</div></div>
-          <button class="add-btn">+ Ajouter une dépense</button></div>
-        <div class="stat-card" style="margin-bottom:14px">
-          <div class="l">Solde prévisionnel fin de mois</div><div class="v" style="color:var(--green)">+ 4 120 €</div>
+        <div class="ws-head"><div class="gly" style="background:var(--gdim);color:var(--green)">◷</div><div><div class="nm">Lucas</div><div class="rl">Votre trésorerie & votre stock</div></div></div>
+        <div class="subtabs" style="display:flex;gap:8px;margin-bottom:16px">
+          <button class="subtab active" id="tab-treso" onclick="lucasTab('treso')">Trésorerie</button>
+          <button class="subtab" id="tab-stock" onclick="lucasTab('stock')">Stock</button>
         </div>
-        <div class="bar-chart">
+        <div id="lucas-treso">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="add-btn">+ Ajouter une dépense</button></div>
+        <div class="stat-card" style="margin-bottom:14px">
+          <div class="l">Solde disponible (Stripe)</div><div class="v" id="lucas-solde" style="color:var(--green)">—</div>
+        </div>
+        <div class="bar-chart" id="lucas-chart">
           <div class="bar" style="height:55%;background:var(--green)"></div>
           <div class="bar" style="height:40%;background:var(--green)"></div>
-          <div class="bar" style="height:70%;background:var(--red)"></div>
+          <div class="bar" style="height:70%;background:var(--green)"></div>
           <div class="bar" style="height:85%;background:var(--green)"></div>
           <div class="bar" style="height:60%;background:var(--green)"></div>
           <div class="bar" style="height:50%;background:var(--border2)"></div>
         </div>
         <div class="stat-row" style="grid-template-columns:1fr 1fr;margin-bottom:16px">
-          <div class="stat-card"><div class="l">Entrées (mois)</div><div class="v" style="color:var(--green);font-size:18px">+ 7 300 €</div></div>
-          <div class="stat-card"><div class="l">Sorties (mois)</div><div class="v" style="color:var(--red);font-size:18px">- 3 180 €</div></div>
+          <div class="stat-card"><div class="l">Entrées (mois)</div><div class="v" id="lucas-entrees" style="color:var(--green);font-size:18px">—</div></div>
+          <div class="stat-card"><div class="l">Impayés en attente</div><div class="v" id="lucas-impayes" style="color:var(--red);font-size:18px">—</div></div>
         </div>
         <div class="ai-box" style="background:var(--adim);border-color:rgba(245,158,11,.25)">
-          <div class="t" style="color:var(--amber)">💡 Lucas a repéré quelque chose</div>
-          <div class="m" style="color:#dcb">3 200 € d'impayés bloquent votre trésorerie. Si Marc les récupère, votre solde passe à +7 320 €. Je l'ai prévenu.</div>
+          <div class="t" style="color:var(--amber)">💡 Lucas travaille avec Marc</div>
+          <div class="m" style="color:#dcb">Quand des factures sont impayées, Lucas le signale à Marc pour qu'il les relance — et votre trésorerie se débloque.</div>
         </div>
         <div class="ws-label">Historique de Lucas</div>
         <div class="hist">
-          <div class="hist-item"><span class="d">aujourd'hui</span><span class="x">Dépense "matériaux Point.P 480 €" ajoutée</span></div>
-          <div class="hist-item"><span class="d">hier</span><span class="x">Alerte trésorerie envoyée à Marc</span></div>
-          <div class="hist-item"><span class="d">1 mars</span><span class="x">Bilan mensuel : marge +18%</span></div>
+          <div class="hist-item"><span class="d">—</span><span class="x">Les mouvements analysés par Lucas apparaîtront ici</span></div>
+        </div>
+        </div>
+        <div id="lucas-stock" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="stat-card" style="flex:1;margin-right:10px"><div class="l">Valeur du stock</div><div class="v" style="font-size:18px">2 340 €</div></div>
+            <button class="add-btn">+ Ajouter un article</button>
+          </div>
+          <div class="ws-label">Votre matériel</div>
+          <div class="list">
+            <div class="list-row"><div class="info"><div class="n">Tubes cuivre Ø16</div><div class="sub">42 unités</div></div><span class="tag green">en stock</span></div>
+            <div class="list-row"><div class="info"><div class="n">Coudes laiton</div><div class="sub">8 unités</div></div><span class="tag amber">stock bas</span></div>
+            <div class="list-row"><div class="info"><div class="n">Joints fibre</div><div class="sub">0 unité</div></div><span class="tag red">épuisé</span></div>
+          </div>
+          <div class="ai-box">
+            <div class="t">🤖 Lucas surveille votre stock</div>
+            <div class="m">2 articles sont bas ou épuisés. Je peux préparer un bon de commande pour ton fournisseur — dis-le-moi.</div>
+          </div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:10px">💡 Le suivi de stock automatique depuis tes achats arrive bientôt.</div>
         </div>
       </div>
 
       <!-- ATELIER EMMA -->
       <div class="workspace" id="view-emma">
-        <div class="ws-head"><div class="gly" style="background:var(--adim);color:var(--amber)">★</div><div><div class="nm">Emma</div><div class="rl">Vos avis Google, sans y penser</div></div></div>
-        <div class="stat-row">
-          <div class="stat-card"><div class="l">Note Google</div><div class="v" style="color:var(--amber)">4,8 ★</div></div>
-          <div class="stat-card"><div class="l">Avis total</div><div class="v">31</div></div>
-          <div class="stat-card"><div class="l">Ce mois</div><div class="v" style="color:var(--green)">+6</div></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-          <span style="font-size:12.5px;color:var(--muted2);min-width:75px">Vers 50 avis</span>
-          <div class="progress" style="flex:1"><div class="fill" style="width:62%"></div></div>
-          <span style="font-size:12.5px;font-weight:600">31/50</span>
-        </div>
-        <div class="ws-label">Chantiers terminés</div>
-        <div class="list">
-          <div class="list-row"><div class="info"><div class="n">Mme Roche · salle de bain</div></div><span class="tag green">avis 5★ reçu</span></div>
-          <div class="list-row"><div class="info"><div class="n">M. Bernard · chaudière</div></div><span class="tag amber">demande envoyée</span></div>
-          <div class="list-row"><div class="info"><div class="n">Garage Léon · dépannage</div></div><span class="tag blue">prêt à demander</span></div>
+        <div class="ws-head"><div class="gly" style="background:var(--adim);color:var(--amber)">★</div><div><div class="nm">Emma</div><div class="rl">Plus d'avis Google, sans y penser</div></div></div>
+        <div class="ai-box" style="background:var(--adim);border-color:rgba(245,158,11,.25)">
+          <div class="t" style="color:var(--amber)">⭐ Demander un avis à un client</div>
+          <div class="m" style="color:#dcb;margin-bottom:10px">Chantier fini ? Envoyez une demande d'avis en un clic. Le client reçoit un email avec votre lien direct — il note en 30 secondes.</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <input id="emma-client-name" placeholder="Nom du client (ex : M. Dupont)" style="background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px;color:var(--text);font-family:'Inter';font-size:14px">
+            <input id="emma-client-email" type="email" placeholder="Email du client" style="background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px;color:var(--text);font-family:'Inter';font-size:14px">
+          </div>
+          <div class="acts" style="margin-top:10px"><button class="v" id="emma-send-btn" onclick="emmaSend()">Envoyer la demande d'avis</button></div>
+          <div id="emma-feedback" style="font-size:13px;margin-top:8px;min-height:16px"></div>
         </div>
         <div class="ai-box">
-          <div class="t">🤖 Emma a préparé une demande d'avis</div>
-          <div class="m">SMS prêt pour Garage Léon avec votre lien Google direct. Un tap et le client note en 10 secondes.</div>
-          <div class="acts"><button class="v" onclick="openValidation()">Envoyer le SMS</button><button class="e">Modifier</button></div>
+          <div class="t">🔗 Votre lien d'avis Google</div>
+          <div class="m" style="margin-bottom:8px">Collez l'ID de votre fiche Google (placeId) pour un lien direct, ou laissez vide pour une recherche par nom.</div>
+          <div style="display:flex;gap:8px">
+            <input id="emma-place" placeholder="placeId Google (optionnel)" style="flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:10px;color:var(--text);font-family:ui-monospace,monospace;font-size:13px">
+            <button class="e" onclick="emmaLink()">Obtenir le lien</button>
+          </div>
+          <div id="emma-link" style="font-size:13px;margin-top:8px;word-break:break-all"></div>
         </div>
         <div class="ws-label">Historique d'Emma</div>
-        <div class="hist">
-          <div class="hist-item"><span class="d">aujourd'hui</span><span class="x">Mme Roche a laissé un avis 5★</span></div>
-          <div class="hist-item"><span class="d">hier</span><span class="x">Demande d'avis envoyée à M. Bernard</span></div>
-          <div class="hist-item"><span class="d">28 fév</span><span class="x">Réponse auto à un avis · remerciement</span></div>
+        <div class="hist" id="emma-hist">
+          <div class="hist-item"><span class="d">—</span><span class="x">Vos demandes d'avis envoyées apparaîtront ici</span></div>
         </div>
       </div>
 
@@ -370,20 +374,9 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
     <h3>À valider</h3>
     <p class="msub">Vérifiez avant l'envoi. Rien ne part sans vous.</p>
     <div id="modalContent">
-      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><span style="width:30px;height:30px;border-radius:8px;background:var(--rdim);color:var(--red);display:flex;align-items:center;justify-content:center;font-weight:700">€</span><span style="font-size:13px;font-weight:600">Marc · Relance Dupont SARL</span></div>
-      <div class="preview">Objet : Relance — facture impayée (1 200 €)
-
-Bonjour,
-
-Sauf erreur de notre part, la facture n°2024-118 d'un montant de 1 200 € reste impayée à ce jour (échéance dépassée de 18 jours).
-
-Conformément à la loi, une indemnité forfaitaire de 40 € pour frais de recouvrement peut s'appliquer.
-
-Merci de procéder au règlement sous 8 jours.
-
-Cordialement,</div>
+      <div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l'instant. Dès que tes agents préparent une action, elle apparaît ici.</div>
     </div>
-    <div class="mbtns">
+    <div class="mbtns" id="modalBtns" style="display:none">
       <button class="ok" onclick="doValidate()">✓ Valider l'envoi</button>
       <button class="no" onclick="refuseAction()">Refuser</button>
     </div>
@@ -433,9 +426,18 @@ const API='/.netlify/functions';
 // --- Session guard ---
 function getSession(){return localStorage.getItem('pl_session')||sessionStorage.getItem('pl_session')}
 function getUid(){return localStorage.getItem('pl_uid')||sessionStorage.getItem('pl_uid')}
-if(!getSession() && !new URLSearchParams(location.search).get('demo')){
-  // pas connecté → redirige (ajoute ?demo=1 à l'URL pour voir l'UI sans backend)
-  window.location.href='/connexion.html';
+function sessionValid(){
+  const s=getSession();
+  if(!s)return false;
+  try{
+    const data=JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
+    return data.exp && data.exp>Date.now();
+  }catch(e){return false}
+}
+if(!sessionValid() && !new URLSearchParams(location.search).get('demo')){
+  // session absente ou expirée → on nettoie et on renvoie à la connexion
+  localStorage.removeItem('pl_session');sessionStorage.removeItem('pl_session');
+  window.location.replace('/connexion.html');
 }
 
 // --- Données réelles : pending actions + profil ---
@@ -455,14 +457,138 @@ function loadDashboardData(){
       // actions à valider
       PENDING=d.actions||[];
       updateValidateBadge(d.pendingCount||0);
+      // Stats d'accueil
+      const hv=document.getElementById('home-tovalidate'); if(hv)hv.textContent=(d.pendingCount||0);
+      // Récupéré / en attente : on les remplit depuis marc-data (chargé à la volée)
+      fetch(API+'/marc-data?s='+encodeURIComponent(getSession())).then(r=>r.json()).then(m=>{
+        if(m&&m.connected){
+          const hr=document.getElementById('home-recovered');if(hr)hr.textContent=Number(m.recoveredMonth).toLocaleString('fr-FR')+' €';
+          const hp=document.getElementById('home-pending');if(hp)hp.textContent=Number(m.toRecover).toLocaleString('fr-FR')+' €';
+        }else{
+          const hr=document.getElementById('home-recovered');if(hr)hr.textContent='0 €';
+          const hp=document.getElementById('home-pending');if(hp)hp.textContent='0 €';
+        }
+      }).catch(()=>{});
       // Honnêteté des ateliers : si l'outil requis n'est pas connecté,
       // on masque les données d'exemple et on invite à connecter.
       applyAgentStates(d.connected||[]);
     }).catch(()=>{/* garde l'UI telle quelle */});
 }
 
+// --- Lucas : vraie trésorerie Stripe ---
+let lucasLoaded=false;
+function loadLucasData(){
+  const s=getSession();
+  if(!s||lucasLoaded)return;
+  lucasLoaded=true;
+  fetch(API+'/lucas-data?s='+encodeURIComponent(s))
+    .then(r=>r.json()).then(d=>{
+      if(d.error||!d.connected)return;
+      const solde=document.getElementById('lucas-solde');
+      if(solde&&d.balance!=null)solde.textContent='+ '+Number(d.balance).toLocaleString('fr-FR')+' €';
+      const ent=document.getElementById('lucas-entrees');
+      if(ent)ent.textContent='+ '+Number(d.entriesMonth).toLocaleString('fr-FR')+' €';
+      // graphique réel
+      const chart=document.getElementById('lucas-chart');
+      if(chart&&d.chart){
+        chart.innerHTML=d.chart.map(m=>'<div class="bar" style="height:'+Math.max(5,m.pct)+'%;background:var(--green)" title="'+m.label+' : '+m.total+' €"></div>').join('');
+      }
+    }).catch(()=>{lucasLoaded=false;});
+}
+
+// --- Léo : génération de devis réelle ---
+function leoGenerate(){
+  const s=getSession();
+  const brief=document.getElementById('leo-brief').value.trim();
+  const btn=document.getElementById('leo-gen-btn');
+  const res=document.getElementById('leo-result');
+  if(!brief){res.innerHTML='<div style="color:var(--amber);font-size:13px;padding:8px">Décris d\'abord le chantier 🙂</div>';return;}
+  if(!s){res.innerHTML='<div style="color:var(--muted2);font-size:13px;padding:8px">Connecte-toi pour générer un vrai devis.</div>';return;}
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  fetch(API+'/leo-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,brief})})
+    .then(r=>r.json()).then(d=>{
+      btn.innerHTML='Générer le devis';btn.disabled=false;
+      if(d.error){res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">'+d.error+'</div>';return;}
+      const lignes=d.lignes.map(l=>'<div class="list-row"><div class="info"><div class="n">'+l.designation+'</div><div class="sub">'+l.quantite+' '+l.unite+' × '+Number(l.prixUnitaire).toLocaleString('fr-FR')+' €</div></div><span style="font-weight:600">'+Number(l.total).toLocaleString('fr-FR')+' €</span></div>').join('');
+      res.innerHTML='<div class="ws-label">'+d.titre+'</div><div class="list">'+lignes+
+        '<div class="list-row" style="background:var(--vdim)"><div class="info"><div class="n">Total HT</div></div><span style="font-weight:800;font-size:16px;color:var(--vlight)">'+Number(d.totalHT).toLocaleString('fr-FR')+' €</span></div></div>'+
+        '<div style="font-size:12px;color:var(--muted);margin-bottom:14px">'+d.notes+'</div>'+
+        '<div class="acts" style="margin-bottom:16px"><button class="v" onclick="alert(\'Bientôt : export PDF + envoi au client\')">Exporter en PDF</button><button class="e" onclick="leoGenerate()">Régénérer</button></div>';
+      res.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }).catch(()=>{btn.innerHTML='Générer le devis';btn.disabled=false;res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">Erreur réseau, réessaie.</div>';});
+}
+
+// --- Emma : demande d'avis réelle ---
+function emmaSend(){
+  const s=getSession();
+  const name=document.getElementById('emma-client-name').value.trim();
+  const email=document.getElementById('emma-client-email').value.trim();
+  const place=document.getElementById('emma-place').value.trim();
+  const fb=document.getElementById('emma-feedback');
+  const btn=document.getElementById('emma-send-btn');
+  if(!email){fb.style.color='var(--amber)';fb.textContent='Entre l\'email du client.';return;}
+  if(!s){fb.style.color='var(--muted2)';fb.textContent='Connecte-toi pour envoyer.';return;}
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  fetch(API+'/emma-review',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({session:s,action:'send',clientName:name,clientEmail:email,placeId:place})})
+    .then(r=>r.json()).then(d=>{
+      btn.innerHTML='Envoyer la demande d\'avis';btn.disabled=false;
+      if(d.error){fb.style.color='var(--red)';fb.textContent=d.error;return;}
+      fb.style.color='var(--green)';fb.textContent='✓ Demande d\'avis envoyée à '+email+' !';
+      document.getElementById('emma-client-name').value='';document.getElementById('emma-client-email').value='';
+      const h=document.getElementById('emma-hist');
+      if(h.querySelector('.d')?.textContent==='—')h.innerHTML='';
+      h.insertAdjacentHTML('afterbegin','<div class="hist-item"><span class="d">à l\'instant</span><span class="x">Demande d\'avis envoyée à '+(name||email)+'</span></div>');
+    }).catch(()=>{btn.innerHTML='Envoyer la demande d\'avis';btn.disabled=false;fb.style.color='var(--red)';fb.textContent='Erreur réseau.';});
+}
+function emmaLink(){
+  const s=getSession();const place=document.getElementById('emma-place').value.trim();
+  const out=document.getElementById('emma-link');
+  if(!s){out.textContent='Connecte-toi pour obtenir ton lien.';return;}
+  fetch(API+'/emma-review',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({session:s,action:'link',placeId:place})})
+    .then(r=>r.json()).then(d=>{
+      if(d.link)out.innerHTML='<a href="'+d.link+'" target="_blank" style="color:var(--vlight)">'+d.link+'</a>';
+      else out.textContent=d.error||'Souci, réessaie.';
+    }).catch(()=>out.textContent='Erreur réseau.');
+}
+
 // Quel outil alimente quel agent
 const AGENT_NEEDS={marc:'stripe',lucas:'stripe',leo:'wordpress',emma:'brevo'};
+
+// --- Onglets Lucas (trésorerie / stock) ---
+function lucasTab(t){
+  document.getElementById('lucas-treso').style.display=(t==='treso')?'block':'none';
+  document.getElementById('lucas-stock').style.display=(t==='stock')?'block':'none';
+  document.getElementById('tab-treso').classList.toggle('active',t==='treso');
+  document.getElementById('tab-stock').classList.toggle('active',t==='stock');
+}
+
+// --- Marc : vraies données Stripe (lecture seule) ---
+let marcLoaded=false;
+function loadMarcData(){
+  const s=getSession();
+  if(!s||marcLoaded)return;
+  marcLoaded=true;
+  fetch(API+'/marc-data?s='+encodeURIComponent(s))
+    .then(r=>r.json()).then(d=>{
+      if(d.error||!d.connected)return;
+      const f=document.getElementById('marc-torecover'); if(!f)return;
+      document.getElementById('marc-torecover').textContent=Number(d.toRecover).toLocaleString('fr-FR')+' €';
+      document.getElementById('marc-recovered').textContent=Number(d.recoveredMonth).toLocaleString('fr-FR')+' €';
+      document.getElementById('marc-pending').textContent=d.pendingRelances;
+      const list=document.getElementById('marc-invoices');
+      if(!d.invoices||d.invoices.length===0){
+        list.innerHTML='<div class="list-row"><div class="info"><div class="n" style="color:var(--muted2)">Aucune facture impayée 🎉</div></div></div>';
+        return;
+      }
+      list.innerHTML=d.invoices.map(inv=>{
+        const tag=inv.status==='retard'?'<span class="tag red">retard '+inv.daysLate+'j</span>':'<span class="tag amber">envoyée</span>';
+        return '<div class="list-row"><div class="info"><div class="n">'+inv.client+'</div><div class="sub">'+Number(inv.amount).toLocaleString('fr-FR')+' '+inv.currency+'</div></div>'+tag+'</div>';
+      }).join('');
+    }).catch(()=>{marcLoaded=false;});
+}
+
 function applyAgentStates(connectedTools){
   Object.keys(AGENT_NEEDS).forEach(agent=>{
     const need=AGENT_NEEDS[agent];
@@ -508,6 +634,8 @@ function showView(v,el){
   document.querySelectorAll('.agent-item').forEach(a=>a.classList.remove('active'));
   if(el)el.classList.add('active');
   document.getElementById('topTitle').textContent=titles[v]||'';
+  if(v==='marc')loadMarcData();
+  if(v==='lucas')loadLucasData();
   closeSidebar();
   window.scrollTo(0,0);
 }
@@ -518,10 +646,14 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 
 // --- Validation modal ---
 function openValidation(){
-  // Si on a des actions réelles, on remplit le modal avec la première
+  const btns=document.getElementById('modalBtns');
   if(PENDING.length>0){
     pendingIndex=0;
     renderPendingAction();
+    if(btns)btns.style.display='flex';
+  }else{
+    document.getElementById('modalContent').innerHTML='<div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l\'instant. Dès que tes agents préparent une action, elle apparaît ici.</div>';
+    if(btns)btns.style.display='none';
   }
   document.getElementById('modalBg').classList.add('open');
 }
@@ -592,21 +724,26 @@ function addUserMsg(t){
   const d=document.createElement('div');d.className='msg user';d.textContent=t;
   c.appendChild(d);c.scrollTop=c.scrollHeight;
 }
+let chatHistory=[]; // {role, content}
 function sendChat(){
   const inp=document.getElementById('chatInput');
   const txt=inp.value.trim();
   if(!txt)return;
   addUserMsg(txt);inp.value='';
+  chatHistory.push({role:'user',content:txt});
   const typing=document.createElement('div');typing.className='msg bot';typing.textContent='…';typing.id='typing';
   document.getElementById('chatMsgs').appendChild(typing);
+  const s=getSession();
   fetch(API+'/baptiste-chat',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({userId:getUid(),message:txt})})
+    body:JSON.stringify({session:s,messages:chatHistory})})
     .then(r=>r.json()).then(d=>{
       document.getElementById('typing')?.remove();
-      addBotMsg(d.reply||d.message||"Je m'en occupe 👍");
+      const reply=d.reply||d.message||d.content||"Je m'en occupe 👍";
+      chatHistory.push({role:'assistant',content:reply});
+      addBotMsg(reply);
     }).catch(()=>{
       document.getElementById('typing')?.remove();
-      addBotMsg("Je note ça 👍 (connexion à mon cerveau en cours de configuration)");
+      addBotMsg("Je note ça 👍 (petite coupure réseau, réessaie)");
     });
 }
 
@@ -633,13 +770,18 @@ function onbStep3(){
 }
 function finishOnboarding(){
   onbData.ville=document.getElementById('onbVille').value.trim();
-  // Sauvegarde via onboarding-save (réutilise ta fonction existante)
+  const s=getSession();
+  // onboarding-save attend { session, prenom, secteur, ... } (secteur = métier ici)
   fetch(API+'/onboarding-save',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({userId:getUid(),prenom:onbData.prenom,metier:onbData.metier,ville:onbData.ville,secteur:onbData.metier})})
-    .catch(()=>{});
+    body:JSON.stringify({session:s,prenom:onbData.prenom,secteur:onbData.metier,painPoints:[],tools:[],apiKeys:{},autonomy:'validate'})})
+    .then(r=>r.json()).then(()=>{
+      // on stocke aussi métier/ville côté users via le champ secteur déjà géré ; ville en complément
+      if(onbData.ville){fetch(API+'/onboarding-save',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({session:s,prenom:onbData.prenom,secteur:onbData.metier})}).catch(()=>{});}
+    }).catch(()=>{});
   document.getElementById('onb').classList.remove('open');
   document.getElementById('userName').textContent=onbData.prenom;
-  addBotMsg(`Parfait ${onbData.prenom} ! J'ai configuré ton équipe pour un ${onbData.metier.toLowerCase()}. Marc, Léo, Lucas et Emma sont prêts. On commence quand tu veux 👍`);
+  addBotMsg('Parfait '+onbData.prenom+" ! J'ai configuré ton équipe pour un "+onbData.metier.toLowerCase()+'. Marc, Léo, Lucas et Emma sont prêts. On commence quand tu veux 👍');
 }
 document.getElementById('onbPrenom').addEventListener('keydown',e=>{if(e.key==='Enter')onbStep3()});
 document.getElementById('onbVille').addEventListener('keydown',e=>{if(e.key==='Enter')finishOnboarding()});
@@ -650,6 +792,26 @@ function logout(){
   sessionStorage.removeItem('pl_session');sessionStorage.removeItem('pl_uid');
   window.location.href='/connexion.html';
 }
+
+// --- Abonnement Stripe Checkout ---
+function startCheckout(){
+  const s=getSession();
+  if(!s){addBotMsg("Connecte-toi d'abord 🙂");return;}
+  addBotMsg("Je t'emmène vers le paiement sécurisé… 💳");
+  fetch(API+'/stripe-checkout',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({session:s})})
+    .then(r=>r.json()).then(d=>{
+      if(d.url){window.location.href=d.url;}
+      else{addBotMsg("Souci avec le paiement : "+(d.error||'réessaie dans un instant')+". Tu peux aussi m'écrire à contact@pagelab.fr.");}
+    }).catch(()=>addBotMsg("Erreur réseau, réessaie."));
+}
+
+// --- Retour de paiement ---
+(function(){
+  const q=new URLSearchParams(location.search);
+  if(q.get('paye')==='1'){setTimeout(()=>addBotMsg("Paiement confirmé, merci ! 🎉 Ton abonnement est actif. On bosse pour toi."),400);}
+  if(q.get('paiement_annule')==='1'){setTimeout(()=>addBotMsg("Pas de souci, le paiement a été annulé. Tu peux réessayer quand tu veux 🙂"),400);}
+})();
 
 // --- Init : déclenche l'onboarding si ?onboarding=1 ---
 if(new URLSearchParams(location.search).get('onboarding')==='1'){

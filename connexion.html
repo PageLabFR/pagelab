@@ -104,6 +104,21 @@ const API='/.netlify/functions';
 let currentEmail='';
 let remember=true;
 
+// --- Si une session valide existe déjà, on saute la connexion ---
+function readValidSession(){
+  const s=localStorage.getItem('pl_session')||sessionStorage.getItem('pl_session');
+  if(!s)return null;
+  try{
+    const data=JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
+    if(data.exp && data.exp>Date.now())return s; // encore valide
+  }catch(e){}
+  localStorage.removeItem('pl_session');sessionStorage.removeItem('pl_session');
+  return null;
+}
+if(readValidSession() && !new URLSearchParams(location.search).get('force')){
+  window.location.replace('/dashboard.html');
+}
+
 function sendCode(){
   const email=document.getElementById('email').value.trim();
   const err=document.getElementById('errEmail');
