@@ -16,6 +16,21 @@ const HEADERS = {
 
 // ---- Exécuteurs par type d'action. Renvoie un objet result, ou jette. ----
 const EXECUTORS = {
+  async send_review_email(p, ctx) {
+    if (!p.to || !p.html) throw new Error('Payload demande d\'avis incomplet')
+    const res = await L.fetchRetry('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RESEND_KEY}` },
+      body: JSON.stringify({
+        from: `${p.fromName || 'PageLab'} (via PageLab) <contact@pagelab.fr>`,
+        to: p.to, subject: p.subject || 'Votre avis compte pour moi',
+        html: p.html
+      })
+    })
+    if (!res.ok) throw new Error(`Resend: ${await res.text()}`)
+    return { sent: p.to }
+  },
+
   async send_relance_email(p, ctx) {
     if (!p.to || !p.subject || !p.body) throw new Error('Payload relance incomplet')
     const res = await L.fetchRetry('https://api.resend.com/emails', {

@@ -1,9 +1,8 @@
-// netlify/functions/agent-emma.js
-// Emma — Veille. Produit une synthèse de veille pour le secteur (informatif,
-// pas d'action irréversible -> pas de validation). Loggée + email récap.
-
+// netlify/functions/agent-emma.js  (V2 — Emma = avis Google, autonome)
+// Chaque jour : repère les clients qui viennent de payer (Stripe) et prépare une
+// demande d'avis Google pour chacun. L'artisan valide avant envoi (queueAction 'validate').
+// Déclenché par le cron (checkCron) ou par agent-run.
 const L = require('./_lib')
-const RESEND_KEY = process.env.RESEND_API_KEY
 
 exports.handler = async (event) => {
   if (!L.checkCron(event)) return { statusCode: 401, body: 'Unauthorized' }
@@ -14,30 +13,55 @@ exports.handler = async (event) => {
     const users = await L.db('GET', 'users', null, `?id=eq.${userId}&select=*`)
     const user = users?.[0]
 
-    const competitors = Array.isArray(agentConfig?.competitors) ? agentConfig.competitors : []
-    const brief = agentConfig?.brief ? `\nAngle demandé par le client : "${agentConfig.brief}". Oriente la veille là-dessus.` : ''
-    const prompt = `Tu es Emma, en charge de la veille pour ${user?.prenom || 'un professionnel'} (secteur: ${user?.secteur || 'général'}).
-${competitors.length ? `Concurrents suivis : ${competitors.join(', ')}.` : ''}${brief}
-Rédige une courte synthèse de veille (tendances, points d'attention, idées d'action) pour la semaine, en français, 150-200 mots, avec des puces "•". N'invente aucun fait précis ni chiffre : reste sur des angles et questions à explorer.`
-    const synthesis = await L.callClaude(prompt, { max_tokens: 800 })
-
-    await L.reschedule(userId, 'emma', L.nextMonday8h())
-    await L.logTask(userId, 'emma', 'veille_report', 'success', { preview: synthesis.slice(0, 120) }, Date.now() - start)
-
-    if (RESEND_KEY && user?.email) {
-      await L.fetchRetry('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${RESEND_KEY}` },
-        body: JSON.stringify({
-          from: 'Emma (PageLab) <contact@pagelab.fr>',
-          to: user.email,
-          subject: `Emma — votre veille de la semaine`,
-          html: `<div style="font-family:Arial,sans-serif;line-height:1.7">${synthesis.replace(/\n/g, '<br>')}</div>`
-        })
-      })
+    const stripeKey = await L.getIntegrationKey(userId, 'stripe')
+    if (!stripeKey) {
+      await L.reschedule(userId, 'emma', L.tomorrow9h())
+      await L.logTask(userId, 'emma', 'review_requests', 'success', { reason: 'stripe_non_connecte', drafted: 0 }, Date.now() - start)
+      return { statusCode: 200, body: JSON.stringify({ success: true, drafted: 0, reason: 'stripe_non_connecte' }) }
     }
 
-    return { statusCode: 200, body: JSON.stringify({ success: true }) }
+    // Paiements des 7 derniers jours (chantiers récemment réglés)
+    const since = Math.floor((Date.now() - 7 * 24 * 60 * 60 * 1000) / 1000)
+    const res = await L.fetchRetry(`https://api.stripe.com/v1/charges?created[gte]=${since}&limit=100`, {
+      headers: { 'Authorization': `Bearer ${stripeKey}` }
+    })
+    if (!res.ok) throw new Error('Stripe: ' + await res.text())
+    const data = await res.json()
+
+    const placeId = agentConfig?.googlePlaceId || ''
+    const reviewLink = placeId
+      ? `https://search.google.com/local/writereview?placeid=${encodeURIComponent(placeId)}`
+      : `https://www.google.com/search?q=${encodeURIComponent((user?.prenom || '') + ' avis google')}`
+
+    let drafted = 0
+    const seen = new Set()
+    for (const c of (data.data || [])) {
+      if (!c.paid || c.status !== 'succeeded') continue
+      const email = c.billing_details?.email || c.receipt_email
+      const name = c.billing_details?.name || 'votre client'
+      if (!email || seen.has(email)) continue
+      seen.add(email)
+
+      const html = `<div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;line-height:1.6;color:#1a1a2e">
+        <p>Bonjour ${name},</p>
+        <p>Merci de votre confiance ! Si vous êtes satisfait du travail réalisé, un petit avis Google m'aiderait beaucoup. Ça prend 30 secondes :</p>
+        <p style="text-align:center;margin:24px 0"><a href="${reviewLink}" style="background:#7c3aed;color:#fff;text-decoration:none;padding:13px 26px;border-radius:10px;font-weight:bold;display:inline-block">⭐ Laisser un avis</a></p>
+        <p style="font-size:13px;color:#888">Merci beaucoup,<br>${user?.prenom || 'Votre artisan'}</p>
+      </div>`
+
+      const created = await L.queueAction(
+        userId, 'emma', 'send_review_email',
+        `Demande d'avis à ${name}`,
+        { to: email, subject: 'Votre avis compte pour moi 🙏', html, fromName: user?.prenom || 'Votre artisan' },
+        `avis:${email}`,
+        agentConfig?.autonomy || 'validate'
+      )
+      if (created) drafted++
+    }
+
+    await L.reschedule(userId, 'emma', L.tomorrow9h())
+    await L.logTask(userId, 'emma', 'review_requests', 'success', { drafted }, Date.now() - start)
+    return { statusCode: 200, body: JSON.stringify({ success: true, drafted }) }
   } catch (err) {
     console.error('Emma error:', err.message)
     await L.logTask(userId, 'emma', 'error', 'error', { error: err.message })

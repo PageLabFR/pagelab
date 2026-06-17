@@ -122,6 +122,64 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
 .add-btn:hover{border-color:var(--vlight)}
 .subtab{background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:8px 16px;font-size:13.5px;font-weight:500;color:var(--muted2);transition:.15s}
 .subtab.active{background:var(--vdim);border-color:var(--vborder);color:var(--vlight)}
+.locked-box{background:var(--card);border:1px dashed var(--border2);border-radius:18px;padding:50px 30px;text-align:center}
+.locked-ico{font-size:42px;margin-bottom:16px;opacity:.85}
+.locked-title{font-size:22px;font-family:'Bricolage Grotesque';font-weight:800;margin-bottom:12px}
+.locked-desc{font-size:14.5px;color:var(--muted2);line-height:1.6;max-width:440px;margin:0 auto 22px}
+.locked-btn{background:var(--violet);color:#fff;padding:12px 24px;border-radius:11px;font-weight:600;font-size:14px}
+.locked-btn:hover{background:var(--vlight)}
+/* Barre d'actions agent : programmer + exécuter */
+.agent-actions{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.btn-run{display:flex;align-items:center;gap:8px;background:var(--violet);color:#fff;padding:12px 20px;border-radius:11px;font-weight:600;font-size:14px;transition:.18s}
+.btn-run:hover{background:var(--vlight);transform:translateY(-1px)}
+.btn-run:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn-sched{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border2);color:var(--text);padding:12px 18px;border-radius:11px;font-weight:500;font-size:14px;transition:.18s}
+.btn-sched:hover{border-color:var(--vlight)}
+.sched-info{font-size:12.5px;color:var(--green);display:flex;align-items:center;gap:6px;margin-left:auto;align-self:center}
+/* mini-modal programmation */
+.sched-pop{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:110;display:none;align-items:center;justify-content:center;padding:24px}
+.sched-pop.open{display:flex}
+.sched-card{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:26px;max-width:380px;width:100%}
+.sched-card h3{font-size:18px;margin-bottom:6px}
+.sched-card p{font-size:13.5px;color:var(--muted2);margin-bottom:18px}
+.sched-card select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-family:'Inter';font-size:15px;margin-bottom:16px}
+.sched-card .srow{display:flex;gap:10px}
+.sched-card .save{flex:1;background:var(--violet);color:#fff;padding:12px;border-radius:10px;font-weight:600}
+.sched-card .save:hover{background:var(--vlight)}
+.sched-card .off{flex:1;background:var(--card2);border:1px solid var(--border2);padding:12px;border-radius:10px;color:var(--muted2)}
+/* popup bloquant générique */
+.popup-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(5px);z-index:120;display:none;align-items:center;justify-content:center;padding:24px}
+.popup-bg.open{display:flex}
+.popup{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:32px 28px;max-width:400px;width:100%;text-align:center;animation:fadeUp .3s ease}
+.popup .pi{font-size:40px;margin-bottom:14px}
+.popup h3{font-size:20px;margin-bottom:10px}
+.popup p{font-size:14px;color:var(--muted2);line-height:1.6;margin-bottom:20px}
+.popup .pbtn{background:var(--violet);color:#fff;padding:12px 26px;border-radius:11px;font-weight:600;font-size:14px;width:100%}
+.popup .pbtn:hover{background:var(--vlight)}
+/* Tour guidé */
+.tour-bg{position:fixed;inset:0;background:rgba(3,3,10,.88);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.tour-bg.open{display:flex}
+.tour-card{background:linear-gradient(160deg,var(--card),var(--bg2));border:1px solid var(--vborder);border-radius:24px;padding:30px 28px 22px;max-width:460px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:tourIn .4s cubic-bezier(.2,.8,.2,1)}
+@keyframes tourIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.tour-progress{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:24px}
+.tour-bar{height:100%;background:linear-gradient(90deg,var(--violet),var(--vlight));border-radius:4px;width:16%;transition:width .4s ease}
+.tour-step{min-height:230px}
+.tour-emoji{font-size:46px;margin-bottom:14px;display:block}
+.tour-step h2{font-family:'Bricolage Grotesque';font-size:25px;font-weight:800;line-height:1.15;margin-bottom:12px}
+.tour-step p{font-size:15px;color:var(--muted2);line-height:1.65;margin-bottom:12px}
+.tour-step .hl{color:var(--vlight);font-weight:600}
+.tour-feat{display:flex;gap:12px;align-items:flex-start;background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:13px 14px;margin-bottom:10px}
+.tour-feat .tf-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0}
+.tour-feat .tf-t{font-size:14px;font-weight:600;margin-bottom:2px}
+.tour-feat .tf-d{font-size:12.5px;color:var(--muted2);line-height:1.45}
+.tour-nav{display:flex;align-items:center;justify-content:space-between;margin-top:22px}
+.tour-skip{background:none;color:var(--muted);font-size:13px;padding:8px}
+.tour-skip:hover{color:var(--text)}
+.tour-next{background:var(--violet);color:#fff;padding:12px 24px;border-radius:11px;font-weight:600;font-size:14px}
+.tour-next:hover{background:var(--vlight)}
+.tour-dots{display:flex;gap:6px}
+.tour-dots .td{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:.2s}
+.tour-dots .td.on{background:var(--vlight);width:18px;border-radius:4px}
 .bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin:6px 0}
 .bar-chart .bar{flex:1;border-radius:4px 4px 0 0}
 .progress{height:7px;background:var(--bg3);border-radius:20px;overflow:hidden}
@@ -204,7 +262,7 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
     <div class="agent-item" data-view="hugo" onclick="showView('hugo',this)">
       <span class="gly" style="background:var(--bdim);color:var(--blue)">⚲</span><span class="nm">Hugo</span><span class="dot"></span>
     </div>
-    <div class="agent-item" data-view="alex" onclick="showView('alex',this)">
+    <div class="agent-item" data-view="alex" onclick="openSoon()">
       <span class="gly" style="background:var(--vdim);color:var(--vlight)">◈</span><span class="nm">Alex</span><span class="soon-mini">bientôt</span>
     </div>
     <div class="sam-card">
@@ -216,6 +274,7 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
     </a>
     <div class="side-foot">
       <a href="#" onclick="startCheckout();return false;" style="color:var(--vlight);font-weight:600">⭐ Passer en illimité</a>
+      <a href="#" onclick="startTour();return false;">Revoir la présentation</a>
       <a href="/contact.html">Aide</a>
       <a onclick="logout()" style="cursor:pointer">Déconnexion</a>
     </div>
@@ -245,14 +304,14 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
         <div class="baptiste">
           <div class="head">
             <div class="av">◆</div>
-            <div style="flex:1"><div class="nm">Baptiste</div><div class="st">● coordinateur</div></div>
+            <div style="flex:1"><div class="nm">Baptiste</div><div class="st">● pilote tes agents · tu valides</div></div>
           </div>
           <div class="chat-msgs" id="chatMsgs">
-            <div class="msg bot">Salut <span id="userName">!</span> 👋 Je suis Baptiste, je coordonne ton équipe. Connecte tes outils et je mets Marc, Léo, Lucas et Emma au travail. Dis-moi ce dont tu as besoin 👍</div>
+            <div class="msg bot">Salut <span id="userName">!</span> 👋 Je suis Baptiste, je coordonne ton équipe.<br><br>Demande-moi ce que tu veux : <b>« où en sont mes impayés ? »</b>, <b>« lance Marc »</b>, <b>« écris un article sur l'isolation »</b>, <b>« mets Emma en pause »</b>… Je m'occupe de piloter les agents, et tu valides toujours avant tout envoi 👍</div>
           </div>
           <div class="chat-input">
             <button class="mic" title="Parler" onclick="alert('Mode vocal bientôt disponible')">🎤</button>
-            <input type="text" id="chatInput" placeholder="Dis à Baptiste ce que tu veux faire…" onkeydown="if(event.key==='Enter')sendChat()">
+            <input type="text" id="chatInput" placeholder="Demande à Baptiste (ex : lance Marc, où en sont mes impayés ?)…" onkeydown="if(event.key==='Enter')sendChat()">
             <button class="send" onclick="sendChat()">↑</button>
           </div>
         </div>
@@ -261,6 +320,11 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
       <!-- ATELIER MARC -->
       <div class="workspace" id="view-marc">
         <div class="ws-head"><div class="gly" style="background:var(--rdim);color:var(--red)">€</div><div><div class="nm">Marc</div><div class="rl">Récupère l'argent qu'on vous doit</div></div></div>
+        <div class="agent-actions">
+          <button class="btn-run" id="run-marc" onclick="runAgent('marc','run-marc')">▶ Exécuter maintenant</button>
+          <button class="btn-sched" onclick="openSchedule('marc')">🕐 Programmer</button>
+          <span class="sched-info" id="sched-info-marc"></span>
+        </div>
         <div class="stat-row">
           <div class="stat-card"><div class="l">À récupérer</div><div class="v" id="marc-torecover" style="color:var(--red)">—</div></div>
           <div class="stat-card"><div class="l">Récupéré (mois)</div><div class="v" id="marc-recovered" style="color:var(--green)">—</div></div>
@@ -299,6 +363,11 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
       <!-- ATELIER LUCAS -->
       <div class="workspace" id="view-lucas">
         <div class="ws-head"><div class="gly" style="background:var(--gdim);color:var(--green)">◷</div><div><div class="nm">Lucas</div><div class="rl">Votre trésorerie & votre stock</div></div></div>
+        <div class="agent-actions">
+          <button class="btn-run" id="run-lucas" onclick="runAgent('lucas','run-lucas')">▶ Exécuter maintenant</button>
+          <button class="btn-sched" onclick="openSchedule('lucas')">🕐 Programmer</button>
+          <span class="sched-info" id="sched-info-lucas"></span>
+        </div>
         <div class="subtabs" style="display:flex;gap:8px;margin-bottom:16px">
           <button class="subtab active" id="tab-treso" onclick="lucasTab('treso')">Trésorerie</button>
           <button class="subtab" id="tab-stock" onclick="lucasTab('stock')">Stock</button>
@@ -351,11 +420,18 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
       <!-- ATELIER EMMA -->
       <div class="workspace" id="view-emma">
         <div class="ws-head"><div class="gly" style="background:var(--adim);color:var(--amber)">★</div><div><div class="nm">Emma</div><div class="rl">Plus d'avis Google, sans y penser</div></div></div>
+        <div class="agent-actions">
+          <button class="btn-run" id="run-emma" onclick="runAgent('emma','run-emma')">▶ Exécuter maintenant</button>
+          <button class="btn-sched" onclick="openSchedule('emma')">🕐 Programmer</button>
+          <span class="sched-info" id="sched-info-emma"></span>
+        </div>
         <div class="ai-box" style="background:var(--adim);border-color:rgba(245,158,11,.25)">
           <div class="t" style="color:var(--amber)">⭐ Demander un avis à un client</div>
           <div class="m" style="color:#dcb;margin-bottom:10px">Chantier fini ? Envoyez une demande d'avis en un clic. Le client reçoit un email avec votre lien direct — il note en 30 secondes.</div>
           <div style="display:flex;flex-direction:column;gap:8px">
-            <input id="emma-client-name" placeholder="Nom du client (ex : M. Dupont)" style="background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px;color:var(--text);font-family:'Inter';font-size:14px">
+            <button class="btn-sched" onclick="emmaLoadClients()" style="justify-content:center"><span>📇</span> Piocher dans mes clients Stripe</button>
+            <div id="emma-clients-list" style="display:none;max-height:160px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:6px"></div>
+            <input id="emma-client-name" placeholder="Nom du client (ou choisi ci-dessus)" style="background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px;color:var(--text);font-family:'Inter';font-size:14px">
             <input id="emma-client-email" type="email" placeholder="Email du client" style="background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px;color:var(--text);font-family:'Inter';font-size:14px">
           </div>
           <div class="acts" style="margin-top:10px"><button class="v" id="emma-send-btn" onclick="emmaSend()">Envoyer la demande d'avis</button></div>
@@ -390,17 +466,15 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
         <div id="hugo-wp" style="font-size:13px;color:var(--muted2)">Connectez votre site WordPress dans « Mes connexions » pour publier en un clic. Sinon, Hugo génère l'article et vous le copiez-collez.</div>
       </div>
 
-      <!-- ATELIER ALEX (réseaux sociaux — bientôt) -->
+      <!-- ATELIER ALEX (réseaux sociaux — bientôt, verrouillé) -->
       <div class="workspace" id="view-alex">
         <div class="ws-head"><div class="gly" style="background:var(--vdim);color:var(--vlight)">◈</div><div><div class="nm">Alex <span class="soon-mini">bientôt</span></div><div class="rl">Vos posts LinkedIn, rédigés pour vous</div></div></div>
-        <div class="ai-box">
-          <div class="t">🤖 Alex rédige votre post LinkedIn</div>
-          <div class="m" style="margin-bottom:10px">Décrivez ce que vous voulez raconter (un chantier réussi, une astuce, une actu). Alex en fait un post LinkedIn prêt à publier. Vous le copiez-collez sur LinkedIn.</div>
-          <textarea id="alex-brief" placeholder="Ex : on vient de finir la rénovation complète d'une salle de bain à Versailles, douche italienne et carrelage grand format, le client est ravi. Je veux montrer mon savoir-faire et donner envie aux gens de faire appel à moi." style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-family:'Inter';font-size:14px;min-height:90px;resize:vertical"></textarea>
-          <div class="acts" style="margin-top:10px"><button class="v" id="alex-gen-btn" onclick="alexGenerate()">Générer le post</button></div>
+        <div class="locked-box">
+          <div class="locked-ico">🔒</div>
+          <div class="locked-title">Alex arrive bientôt</div>
+          <div class="locked-desc">Alex rédigera vos posts LinkedIn et Facebook et les publiera automatiquement (via Zernio). On met la dernière main dessus.<br><br>En attendant, vos 5 autres agents sont déjà au travail 💪</div>
+          <button class="locked-btn" onclick="showView('marc',document.querySelector('[data-view=marc]'))">Voir mes agents actifs</button>
         </div>
-        <div id="alex-result"></div>
-        <div style="font-size:12.5px;color:var(--muted);margin-top:10px">💡 La publication automatique (LinkedIn + Facebook via Zernio) arrive bientôt. Pour l'instant, Alex rédige et vous publiez en copier-coller.</div>
       </div>
 
     </div>
@@ -465,6 +539,44 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
       <div class="qd">Pour t'aider à être trouvé localement (Hugo s'en occupera).</div>
       <input class="onb-input" id="onbVille" placeholder="Ex : Cergy" autocomplete="address-level2">
       <button class="onb-btn" onclick="finishOnboarding()">C'est parti 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOUR GUIDÉ (concept, après 1re connexion) -->
+<div class="tour-bg" id="tourBg">
+  <div class="tour-card">
+    <div class="tour-progress"><div class="tour-bar" id="tourBar"></div></div>
+    <div class="tour-step" id="tourStep"></div>
+    <div class="tour-nav">
+      <button class="tour-skip" onclick="endTour()">Passer</button>
+      <div class="tour-dots" id="tourDots"></div>
+      <button class="tour-next" id="tourNext" onclick="nextTour()">Suivant →</button>
+    </div>
+  </div>
+</div>
+
+<!-- POPUP BLOQUANT (Alex bientôt) -->
+<div class="popup-bg" id="popupSoon">
+  <div class="popup">
+    <div class="pi">🔒</div>
+    <h3>Alex arrive bientôt</h3>
+    <p>Cet agent n'est pas encore disponible. Alex rédigera et publiera vos posts LinkedIn et Facebook automatiquement. Vos 5 autres agents sont déjà au travail !</p>
+    <button class="pbtn" onclick="closeSoon()">J'ai compris</button>
+  </div>
+</div>
+
+<!-- MODAL PROGRAMMATION AGENT -->
+<div class="sched-pop" id="schedPop">
+  <div class="sched-card">
+    <h3 id="schedTitle">Programmer l'agent</h3>
+    <p>Choisissez l'heure à laquelle cet agent vérifie et prépare son travail, chaque jour automatiquement.</p>
+    <select id="schedHour">
+      <option value="">— Désactivé (manuel uniquement) —</option>
+    </select>
+    <div class="srow">
+      <button class="save" onclick="saveSchedule()">Enregistrer</button>
+      <button class="off" onclick="closeSchedule()">Annuler</button>
     </div>
   </div>
 </div>
@@ -568,6 +680,27 @@ function leoGenerate(){
 }
 
 // --- Emma : demande d'avis réelle ---
+// --- Emma : piocher dans les clients Stripe ---
+function emmaLoadClients(){
+  const s=getSession();
+  const box=document.getElementById('emma-clients-list');
+  if(!s){box.style.display='block';box.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:8px">Connecte-toi pour voir tes clients.</div>';return;}
+  box.style.display='block';box.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:8px"><span class="spinner"></span> Chargement…</div>';
+  fetch(API+'/emma-review',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({session:s,action:'clients'})})
+    .then(r=>r.json()).then(d=>{
+      if(d.error){box.innerHTML='<div style="font-size:13px;color:var(--red);padding:8px">'+d.error+'</div>';return;}
+      if(!d.connected){box.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:8px">Connecte Stripe dans « Mes connexions » pour retrouver tes clients ici. Sinon, saisis l\'email manuellement ci-dessous 👇</div>';return;}
+      if(!d.clients||d.clients.length===0){box.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:8px">Aucun client avec email trouvé dans Stripe. Saisis-le manuellement 👇</div>';return;}
+      box.innerHTML=d.clients.map(c=>'<div onclick="emmaPickClient(\''+(c.name||'').replace(/\x27/g,'')+'\',\''+c.email+'\')" style="padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;gap:8px" onmouseover="this.style.background=\'var(--card2)\'" onmouseout="this.style.background=\'\'"><span>'+(c.name||c.email)+'</span><span style="color:var(--muted)">'+c.email+'</span></div>').join('');
+    }).catch(()=>{box.innerHTML='<div style="font-size:13px;color:var(--red);padding:8px">Erreur réseau.</div>';});
+}
+function emmaPickClient(name,email){
+  document.getElementById('emma-client-name').value=name||'';
+  document.getElementById('emma-client-email').value=email||'';
+  document.getElementById('emma-clients-list').style.display='none';
+}
+
 function emmaSend(){
   const s=getSession();
   const name=document.getElementById('emma-client-name').value.trim();
@@ -646,6 +779,86 @@ function alexGenerate(){
 // --- Copier dans le presse-papier ---
 function copyText(txt,btn){
   navigator.clipboard.writeText(txt).then(()=>{const o=btn.textContent;btn.textContent='✓ Copié !';setTimeout(()=>btn.textContent=o,1800);}).catch(()=>{});
+}
+
+// --- Popup Alex (bientôt) ---
+function openSoon(){document.getElementById('popupSoon').classList.add('open');closeSidebar();}
+function closeSoon(){document.getElementById('popupSoon').classList.remove('open');}
+
+// --- Exécuter un agent maintenant (via agent-run) ---
+function runAgent(slug,btnId){
+  const s=getSession();
+  const btn=document.getElementById(btnId);
+  if(!s){addBotMsg("Connecte-toi d'abord 🙂");return;}
+  const original=btn.innerHTML;
+  btn.innerHTML='<span class="spinner"></span> En cours…';btn.disabled=true;
+  fetch(API+'/agent-run',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({session:s,agent:slug})})
+    .then(r=>r.json()).then(d=>{
+      btn.innerHTML='✓ Lancé !';
+      setTimeout(()=>{btn.innerHTML=original;btn.disabled=false;},2200);
+      // recharge les actions à valider + données de l'agent
+      loadDashboardData();
+      if(slug==='marc'){marcLoaded=false;loadMarcData();}
+      if(slug==='lucas'){lucasLoaded=false;loadLucasData();}
+      const label={marc:'Marc a vérifié vos impayés',leo:'Léo a préparé un devis',lucas:'Lucas a fait le point sur votre trésorerie',emma:'Emma a préparé vos demandes d\'avis',hugo:'Hugo a rédigé un article'};
+      addBotMsg((label[slug]||'Agent lancé')+" ✅ Regarde dans « À valider » en haut à droite si une action t'attend.");
+    }).catch(()=>{btn.innerHTML=original;btn.disabled=false;addBotMsg("Souci au lancement, réessaie dans un instant.");});
+}
+
+// --- Programmation horaire ---
+let schedAgent=null;
+let SCHEDULES={};
+function buildHourOptions(){
+  const sel=document.getElementById('schedHour');
+  if(sel.options.length>1)return; // déjà construit
+  for(let h=6;h<=21;h++){
+    const o=document.createElement('option');o.value=h;o.textContent=String(h).padStart(2,'0')+'h00';
+    sel.appendChild(o);
+  }
+}
+function openSchedule(slug){
+  schedAgent=slug;
+  buildHourOptions();
+  const names={marc:'Marc',leo:'Léo',lucas:'Lucas',emma:'Emma',hugo:'Hugo'};
+  document.getElementById('schedTitle').textContent='Programmer '+(names[slug]||'l\'agent');
+  const cur=SCHEDULES[slug];
+  document.getElementById('schedHour').value=(cur&&cur.hour!=null)?String(cur.hour):'';
+  document.getElementById('schedPop').classList.add('open');
+}
+function closeSchedule(){document.getElementById('schedPop').classList.remove('open');}
+function saveSchedule(){
+  const s=getSession();
+  const hour=document.getElementById('schedHour').value;
+  if(!s){closeSchedule();return;}
+  fetch(API+'/agent-schedule',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({session:s,agent:schedAgent,hour:hour===''?null:hour})})
+    .then(r=>r.json()).then(d=>{
+      if(!d.error){
+        SCHEDULES[schedAgent]={hour:hour===''?null:parseInt(hour)};
+        renderSchedInfo(schedAgent);
+        addBotMsg(hour===''?(schedAgent+' repasse en mode manuel.'):('C\'est noté ! Cet agent tournera chaque jour à '+String(hour).padStart(2,'0')+'h00 ✅'));
+      }
+      closeSchedule();
+    }).catch(()=>closeSchedule());
+}
+function renderSchedInfo(slug){
+  const el=document.getElementById('sched-info-'+slug);
+  if(!el)return;
+  const c=SCHEDULES[slug];
+  if(c&&c.hour!=null)el.textContent='🟢 auto chaque jour à '+String(c.hour).padStart(2,'0')+'h';
+  else el.textContent='';
+}
+function loadSchedules(){
+  const s=getSession();
+  if(!s)return;
+  fetch(API+'/agent-schedule?s='+encodeURIComponent(s))
+    .then(r=>r.json()).then(d=>{
+      if(d.schedules){
+        for(const slug in d.schedules){SCHEDULES[slug]={hour:d.schedules[slug].hour};}
+        ['marc','lucas','emma'].forEach(renderSchedInfo);
+      }
+    }).catch(()=>{});
 }
 
 // Quel outil alimente quel agent
@@ -763,7 +976,11 @@ function renderReviewList(){
   const html=PENDING.map(a=>{
     const lb=labels[a.agent_slug]||['◆','var(--vlight)','var(--vdim)'];
     const p=a.payload||{};
-    const preview=(p.subject?('Objet : '+p.subject+'\n'):'')+(p.body||p.message||p.content||a.summary||'(aperçu indisponible)');
+    let preview=(p.subject?('Objet : '+p.subject+'\n'):'');
+    if(p.body||p.message)preview+=(p.body||p.message);
+    else if(p.text)preview+=p.text;
+    else if(p.html){const t=document.createElement('div');t.innerHTML=p.html;preview+=(t.textContent||'').trim();}
+    else preview+=(a.summary||'(aperçu indisponible)');
     const on=selectedActions.has(a.id);
     return '<div class="review-item">'+
       '<div class="chk'+(on?' on':'')+'" onclick="toggleAction(\''+a.id+'\',this)">'+(on?'✓':'')+'</div>'+
@@ -846,12 +1063,21 @@ function sendChat(){
     body:JSON.stringify({session:s,messages:chatHistory})})
     .then(r=>r.json()).then(d=>{
       document.getElementById('typing')?.remove();
-      const reply=d.reply||d.message||d.content||"Je m'en occupe 👍";
+      if(d.error){addBotMsg("Hmm, souci : "+d.error);return;}
+      // Baptiste renvoie 'response' (+ éventuellement action / runResult / agentsUpdated)
+      const reply=d.response||d.reply||"C'est noté 👍";
       chatHistory.push({role:'assistant',content:reply});
       addBotMsg(reply);
+      // Si Baptiste a déclenché un agent, on recharge les actions à valider
+      if(d.runResult&&d.runResult.success){
+        loadDashboardData();marcLoaded=false;lucasLoaded=false;
+        setTimeout(()=>addBotMsg("✅ C'est lancé. Regarde dans « À valider » en haut à droite, le résultat t'attend pour relecture."),600);
+      }
+      // Si Baptiste a activé/mis en pause des agents, on rafraîchit les programmations
+      if(d.agentsUpdated){loadSchedules();}
     }).catch(()=>{
       document.getElementById('typing')?.remove();
-      addBotMsg("Je note ça 👍 (petite coupure réseau, réessaie)");
+      addBotMsg("Petite coupure réseau, réessaie 🙂");
     });
 }
 
@@ -889,7 +1115,8 @@ function finishOnboarding(){
     }).catch(()=>{});
   document.getElementById('onb').classList.remove('open');
   document.getElementById('userName').textContent=onbData.prenom;
-  addBotMsg('Parfait '+onbData.prenom+" ! J'ai configuré ton équipe pour un "+onbData.metier.toLowerCase()+'. Marc, Léo, Lucas et Emma sont prêts. On commence quand tu veux 👍');
+  // Tour guidé du concept juste après
+  setTimeout(startTour,400);
 }
 document.getElementById('onbPrenom').addEventListener('keydown',e=>{if(e.key==='Enter')onbStep3()});
 document.getElementById('onbVille').addEventListener('keydown',e=>{if(e.key==='Enter')finishOnboarding()});
@@ -921,12 +1148,60 @@ function startCheckout(){
   if(q.get('paiement_annule')==='1'){setTimeout(()=>addBotMsg("Pas de souci, le paiement a été annulé. Tu peux réessayer quand tu veux 🙂"),400);}
 })();
 
+// --- Tour guidé du concept (après 1re connexion) ---
+const TOUR_STEPS=[
+  {emoji:'👋',title:'Bienvenue dans votre équipe',html:'<p>PageLab, ce n\'est pas un logiciel de plus à apprendre. C\'est une <span class="hl">équipe d\'agents qui travaillent pour vous</span>, pendant que vous êtes sur le chantier.</p><p>Laissez-moi vous montrer comment ça marche, en 1 minute. 👇</p>'},
+  {emoji:'🤖',title:'Vos agents bossent tout seuls',html:'<p>Chaque agent surveille un domaine et <span class="hl">prépare le travail automatiquement</span> :</p>'+
+    '<div class="tour-feat"><div class="tf-ico" style="background:var(--rdim);color:var(--red)">€</div><div><div class="tf-t">Marc — Impayés</div><div class="tf-d">Repère vos factures en retard et rédige les relances</div></div></div>'+
+    '<div class="tour-feat"><div class="tf-ico" style="background:var(--gdim);color:var(--green)">◷</div><div><div class="tf-t">Lucas — Trésorerie</div><div class="tf-d">Suit vos entrées et votre solde en temps réel</div></div></div>'+
+    '<div class="tour-feat"><div class="tf-ico" style="background:var(--adim);color:var(--amber)">★</div><div><div class="tf-t">Emma — Avis Google</div><div class="tf-d">Demande un avis à vos clients après chaque chantier</div></div></div>'},
+  {emoji:'✅',title:'Vous validez d\'un seul clic',html:'<p>Les agents <span class="hl">ne font rien dans votre dos</span>. Ils préparent, vous décidez.</p><p>Tout ce qu\'ils proposent (une relance, un avis, un article…) atterrit dans le bouton <span class="hl">« À valider »</span> en haut à droite. Vous cochez ce qui vous va, et ça part. C\'est vous le patron. 💪</p>'},
+  {emoji:'💬',title:'Baptiste, votre bras droit',html:'<p>En bas à gauche, il y a <span class="hl">Baptiste</span>. C\'est lui qui coordonne toute l\'équipe.</p><p>Parlez-lui normalement, comme à un employé :</p>'+
+    '<div class="tour-feat"><div class="tf-ico" style="background:var(--vdim);color:var(--vlight)">»</div><div><div class="tf-d">« <b>Où en sont mes impayés ?</b> »</div></div></div>'+
+    '<div class="tour-feat"><div class="tf-ico" style="background:var(--vdim);color:var(--vlight)">»</div><div><div class="tf-d">« <b>Lance Marc</b> » ou « <b>écris un article sur l\'isolation</b> »</div></div></div>'+
+    '<div class="tour-feat"><div class="tf-ico" style="background:var(--vdim);color:var(--vlight)">»</div><div><div class="tf-d">« <b>Mets Emma en pause cette semaine</b> »</div></div></div>'+
+    '<p style="margin-top:10px">Il s\'occupe du reste. 🙌</p>'},
+  {emoji:'🎛️',title:'Ou faites-le vous-même',html:'<p>Vous préférez garder la main ? Chaque agent a son atelier (menu de gauche) avec deux boutons :</p>'+
+    '<div class="tour-feat"><div class="tf-ico" style="background:var(--violet);color:#fff">▶</div><div><div class="tf-t">Exécuter maintenant</div><div class="tf-d">L\'agent fait son travail tout de suite</div></div></div>'+
+    '<div class="tour-feat"><div class="tf-ico" style="background:var(--card2);color:var(--text);border:1px solid var(--border2)">🕐</div><div><div class="tf-t">Programmer</div><div class="tf-d">Il tournera tout seul chaque jour à l\'heure choisie</div></div></div>'},
+  {emoji:'🔌',title:'Une dernière chose',html:'<p>Pour que vos agents travaillent sur <span class="hl">vos vraies données</span>, connectez vos outils (Stripe pour les factures, WordPress pour le blog…).</p><p>Cliquez sur <span class="hl">« Mes connexions »</span> dans le menu de gauche. Ça prend 2 minutes, et après, toute l\'équipe est opérationnelle. 🚀</p>'}
+];
+let tourIndex=0;
+function startTour(){
+  tourIndex=0;
+  const dots=document.getElementById('tourDots');
+  dots.innerHTML=TOUR_STEPS.map((_,i)=>'<div class="td'+(i===0?' on':'')+'"></div>').join('');
+  renderTour();
+  document.getElementById('tourBg').classList.add('open');
+}
+function renderTour(){
+  const s=TOUR_STEPS[tourIndex];
+  document.getElementById('tourStep').innerHTML='<span class="tour-emoji">'+s.emoji+'</span><h2>'+s.title+'</h2>'+s.html;
+  document.getElementById('tourBar').style.width=((tourIndex+1)/TOUR_STEPS.length*100)+'%';
+  document.getElementById('tourNext').textContent=(tourIndex===TOUR_STEPS.length-1)?'C\'est parti ! 🚀':'Suivant →';
+  document.querySelectorAll('#tourDots .td').forEach((d,i)=>d.classList.toggle('on',i===tourIndex));
+}
+function nextTour(){
+  if(tourIndex<TOUR_STEPS.length-1){tourIndex++;renderTour();}
+  else endTour();
+}
+function endTour(){
+  document.getElementById('tourBg').classList.remove('open');
+  try{localStorage.setItem('pl_tour_done','1');}catch(e){}
+  addBotMsg('Et voilà ! Pose-moi une question quand tu veux, ou clique sur « Mes connexions » pour brancher tes outils 👍');
+}
+
 // --- Init : déclenche l'onboarding si ?onboarding=1 ---
 if(new URLSearchParams(location.search).get('onboarding')==='1'){
   document.getElementById('onb').classList.add('open');
 }else{
   // Charge les vraies données (profil, actions à valider) si connecté
   loadDashboardData();
+  loadSchedules();
+  // Première visite (pas d'onboarding mais tour jamais vu) → on explique le concept
+  try{
+    if(!localStorage.getItem('pl_tour_done')){setTimeout(startTour,600);}
+  }catch(e){}
 }
 </script>
 </body>
