@@ -1070,8 +1070,15 @@ function sendChat(){
       addBotMsg(reply);
       // Si Baptiste a déclenché un agent, on recharge les actions à valider
       if(d.runResult&&d.runResult.success){
-        loadDashboardData();marcLoaded=false;lucasLoaded=false;
-        setTimeout(()=>addBotMsg("✅ C'est lancé. Regarde dans « À valider » en haut à droite, le résultat t'attend pour relecture."),600);
+        // L'agent tourne en arrière-plan (10-15s). On informe, puis on recharge "À valider"
+        // plusieurs fois pour capter les actions dès qu'elles sont prêtes.
+        setTimeout(()=>addBotMsg("⏳ C'est lancé ! Je prépare ça en arrière-plan, le résultat apparaîtra dans « À valider » d'ici une minute."),500);
+        let tries=0;
+        const poll=setInterval(()=>{
+          tries++;
+          loadDashboardData();marcLoaded=false;lucasLoaded=false;
+          if(tries>=6)clearInterval(poll); // ~30s (6 × 5s)
+        },5000);
       }
       // Si Baptiste a activé/mis en pause des agents, on rafraîchit les programmations
       if(d.agentsUpdated){loadSchedules();}

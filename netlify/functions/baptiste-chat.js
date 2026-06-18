@@ -138,14 +138,21 @@ Agents déclenchables (slug) : marc, leo, sophie, alex, julie, nina, emma, lucas
           await db('PATCH', 'agents_config', { is_active: true }, `?user_id=eq.${userId}&agent_slug=neq.baptiste`)
           agentsUpdated = true
         } else if (action.action === 'run' && action.agent) {
-          // Déclenche l'agent à la demande (prépare des actions à valider, n'envoie rien)
+          // Déclenche l'agent à la demande (prépare des actions à valider, n'envoie rien).
+          // IMPORTANT : on ne fait PAS "await" sur la fin du run. Les agents (Marc, Hugo…)
+          // appellent l'IA et peuvent prendre 10-15s ; si baptiste-chat attendait, on
+          // dépasserait le timeout de la fonction et le run serait tué en cours de route
+          // (c'est pour ça que "Baptiste dit lancé mais rien n'apparaît").
+          // On lance la requête sans l'attendre : le run continue côté serveur, et le
+          // front recharge "À valider" quelques secondes plus tard.
           const siteUrl = process.env.SITE_URL || 'https://pagelab.fr'
           try {
-            const r = await fetch(`${siteUrl}/.netlify/functions/agent-run`, {
+            fetch(`${siteUrl}/.netlify/functions/agent-run`, {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ session, agent: action.agent, brief: action.brief || null })
-            })
-            runResult = await r.json().catch(() => ({}))
+            }).catch(e => console.error('run trigger:', e.message))
+            // On considère le déclenchement comme réussi (l'exécution se poursuit en arrière-plan)
+            runResult = { triggered: true, agent: action.agent, success: true }
           } catch (e) { runResult = { error: e.message } }
         }
       } catch (e) { console.error('Action parse error:', e) }
