@@ -490,8 +490,9 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
     <div id="modalContent">
       <div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l'instant. Dès que vos agents préparent une action, elle apparaît ici.</div>
     </div>
-    <div class="mbtns" id="modalBtns" style="display:none">
-      <button class="ok" id="btnValidateSel" onclick="validateSelection()">✓ Valider la sélection</button>
+    <div class="mbtns" id="modalBtns" style="display:none;flex-wrap:wrap">
+      <button class="ok" id="btnValidateSel" onclick="validateSelection(false)">✓ Valider la sélection</button>
+      <button class="no" onclick="validateSelection(true)" title="Les envois partent dans 24h, annulables à tout moment">🛡 Valider avec sécurité 24h</button>
       <button class="no" onclick="validateAll()">Tout valider</button>
     </div>
   </div>
@@ -1005,9 +1006,9 @@ function closeValidation(){document.getElementById('modalBg').classList.remove('
 
 function validateAll(){
   selectedActions=new Set(PENDING.map(a=>a.id));
-  validateSelection();
+  validateSelection(false);
 }
-function validateSelection(){
+function validateSelection(delay24h){
   const s=getSession();
   const ids=[...selectedActions];
   if(ids.length===0){addBotMsg("Coche au moins une action 🙂");return;}
@@ -1021,11 +1022,11 @@ function validateSelection(){
     okBtn.disabled=false;if(allBtn)allBtn.disabled=false;okBtn.textContent='✓ Valider la sélection';
     return;
   }
-  // Envoi réel séquentiel via actions-approve
+  // Envoi réel via actions-approve (avec ou sans délai de sécurité 24h)
   let done=0,errors=0;
   Promise.all(ids.map(id=>
     fetch(API+'/actions-approve',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({session:s,actionId:id})})
+      body:JSON.stringify({session:s,actionId:id,delay24h:!!delay24h})})
       .then(r=>r.json()).then(d=>{if(d.error)errors++;else done++;}).catch(()=>errors++)
   )).then(()=>{
     PENDING=PENDING.filter(a=>!selectedActions.has(a.id));
@@ -1033,7 +1034,10 @@ function validateSelection(){
     updateValidateBadge(PENDING.length);
     okBtn.disabled=false;if(allBtn)allBtn.disabled=false;okBtn.textContent='✓ Valider la sélection';
     closeValidation();
-    if(done)addBotMsg(done+" action(s) envoyée(s) ✅"+(errors?(' · '+errors+' en erreur, je réessaierai.'):' Je m\'occupe du suivi.'));
+    if(done){
+      if(delay24h)addBotMsg(done+" action(s) programmée(s) 🛡 Elles partiront dans 24h. Tu peux les annuler à tout moment dans « Programmées ».");
+      else addBotMsg(done+" action(s) envoyée(s) ✅"+(errors?(' · '+errors+' en erreur, je réessaierai.'):' Je m\'occupe du suivi.'));
+    }
     else addBotMsg("Souci à l'envoi, réessaie dans un instant.");
   });
 }

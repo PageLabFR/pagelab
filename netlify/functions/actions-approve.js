@@ -149,10 +149,22 @@ exports.handler = async (event) => {
     }
     if (!userId || !actionId) return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: 'Paramètres manquants' }) }
 
+    const statusFilter = internal ? 'status=in.(pending,scheduled)' : 'status=eq.pending'
     const rows = await L.db('GET', 'pending_actions', null,
-      `?id=eq.${actionId}&user_id=eq.${userId}&status=eq.pending&select=*`)
+      `?id=eq.${actionId}&user_id=eq.${userId}&${statusFilter}&select=*`)
     const action = rows?.[0]
     if (!action) return { statusCode: 404, headers: HEADERS, body: JSON.stringify({ error: 'Action introuvable ou déjà traitée' }) }
+
+    // --- Mode "délai de sécurité 24h" ---
+    // Si body.delay24h est vrai (validation par l'artisan avec battement de sécurité),
+    // on ne déclenche PAS l'exécution : l'action passe en 'scheduled'. Elle sera envoyée
+    // par le cron 24h après decided_at, et l'artisan peut l'annuler entre-temps.
+    // (internal = appel du cron, qui lui exécute pour de vrai.)
+    if (!internal && body.delay24h) {
+      await L.db('PATCH', 'pending_actions',
+        { status: 'scheduled', decided_at: new Date().toISOString() }, `?id=eq.${actionId}`)
+      return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ success: true, status: 'scheduled', sendInHours: 24 }) }
+    }
 
     // Contexte utile aux exécuteurs (user + config de l'agent)
     const users = await L.db('GET', 'users', null, `?id=eq.${userId}&select=*`)
