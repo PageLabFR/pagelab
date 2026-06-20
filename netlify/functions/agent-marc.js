@@ -12,19 +12,20 @@ const L = require('./_lib')
 const MAX_PER_RUN = 10
 
 // Détermine si le client est un professionnel (pour les 40€)
-function isPro(inv) {
+function isPro(inv, userDefault) {
   const t = (inv._customerType || '').toLowerCase()
   if (t === 'pro' || t === 'professionnel' || t === 'b2b' || t === 'entreprise') return true
   if (t === 'particulier' || t === 'b2c' || t === 'particular') return false
-  // Heuristique de secours : un nom d'entreprise (présence de forme juridique) => pro.
+  // Heuristique : un nom d'entreprise (forme juridique) => pro.
   const name = (inv.clientName || '')
   if (/\b(SARL|SAS|SASU|EURL|SA|SCI|EI|EIRL|Ets|Établissements|Cie|& Fils|BTP|Bâtiment)\b/i.test(name)) return true
-  // Sinon, par prudence : particulier (pas de 40€)
+  // Réglage par défaut de l'artisan : 'pro' => pro, sinon particulier (prudent).
+  if (userDefault === 'pro') return true
   return false
 }
 
 async function draftRelance(user, inv) {
-  const pro = isPro(inv)
+  const pro = isPro(inv, user?.settings?.clientType)
   const mention40 = pro
     ? `Comme le permet la loi entre professionnels, une indemnité forfaitaire de 40 € pour frais de recouvrement pourra s'appliquer en cas de retard persistant (art. L441-10 et D441-5 du Code de commerce).`
     : `` // JAMAIS de 40€ pour un particulier
@@ -91,7 +92,7 @@ exports.handler = async (event) => {
 
       const ok = await L.queueAction(userId, 'marc', 'send_relance_email',
         `Relance facture ${meta.invoiceNumber} · ${meta.amount} ${meta.currency} · ${meta.to}`,
-        { ...meta, subject: `Relance — facture ${meta.invoiceNumber}`, body, isPro: isPro(meta) },
+        { ...meta, subject: `Relance — facture ${meta.invoiceNumber}`, body, isPro: isPro(meta, user?.settings?.clientType) },
         inv.id /* dedupeKey */)
       if (ok) created++
     }

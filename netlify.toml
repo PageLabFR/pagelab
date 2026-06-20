@@ -9,48 +9,28 @@
   node_bundler = "esbuild"
   directory = "netlify/functions"
 
+# ─── CRONS ───────────────────────────────────────────────
+# Boucle principale : déclenche les agents dont next_run_at est mûr
 [functions."cron-universal"]
   schedule = "0 8 * * *"
 
+# Sam : surveillance, chaque heure
 [functions."agent-sam"]
   schedule = "0 * * * *"
 
+# Rapport hebdo de Baptiste, lundi 8h
 [functions."baptiste-weekly-report"]
   schedule = "0 8 * * 1"
 
-[[redirects]]
-  from = "/register"
-  to = "/register.html"
-  status = 200
+# Délai de sécurité 24h : envoie les actions programmées arrivées à échéance.
+# Tourne chaque heure pour partir au plus près des 24h après validation.
+[functions."cron-send-scheduled"]
+  schedule = "0 * * * *"
 
-[[redirects]]
-  from = "/login"
-  to = "/login.html"
-  status = 200
-
-[[redirects]]
-  from = "/onboarding"
-  to = "/onboarding.html"
-  status = 200
-
-[[redirects]]
-  from = "/baptiste"
-  to = "/baptiste.html"
-  status = 200
-
+# ─── REDIRECTIONS PAGES ──────────────────────────────────
 [[redirects]]
   from = "/integrations"
   to = "/integrations.html"
-  status = 200
-
-[[redirects]]
-  from = "/activite"
-  to = "/activite.html"
-  status = 200
-
-[[redirects]]
-  from = "/billing"
-  to = "/billing.html"
   status = 200
 
 [[redirects]]
@@ -64,6 +44,11 @@
   status = 200
 
 [[redirects]]
+  from = "/conformite-2026"
+  to = "/conformite-2026.html"
+  status = 200
+
+[[redirects]]
   from = "/mentions-legales"
   to = "/mentions-legales.html"
   status = 200
@@ -74,28 +59,21 @@
   status = 200
 
 [[redirects]]
-  from = "/politique-confidentialite"
-  to = "/politique-confidentialite.html"
+  from = "/confidentialite"
+  to = "/confidentialite.html"
   status = 200
 
 [[redirects]]
-  from = "/cookies"
-  to = "/cookies.html"
+  from = "/connexion"
+  to = "/connexion.html"
   status = 200
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
 
 [[redirects]]
-  from = "/api/auth/send-magic-link"
-  to = "/.netlify/functions/auth-send-magic-link"
+  from = "/dashboard"
+  to = "/dashboard.html"
   status = 200
-  force = true
 
+# ─── API (redirections fonctionnelles) ───────────────────
 [[redirects]]
   from = "/api/baptiste/chat"
   to = "/.netlify/functions/baptiste-chat"
@@ -119,3 +97,11 @@
   to = "/.netlify/functions/stripe-webhook"
   status = 200
   force = true
+
+# ─── HEADERS SÉCURITÉ ────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
