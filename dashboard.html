@@ -926,12 +926,26 @@ function loadMarcData(){
       const list=document.getElementById('marc-invoices');
       if(!d.invoices||d.invoices.length===0){
         list.innerHTML='<div class="list-row"><div class="info"><div class="n" style="color:var(--muted2)">Aucune facture impayée 🎉</div></div></div>';
-        return;
+      }else{
+        list.innerHTML=d.invoices.map(function(inv){
+          var tag;
+          if(inv.status==='relance')tag='<span class="tag green">relancé'+(inv.nbRelances>1?' '+inv.nbRelances+'×':'')+'</span>';
+          else if(inv.status==='retard')tag='<span class="tag red">retard '+inv.daysLate+'j</span>';
+          else tag='<span class="tag amber">envoyée</span>';
+          return '<div class="list-row"><div class="info"><div class="n">'+inv.client+'</div><div class="sub">'+Number(inv.amount).toLocaleString('fr-FR')+' '+inv.currency+'</div></div>'+tag+'</div>';
+        }).join('');
       }
-      list.innerHTML=d.invoices.map(inv=>{
-        const tag=inv.status==='retard'?'<span class="tag red">retard '+inv.daysLate+'j</span>':'<span class="tag amber">envoyée</span>';
-        return '<div class="list-row"><div class="info"><div class="n">'+inv.client+'</div><div class="sub">'+Number(inv.amount).toLocaleString('fr-FR')+' '+inv.currency+'</div></div>'+tag+'</div>';
-      }).join('');
+      // Historique de Marc (relances envoyées)
+      var hist=document.getElementById('marc-hist');
+      if(hist){
+        if(d.history&&d.history.length>0){
+          hist.innerHTML=d.history.map(function(h){
+            return '<div class="hist-item"><span class="d">'+h.date+'</span><span class="x">✅ '+h.label+'</span></div>';
+          }).join('');
+        }else{
+          hist.innerHTML='<div class="hist-item"><span class="d">—</span><span class="x">Les relances de Marc apparaîtront ici</span></div>';
+        }
+      }
     }).catch(()=>{marcLoaded=false;});
 }
 
@@ -970,6 +984,9 @@ function updateValidateBadge(n){
     btn.classList.add('empty');
     btn.innerHTML='<span>✓</span><span class="txt">Tout est validé</span>';
   }
+  // Synchronise aussi le compteur de l'accueil
+  const hv=document.getElementById('home-tovalidate');
+  if(hv)hv.textContent=n;
 }
 
 // --- Navigation entre vues ---
@@ -1071,6 +1088,9 @@ function validateSelection(delay24h){
     updateValidateBadge(PENDING.length);
     okBtn.disabled=false;if(allBtn)allBtn.disabled=false;okBtn.textContent='✓ Valider la sélection';
     closeValidation();
+    // Rafraîchit toutes les données (compteurs accueil, Marc, historique) après envoi
+    marcLoaded=false;lucasLoaded=false;
+    setTimeout(()=>{loadDashboardData();if(document.getElementById('view-marc').classList.contains('active'))loadMarcData();},800);
     if(done){
       if(delay24h)addBotMsg(done+" action(s) programmée(s) 🛡 Elles partiront dans 24h. Tu peux les annuler à tout moment dans « Programmées ».");
       else addBotMsg(done+" action(s) envoyée(s) ✅"+(errors?(' · '+errors+' en erreur, je réessaierai.'):' Je m\'occupe du suivi.'));

@@ -47,6 +47,19 @@ exports.handler = async (event) => {
     const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0)
     const monthStartSec = Math.floor(monthStart.getTime() / 1000)
 
+    // Récupère les actions Marc : pending (préparées) + executed (relances envoyées)
+    const pending = await L.db('GET', 'pending_actions', null,
+      `?user_id=eq.${userId}&agent_slug=eq.marc&status=in.(pending,scheduled)&select=id,payload,status`) || []
+    const sent = await L.db('GET', 'pending_actions', null,
+      `?user_id=eq.${userId}&agent_slug=eq.marc&status=eq.executed&order=decided_at.desc&select=summary,payload,decided_at&limit=30`) || []
+
+    // Compte les relances envoyées par facture (clé = invoiceId)
+    const relancesByInvoice = {}
+    for (const a of sent) {
+      const invId = a.payload?.invoiceId
+      if (invId) relancesByInvoice[invId] = (relancesByInvoice[invId] || 0) + 1
+    }
+
     let toRecover = 0, recoveredMonth = 0, overdueCount = 0
     const invoices = (openData.data || []).map(i => {
       const amount = (i.amount_due || 0) / 100
@@ -54,11 +67,13 @@ exports.handler = async (event) => {
       const overdue = i.due_date && i.due_date < nowSec
       if (overdue) overdueCount++
       const daysLate = overdue ? Math.floor((nowSec - i.due_date) / 86400) : 0
+      const nbRelances = relancesByInvoice[i.id] || 0
       return {
         client: i.customer_name || i.customer_email || 'Client',
         amount: amount.toFixed(2),
         currency: (i.currency || 'eur').toUpperCase(),
-        status: overdue ? 'retard' : 'envoyée',
+        status: nbRelances > 0 ? 'relance' : (overdue ? 'retard' : 'envoyee'),
+        nbRelances,
         daysLate
       }
     }).sort((a, b) => b.daysLate - a.daysLate)
@@ -69,9 +84,11 @@ exports.handler = async (event) => {
       }
     }
 
-    // Combien de relances Marc a déjà préparées (pending)
-    const pending = await L.db('GET', 'pending_actions', null,
-      `?user_id=eq.${userId}&agent_slug=eq.marc&status=eq.pending&select=id`) || []
+    // Historique lisible des relances envoyées
+    const history = sent.slice(0, 10).map(a => ({
+      date: a.decided_at ? new Date(a.decided_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }) : '',
+      label: a.summary || 'Relance envoyée'
+    }))
 
     return {
       statusCode: 200,
@@ -82,7 +99,9 @@ exports.handler = async (event) => {
         recoveredMonth: recoveredMonth.toFixed(2),
         overdueCount,
         pendingRelances: pending.length,
-        invoices: invoices.slice(0, 12)
+        sentCount: sent.length,
+        invoices: invoices.slice(0, 12),
+        history
       })
     }
   } catch (err) {
