@@ -153,6 +153,20 @@ border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:au
 .ct-opt{flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:11px;font-size:13.5px;font-weight:500;color:var(--muted2);transition:.15s}
 .ct-opt.on{background:var(--vdim);border-color:var(--vborder);color:var(--vlight)}
 .ct-hint{font-size:12px;color:var(--muted);line-height:1.45}
+/* Devis Léo */
+.leo-head{display:grid;grid-template-columns:1fr 90px 90px;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:0 4px 6px}
+.leo-lines{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.leo-line{display:grid;grid-template-columns:1fr 90px 90px;gap:8px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+.ll-desc{font-size:13.5px;font-weight:500}
+.ll-sub{font-size:12px;color:var(--muted2);margin-top:2px}
+.ll-tva{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:6px;color:var(--text);font-size:13px;font-family:'Inter'}
+.ll-tot{font-size:13.5px;font-weight:600;text-align:right}
+.leo-totaux{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.tot-row{display:flex;justify-content:space-between;font-size:13.5px;padding:4px 0;color:var(--muted2)}
+.tot-row.total-ttc{font-size:17px;font-weight:800;color:var(--vlight);border-top:1px solid var(--border2);margin-top:6px;padding-top:10px}
+.leo-mentions{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:6px}
+.lm-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.lm{font-size:12.5px;color:#c9c9de;line-height:1.6}
 /* popup bloquant générique */
 .popup-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(5px);z-index:120;display:none;align-items:center;justify-content:center;padding:24px}
 .popup-bg.open{display:flex}
@@ -673,6 +687,7 @@ function loadLucasData(){
 }
 
 // --- Léo : génération de devis réelle ---
+let leoDevis=null;
 function leoGenerate(){
   const s=getSession();
   const brief=document.getElementById('leo-brief').value.trim();
@@ -685,13 +700,49 @@ function leoGenerate(){
     .then(r=>r.json()).then(d=>{
       btn.innerHTML='Générer le devis';btn.disabled=false;
       if(d.error){res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">'+d.error+'</div>';return;}
-      const lignes=d.lignes.map(l=>'<div class="list-row"><div class="info"><div class="n">'+l.designation+'</div><div class="sub">'+l.quantite+' '+l.unite+' × '+Number(l.prixUnitaire).toLocaleString('fr-FR')+' €</div></div><span style="font-weight:600">'+Number(l.total).toLocaleString('fr-FR')+' €</span></div>').join('');
-      res.innerHTML='<div class="ws-label">'+d.titre+'</div><div class="list">'+lignes+
-        '<div class="list-row" style="background:var(--vdim)"><div class="info"><div class="n">Total HT</div></div><span style="font-weight:800;font-size:16px;color:var(--vlight)">'+Number(d.totalHT).toLocaleString('fr-FR')+' €</span></div></div>'+
-        '<div style="font-size:12px;color:var(--muted);margin-bottom:14px">'+d.notes+'</div>'+
-        '<div class="acts" style="margin-bottom:16px"><button class="v" onclick="alert(\'Bientôt : export PDF + envoi au client\')">Exporter en PDF</button><button class="e" onclick="leoGenerate()">Régénérer</button></div>';
-      res.scrollIntoView({behavior:'smooth',block:'nearest'});
+      leoDevis=d;
+      renderLeoDevis();
+      document.getElementById('leo-result').scrollIntoView({behavior:'smooth',block:'nearest'});
     }).catch(()=>{btn.innerHTML='Générer le devis';btn.disabled=false;res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">Erreur réseau, réessaie.</div>';});
+}
+function leoSetTva(i,val){ if(leoDevis&&leoDevis.lignes[i]){leoDevis.lignes[i].tva=parseFloat(val);renderLeoDevis();} }
+function renderLeoDevis(){
+  const d=leoDevis; if(!d)return;
+  const fmt=n=>Number(n).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  // recalcul
+  let totalHT=0; const tvaParTaux={};
+  d.lignes.forEach(l=>{const ht=(l.quantite||1)*(l.prixUnitaire||0);l.totalHT=ht;totalHT+=ht;tvaParTaux[l.tva]=(tvaParTaux[l.tva]||0)+ht*(l.tva/100);});
+  const totalTVA=Object.values(tvaParTaux).reduce((s,v)=>s+v,0);
+  const totalTTC=totalHT+totalTVA;
+  const opt=t=>[20,10,5.5,0].map(v=>'<option value="'+v+'"'+(v===t?' selected':'')+'>'+(v===0?'0 %':v+' %')+'</option>').join('');
+  const lignes=d.lignes.map((l,i)=>
+    '<div class="leo-line"><div class="ll-main"><div class="ll-desc">'+l.designation+'</div>'+
+    '<div class="ll-sub">'+l.quantite+' '+l.unite+' × '+fmt(l.prixUnitaire)+' €</div></div>'+
+    '<select class="ll-tva" onchange="leoSetTva('+i+',this.value)">'+opt(l.tva)+'</select>'+
+    '<div class="ll-tot">'+fmt(l.totalHT)+' €</div></div>'
+  ).join('');
+  const tvaLines=Object.keys(tvaParTaux).filter(t=>tvaParTaux[t]>0).map(t=>
+    '<div class="tot-row"><span>dont TVA '+(t==='5.5'?'5,5':t)+' %</span><span>'+fmt(tvaParTaux[t])+' €</span></div>').join('');
+  const m=d.mentions||{};
+  const mentionsHtml='<div class="leo-mentions"><div class="lm-title">Mentions légales (modifiables)</div>'+
+    '<div class="lm">• '+m.assuranceDecennale+'</div>'+
+    '<div class="lm">• '+m.validite+'</div>'+
+    '<div class="lm">• '+m.paiement+'</div>'+
+    '<div class="lm">• '+m.retractation+'</div>'+
+    (m.tva?'<div class="lm">• '+m.tva+'</div>':'')+
+    '<div class="lm">• SIRET : '+m.siret+'</div></div>';
+  document.getElementById('leo-result').innerHTML=
+    '<div class="ws-label">'+d.titre+'</div>'+
+    '<div class="leo-head"><span>Prestation</span><span>TVA</span><span>Total HT</span></div>'+
+    '<div class="leo-lines">'+lignes+'</div>'+
+    '<div class="leo-totaux">'+
+      '<div class="tot-row"><span>Total HT</span><span>'+fmt(totalHT)+' €</span></div>'+
+      tvaLines+
+      '<div class="tot-row total-ttc"><span>Total TTC</span><span>'+fmt(totalTTC)+' €</span></div>'+
+    '</div>'+
+    mentionsHtml+
+    '<div class="acts" style="margin:14px 0"><button class="v" onclick="alert(\'Bientôt : export PDF Factur-X + envoi au client\')">Exporter en PDF</button><button class="e" onclick="leoGenerate()">Régénérer</button></div>'+
+    '<div style="font-size:11.5px;color:var(--muted)">💡 Léo a proposé les taux de TVA. Vérifiez-les et ajustez avant d\'envoyer : 20 % (neuf), 10 % (rénovation +2 ans), 5,5 % (rénovation énergétique).</div>';
 }
 
 // --- Emma : demande d'avis réelle ---
