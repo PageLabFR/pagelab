@@ -3,469 +3,212 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PageLab — L'équipe IA des artisans du bâtiment</title>
-<meta name="description" content="Vos impayés relancés, vos devis faits, vos soirées récupérées. PageLab, l'équipe d'agents IA qui bosse pour les artisans du bâtiment pendant que vous êtes sur le chantier. Vous validez d'un clic.">
-<meta name="keywords" content="logiciel artisan bâtiment, relance impayés artisan, devis BTP, facturation électronique 2026, IA artisan, gestion artisan">
-<meta name="author" content="PageLab">
+<title>PageLab — Une équipe qui gère votre paperasse pendant que vous êtes sur le chantier</title>
+<meta name="description" content="PageLab donne aux artisans du bâtiment une équipe d'agents qui relancent les impayés, suivent la trésorerie, font les devis et récoltent les avis Google. Vous validez d'un clic.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://pagelab.fr/">
-<meta property="og:title" content="PageLab — L'équipe IA des artisans du bâtiment">
-<meta property="og:description" content="Vos impayés relancés, vos devis faits, vos soirées récupérées. Vous validez, on bosse.">
+<meta property="og:title" content="PageLab — l'équipe qui gère votre paperasse">
+<meta property="og:description" content="Les artisans excellent dans leur métier. C'est tout le reste qui les épuise. PageLab s'en occupe.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://pagelab.fr/">
-<meta property="og:locale" content="fr_FR">
-<link rel="icon" type="image/png" href="/public/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PageLab","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"Une équipe d'agents pour les artisans du bâtiment : relance des impayés, trésorerie, devis, avis Google. Vous validez d'un clic.","url":"https://pagelab.fr","offers":{"@type":"Offer","price":"19","priceCurrency":"EUR"},"publisher":{"@type":"Organization","name":"PageLab","url":"https://pagelab.fr","email":"contact@pagelab.fr"}}
+</script>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#07070f;--bg2:#0d0d1a;--bg3:#111120;--card:#12121f;--card2:#16162a;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
-  --violet:#7c3aed;--violet2:#6d28d9;--vlight:#9d5ff3;--vdim:rgba(124,58,237,0.1);--vborder:rgba(124,58,237,0.25);
-  --indigo:#4f46e5;--green:#10b981;--amber:#f59e0b;--red:#f87171;--blue:#60a5fa;
-  --text:#eeeef8;--muted:#55556a;--muted2:#8888a8;--r:14px;
+  --bg:#fbfbfd; --bg2:#f4f3f8; --card:#ffffff; --border:#e7e5ee; --border2:#dcdae6;
+  --ink:#1a1825; --ink2:#4a4760; --muted:#8a87a0;
+  --violet:#7c3aed; --vlight:#8b5cf6; --vdim:#f3eefe; --vborder:#e0d4fb;
+  --red:#dc2626; --rdim:#fef2f2; --green:#059669; --gdim:#ecfdf5; --amber:#d97706; --adim:#fffbeb; --blue:#2563eb; --bdim:#eff6ff;
 }
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.65}
-h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;line-height:1.08;letter-spacing:-0.03em}
-a{color:inherit;text-decoration:none}
-button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
-.container{max-width:1140px;margin:0 auto;padding:0 24px}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
-@keyframes glowPulse{0%,100%{opacity:.5}50%{opacity:.9}}
-.reveal{opacity:0}
-.reveal.in{animation:fadeUp .7s cubic-bezier(.16,1,.3,1) forwards}
-
-/* NAV */
-.nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
-  padding:15px 24px;background:rgba(7,7,15,0.8);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-.nav .inner{max-width:1140px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:9px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:19px}
-.logo .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--violet),var(--indigo));
-  display:flex;align-items:center;justify-content:center;font-size:16px}
-.nav .links{display:flex;gap:24px;align-items:center}
-.nav .links a{color:var(--muted2);font-size:14px;transition:.15s}
-.nav .links a:hover{color:var(--text)}
-.btn{background:var(--violet);color:#fff;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;transition:.18s;display:inline-block}
-.btn:hover{background:var(--vlight);transform:translateY(-1px)}
-.btn-lg{padding:15px 32px;font-size:16px;border-radius:12px}
-.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text)}
-.btn-ghost:hover{border-color:var(--vlight);background:var(--vdim)}
-
-/* HERO */
-.hero{position:relative;padding:90px 0 70px;overflow:hidden}
-.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
-.hero-bg .halo{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5}
-.hero-bg .h1{width:480px;height:480px;background:var(--violet);top:-160px;right:-120px;animation:glowPulse 8s ease-in-out infinite}
-.hero-bg .h2{width:380px;height:380px;background:var(--indigo);bottom:-180px;left:-100px;animation:glowPulse 10s ease-in-out infinite}
-.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center}
-.hero-kicker{display:inline-flex;align-items:center;gap:8px;background:var(--vdim);border:1px solid var(--vborder);
-  color:var(--vlight);font-size:13px;font-weight:600;padding:7px 15px;border-radius:30px;margin-bottom:22px}
-.hero-kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--vlight);animation:pulseDot 2s infinite}
-.hero h1{font-size:54px;margin-bottom:20px}
-.hero h1 .accent{background:linear-gradient(120deg,var(--vlight),var(--blue));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero .sub{font-size:19px;color:var(--muted2);max-width:540px;margin-bottom:32px;line-height:1.6}
-.hero .ctas{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.hero .trust{margin-top:20px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
-
-/* hero illustration : un mini-dashboard SVG-ish en HTML */
-.hero-visual{position:relative}
-.mini-dash{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:16px;box-shadow:0 30px 80px rgba(0,0,0,.5);animation:floatY 6s ease-in-out infinite}
-.mini-dash .bar{background:#000;border-radius:10px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.mini-dash .bar .l{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}
-.mini-dash .bar .pill{background:#fff;color:#000;font-size:11px;font-weight:700;padding:5px 12px;border-radius:7px}
-.mini-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
-.mini-stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px}
-.mini-stat .n{font-size:17px;font-weight:800;font-family:'Bricolage Grotesque',sans-serif}
-.mini-stat .t{font-size:10px;color:var(--muted2);margin-top:2px}
-.mini-chat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px}
-.mini-chat .who{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;margin-bottom:7px}
-.mini-chat .who .av{width:22px;height:22px;border-radius:6px;background:var(--vdim);border:1px solid var(--vborder);display:flex;align-items:center;justify-content:center;font-size:12px}
-.mini-chat .msg{font-size:12px;color:var(--muted2);line-height:1.5}
-.float-badge{position:absolute;background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:10px 14px;
-  display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.4)}
-.float-badge .ic{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
-.fb1{top:-22px;left:-26px;animation:floatY 5s ease-in-out infinite}
-.fb2{bottom:-20px;right:-20px;animation:floatY 7s ease-in-out infinite .5s}
-
-@media(max-width:920px){
-  .hero-grid{grid-template-columns:1fr;gap:40px}
-  .hero h1{font-size:40px}
-  .nav .links a:not(.btn){display:none}
-  .hero-visual{max-width:420px;margin:0 auto}
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;line-height:1.12;letter-spacing:-.01em}
+.container{max-width:1080px;margin:0 auto;padding:0 22px}
+a{text-decoration:none;color:inherit}
+.nav{position:sticky;top:0;z-index:50;background:rgba(251,251,253,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-in{max-width:1080px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:18px;font-family:'Bricolage Grotesque'}
+.logo .mk{width:30px;height:30px;border-radius:8px;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:center}
+.nav-links{display:flex;align-items:center;gap:26px;font-size:14.5px;font-weight:500;color:var(--ink2)}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--violet);color:#fff!important;padding:9px 18px;border-radius:10px;font-weight:600}
+.nav-cta:hover{background:var(--vlight)}
+@media(max-width:720px){.nav-links a:not(.nav-cta){display:none}}
+.hero{padding:80px 0 60px;text-align:center}
+.hero .kick{display:inline-block;background:var(--vdim);color:var(--violet);font-size:13px;font-weight:600;padding:6px 15px;border-radius:30px;margin-bottom:22px;border:1px solid var(--vborder)}
+.hero h1{font-size:52px;font-weight:800;max-width:760px;margin:0 auto 22px}
+.hero h1 .hl{color:var(--violet)}
+.hero p.sub{font-size:19px;color:var(--ink2);max-width:600px;margin:0 auto 32px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--violet);color:#fff;padding:14px 28px;border-radius:12px;font-weight:600;font-size:16px;transition:.18s}
+.btn-primary:hover{background:var(--vlight);transform:translateY(-1px)}
+.btn-ghost{background:var(--card);color:var(--ink);padding:14px 26px;border-radius:12px;font-weight:600;font-size:16px;border:1px solid var(--border2)}
+.btn-ghost:hover{border-color:var(--violet)}
+@media(max-width:600px){.hero{padding:50px 0 40px}.hero h1{font-size:34px}.hero p.sub{font-size:16px}}
+.pain{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:44px 0}
+.pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px;text-align:center}
+.pain-grid .n{font-size:34px;font-weight:800;font-family:'Bricolage Grotesque';color:var(--violet)}
+.pain-grid .t{font-size:14px;color:var(--ink2);margin-top:4px}
+.section{padding:72px 0}
+.section-head{text-align:center;max-width:640px;margin:0 auto 44px}
+.section-head .kick{color:var(--violet);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.section-head h2{font-size:36px;font-weight:800;margin-bottom:14px}
+.section-head p{font-size:17px;color:var(--ink2)}
+@media(max-width:600px){.section{padding:48px 0}.section-head h2{font-size:27px}}
+.agents{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.agent{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px;transition:.2s;display:flex;flex-direction:column}
+.agent:hover{border-color:var(--vborder);box-shadow:0 12px 32px rgba(124,58,237,.08);transform:translateY(-2px)}
+.agent .gly{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;margin-bottom:16px}
+.agent h3{font-size:20px;font-weight:700;margin-bottom:3px}
+.agent .role{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:12px}
+.agent p{font-size:14.5px;color:var(--ink2);flex:1;margin-bottom:18px}
+.agent .foot{display:flex;align-items:center;justify-content:space-between}
+.agent .price{font-weight:700;font-size:17px}.agent .price span{font-size:13px;color:var(--muted);font-weight:400}
+.agent .pick{background:var(--violet);color:#fff;padding:9px 16px;border-radius:10px;font-weight:600;font-size:14px}
+.agent .pick:hover{background:var(--vlight)}
+.custom{background:linear-gradient(135deg,var(--violet),#6d28d9);border-radius:22px;padding:44px 34px;text-align:center;color:#fff;margin-top:26px}
+.custom h3{font-size:26px;font-weight:800;margin-bottom:10px}
+.custom p{font-size:16px;opacity:.92;max-width:480px;margin:0 auto 22px}
+.custom .btn{background:#fff;color:var(--violet);padding:13px 26px;border-radius:11px;font-weight:700;font-size:15px;display:inline-block}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+.step{text-align:center;padding:10px}
+.step .num{width:44px;height:44px;border-radius:50%;background:var(--vdim);color:var(--violet);font-weight:800;font-size:19px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;border:1px solid var(--vborder)}
+.step h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.step p{font-size:14.5px;color:var(--ink2)}
+.trust{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px}
+.trust-item{display:flex;gap:14px;align-items:flex-start}
+.trust-item .ic{width:40px;height:40px;border-radius:11px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.trust-item h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.trust-item p{font-size:14px;color:var(--ink2)}
+.final{text-align:center;padding:80px 22px}
+.final h2{font-size:38px;font-weight:800;margin-bottom:16px}
+.final p{font-size:18px;color:var(--ink2);margin-bottom:28px}
+@media(max-width:600px){.final h2{font-size:28px}}
+.foot{background:var(--ink);color:#cfcce0;padding:40px 0}
+.foot-in{max-width:1080px;margin:0 auto;padding:0 22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:center}
+.foot a{color:#cfcce0;font-size:14px;margin-right:18px}
+.foot a:hover{color:#fff}
+.foot .small{font-size:12.5px;color:#8a87a0;width:100%;margin-top:14px;border-top:1px solid #2a2838;padding-top:14px}
 </style>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "PageLab",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Web",
-  "description": "L'équipe d'agents IA des artisans du bâtiment : relance des impayés, devis, trésorerie et avis Google. Vous validez d'un clic.",
-  "url": "https://pagelab.fr",
-  "offers": {
-    "@type": "Offer",
-    "price": "19",
-    "priceCurrency": "EUR",
-    "description": "Abonnement mensuel, tous les agents inclus, essai 14 jours"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "PageLab",
-    "url": "https://pagelab.fr",
-    "email": "contact@pagelab.fr"
-  }
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {"@type":"Question","name":"PageLab, c'est compliqué à utiliser ?","acceptedAnswer":{"@type":"Answer","text":"Non. Les agents préparent le travail, vous validez d'un clic. Aucune formation nécessaire, c'est pensé pour être utilisé depuis le chantier."}},
-    {"@type":"Question","name":"Mes données sont-elles en sécurité ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Vos clés et données sont chiffrées. Nous ne revendons jamais vos données et ne les utilisons pas pour entraîner des modèles."}},
-    {"@type":"Question","name":"PageLab gère-t-il la facturation électronique 2026-2027 ?","acceptedAnswer":{"@type":"Answer","text":"La réforme impose la réception des factures électroniques dès le 1er septembre 2026 et leur émission au 1er septembre 2027 pour les TPE et artisans. PageLab prépare vos factures au format structuré et se connecte à une plateforme agréée pour la transmission, afin de vous accompagner vers ces échéances."}},
-    {"@type":"Question","name":"Combien ça coûte ?","acceptedAnswer":{"@type":"Answer","text":"Un seul abonnement à 19€/mois pour les premiers artisans (offre fondateur), tous les agents inclus, sans engagement, avec 14 jours d'essai gratuit."}}
-  ]
-}
-</script>
 </head>
 <body>
-
 <nav class="nav">
-  <div class="inner">
-    <a href="/" class="logo"><span class="mark">⬡</span> PageLab</a>
-    <div class="links">
+  <div class="nav-in">
+    <a href="/" class="logo"><span class="mk">&#11041;</span> PageLab</a>
+    <div class="nav-links">
       <a href="#agents">Les agents</a>
-      <a href="#hybride">Comment ça marche</a>
-      <a href="/conformite-2026.html">Conformité 2026</a>
-      <a href="/blog.html">Blog</a>
-      <a href="/connexion.html" class="btn">Connexion</a>
+      <a href="#comment">Comment &ccedil;a marche</a>
+      <a href="/connexion.html">Connexion</a>
+      <a href="#agents" class="nav-cta">D&eacute;couvrir les agents</a>
     </div>
   </div>
 </nav>
-
-<!-- HERO -->
 <header class="hero">
-  <div class="hero-bg"><div class="halo h1"></div><div class="halo h2"></div></div>
-  <div class="container hero-grid">
-    <div class="hero-text">
-      <span class="hero-kicker"><span class="dot"></span> Pour les artisans du bâtiment</span>
-      <h1>Le travail, ça va.<br>C'est <span class="accent">tout le reste</span> qui vous tue.</h1>
-      <p class="sub">Devis, relances, impayés, paperasse du soir. PageLab, c'est l'équipe d'agents IA qui s'en occupe pendant que vous êtes sur le chantier. <strong style="color:var(--text)">Vous validez d'un clic.</strong></p>
-      <div class="ctas">
-        <a href="/connexion.html" class="btn btn-lg">Tester 14 jours gratuitement</a>
-        <a href="#hybride" class="btn btn-lg btn-ghost">Voir comment ça marche</a>
-      </div>
-      <div class="trust">✓ Sans carte bancaire &nbsp;·&nbsp; ✓ Prêt en 10 minutes &nbsp;·&nbsp; ✓ Accompagné par un humain</div>
-    </div>
-    <div class="hero-visual">
-      <div class="float-badge fb1"><span class="ic" style="background:rgba(248,113,113,.15);color:var(--red)">€</span> Impayés relancés</div>
-      <div class="mini-dash">
-        <div class="bar">
-          <span class="l"><span style="color:#fff">✓</span> 3 actions à valider</span>
-          <span class="pill">Tout voir</span>
-        </div>
-        <div class="mini-row">
-          <div class="mini-stat"><div class="n" style="color:var(--green)">1 850€</div><div class="t">Récupéré</div></div>
-          <div class="mini-stat"><div class="n" style="color:var(--red)">3 200€</div><div class="t">En attente</div></div>
-          <div class="mini-stat"><div class="n" style="color:var(--amber)">4,8★</div><div class="t">Google</div></div>
-        </div>
-        <div class="mini-chat">
-          <div class="who"><span class="av">◆</span> Baptiste</div>
-          <div class="msg">Bonjour 👋 Vos agents sont prêts : Marc surveille vos impayés, Léo vos devis, Lucas votre trésorerie. Dites-moi ce dont vous avez besoin.</div>
-        </div>
-      </div>
-      <div class="float-badge fb2"><span class="ic" style="background:rgba(16,185,129,.15);color:var(--green)">✓</span> Devis signé</div>
+  <div class="container">
+    <span class="kick">L'outil s'adapte &agrave; vous, pas l'inverse</span>
+    <h1>Vous &ecirc;tes un as du m&eacute;tier.<br>C'est <span class="hl">tout le reste</span> qui vous &eacute;puise.</h1>
+    <p class="sub">PageLab vous donne une &eacute;quipe qui s'occupe des impay&eacute;s, de la tr&eacute;sorerie, des devis et des avis clients. Vous validez d'un clic, depuis le chantier.</p>
+    <div class="hero-btns">
+      <a href="#agents" class="btn-primary">D&eacute;couvrir les agents</a>
+      <a href="#comment" class="btn-ghost">Comment &ccedil;a marche ?</a>
     </div>
   </div>
 </header>
-
-<!-- STATS CHOC -->
-<style>
-.stats-band{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);padding:48px 0}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;text-align:center}
-.stat-big .num{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:42px;line-height:1;margin-bottom:8px}
-.stat-big .lab{font-size:13.5px;color:var(--muted2);line-height:1.4}
-.stat-big .src{font-size:11px;color:var(--muted);margin-top:6px}
-@media(max-width:760px){.stats-grid{grid-template-columns:1fr 1fr;gap:28px 18px}.stat-big .num{font-size:34px}}
-</style>
-<section class="stats-band">
-  <div class="container stats-grid">
-    <div class="stat-big reveal"><div class="num" style="color:var(--red)">1 sur 4</div><div class="lab">faillite d'artisan du bâtiment causée par les impayés</div><div class="src">Banque de France</div></div>
-    <div class="stat-big reveal"><div class="num">13h</div><div class="lab">par semaine perdues sur l'administratif</div><div class="src">OpinionWay / Qonto 2026</div></div>
-    <div class="stat-big reveal"><div class="num">47%</div><div class="lab">des factures du BTP payées avec +30j de retard</div><div class="src">Étude sectorielle 2026</div></div>
-    <div class="stat-big reveal"><div class="num">90%</div><div class="lab">des clients cherchent leur artisan sur Google</div><div class="src">BrightLocal 2025</div></div>
-  </div>
-</section>
-
-<!-- COMMENT CA MARCHE / HYBRIDE -->
-<style>
-.section{padding:80px 0}
-.section-head{text-align:center;max-width:640px;margin:0 auto 50px}
-.section-head .kick{color:var(--vlight);font-size:13px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;margin-bottom:14px}
-.section-head h2{font-size:38px;margin-bottom:16px}
-.section-head p{color:var(--muted2);font-size:17px}
-.hyb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.hyb-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;position:relative}
-.hyb-card .step{position:absolute;top:20px;right:24px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:40px;color:var(--border2)}
-.hyb-card .ic{width:48px;height:48px;border-radius:13px;background:var(--vdim);border:1px solid var(--vborder);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px}
-.hyb-card h3{font-size:20px;margin-bottom:10px}
-.hyb-card p{color:var(--muted2);font-size:14.5px}
-.vs-band{margin-top:50px;background:var(--card2);border:1px solid var(--border);border-radius:18px;padding:36px;display:grid;grid-template-columns:1fr auto 1fr;gap:30px;align-items:center}
-.vs-col h4{font-size:15px;margin-bottom:14px}
-.vs-col ul{list-style:none}
-.vs-col li{font-size:14px;color:var(--muted2);padding:6px 0 6px 26px;position:relative}
-.vs-col.bad li::before{content:"✕";position:absolute;left:0;color:var(--red)}
-.vs-col.good li::before{content:"✓";position:absolute;left:0;color:var(--green)}
-.vs-col.good li{color:var(--text)}
-.vs-mid{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;color:var(--muted);font-size:14px}
-@media(max-width:820px){.hyb-grid{grid-template-columns:1fr}.vs-band{grid-template-columns:1fr;gap:20px}.vs-mid{display:none}}
-</style>
-<section class="section" id="hybride">
+<section class="pain">
   <div class="container">
-    <div class="section-head reveal">
-      <div class="kick">Ni un logiciel de plus, ni une boîte noire</div>
-      <h2>Vous voyez tout. L'IA fait le travail.</h2>
-      <p>Les autres vous donnent un logiciel à remplir. PageLab fait le boulot à votre place — et vous gardez le contrôle, d'un simple clic.</p>
-    </div>
-    <div class="hyb-grid">
-      <div class="hyb-card reveal"><div class="step">1</div><div class="ic">👁️</div><h3>Vous voyez</h3><p>Vos factures, vos devis, votre trésorerie, vos avis — affichés clairement comme dans un vrai logiciel. D'un coup d'œil, vous savez où vous en êtes.</p></div>
-      <div class="hyb-card reveal"><div class="step">2</div><div class="ic">🤖</div><h3>L'IA prépare</h3><p>Pendant que vous êtes sur le chantier, vos agents relancent, rédigent les devis, préparent les factures conformes, demandent les avis. 24h/24.</p></div>
-      <div class="hyb-card reveal"><div class="step">3</div><div class="ic">👍</div><h3>Vous validez</h3><p>Rien ne part sans vous. Un gros bouton, vous validez d'un clic le soir en 5 minutes. Ou vous laissez tourner en automatique. Vous décidez.</p></div>
-    </div>
-
-    <div class="vs-band reveal">
-      <div class="vs-col bad">
-        <h4>Les autres outils</h4>
-        <ul>
-          <li>Un logiciel de plus à apprendre</li>
-          <li>Vous saisissez, vous cliquez, vous gérez</li>
-          <li>Vous bossez toujours autant le soir</li>
-          <li>Pensé pour « tous les métiers »</li>
-        </ul>
-      </div>
-      <div class="vs-mid">VS</div>
-      <div class="vs-col good">
-        <h4>PageLab</h4>
-        <ul>
-          <li>Une équipe qui bosse à votre place</li>
-          <li>Vous jetez l'info, l'IA range et exécute</li>
-          <li>Vos soirées, vous les récupérez</li>
-          <li>100 % pensé pour le bâtiment</li>
-        </ul>
-      </div>
+    <div class="pain-grid">
+      <div><div class="n">1 sur 4</div><div class="t">faillite d'artisan caus&eacute;e par les impay&eacute;s <span style="color:var(--muted)">(Banque de France)</span></div></div>
+      <div><div class="n">47 %</div><div class="t">des factures BTP pay&eacute;es en retard de +30 jours</div></div>
+      <div><div class="n">+10 h</div><div class="t">par semaine perdues sur l'administratif</div></div>
+      <div><div class="n">2027</div><div class="t">la facturation &eacute;lectronique devient obligatoire</div></div>
     </div>
   </div>
 </section>
-
-<!-- AGENTS -->
-<style>
-.agents-sec{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.agents-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.agent-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:.2s}
-.agent-card:hover{border-color:var(--vborder);transform:translateY(-3px)}
-.agent-card .top{display:flex;align-items:center;gap:13px;margin-bottom:14px}
-.agent-card .gly{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0}
-.agent-card .nm{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px}
-.agent-card .rl{font-size:12.5px;color:var(--muted2)}
-.agent-card p{font-size:14px;color:var(--muted2);line-height:1.55}
-.agent-card .stat-line{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted)}
-.coord{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.coord-card{background:var(--card2);border:1px solid var(--vborder);border-radius:16px;padding:22px;display:flex;gap:14px;align-items:flex-start}
-.coord-card .gly{width:46px;height:46px;border-radius:13px;background:var(--vdim);display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0}
-.coord-card h3{font-size:17px;margin-bottom:5px}
-.coord-card p{font-size:13.5px;color:var(--muted2)}
-.soon{display:inline-block;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle}
-@media(max-width:820px){.agents-grid{grid-template-columns:1fr}.coord{grid-template-columns:1fr}}
-</style>
-<section class="section agents-sec" id="agents">
+<section class="section" id="agents">
   <div class="container">
-    <div class="section-head reveal">
-      <div class="kick">Votre équipe</div>
-      <h2>6 agents. Chacun règle une vraie galère.</h2>
-      <p>Pas de gadget. Chaque agent répond à une douleur que les artisans du bâtiment nous ont décrite.</p>
+    <div class="section-head">
+      <div class="kick">Votre &eacute;quipe</div>
+      <h2>Choisissez les agents dont vous avez besoin</h2>
+      <p>On les configure pour vous et vos outils. Vous n'avez plus qu'&agrave; valider leur travail.</p>
     </div>
-    <div class="agents-grid">
-      <div class="agent-card reveal"><div class="top"><div class="gly" style="background:rgba(248,113,113,.13);color:var(--red)">€</div><div><div class="nm">Marc</div><div class="rl">Impayés &amp; relances</div></div></div><p>Repère vos factures en retard et relance vos clients automatiquement, avec la mention de l'indemnité légale de 40 € entre professionnels.</p><div class="stat-line">🔥 1 faillite sur 4 vient des impayés</div></div>
-      <div class="agent-card reveal"><div class="top"><div class="gly" style="background:rgba(96,165,250,.13);color:var(--blue)">▤</div><div><div class="nm">Léo</div><div class="rl">Devis &amp; factures</div></div></div><p>Génère vos devis en quelques secondes (même depuis une photo de chantier), les relance, et prépare vos factures.</p><div class="stat-line">🔥 13h/semaine perdues sur la paperasse</div></div>
-      <div class="agent-card reveal"><div class="top"><div class="gly" style="background:rgba(16,185,129,.13);color:var(--green)">◷</div><div><div class="nm">Lucas</div><div class="rl">Trésorerie</div></div></div><p>Vous montre où en est votre cash, ce qui rentre, ce qui sort, et vous prévient avant que ça coince.</p><div class="stat-line">🔥 85% des faillites = TPE de moins de 5 salariés</div></div>
-      <div class="agent-card reveal"><div class="top"><div class="gly" style="background:rgba(245,158,11,.13);color:var(--amber)">★</div><div><div class="nm">Emma</div><div class="rl">Avis Google</div></div></div><p>Envoie une demande d'avis à vos clients après chaque chantier. Votre réputation grimpe sans y penser.</p><div class="stat-line">🔥 87% lisent les avis avant d'appeler</div></div>
-      <div class="agent-card reveal"><div class="top"><div class="gly" style="background:rgba(157,95,243,.13);color:var(--vlight)">🛡</div><div><div class="nm">Sam</div><div class="rl">Surveillance &amp; conformité</div></div></div><p>Veille à ce que tout tourne, et vous prépare à la facturation électronique : réception obligatoire dès septembre 2026, émission pour les artisans en septembre 2027.</p><div class="stat-line">🔥 Réception obligatoire dès septembre 2026</div></div>
-      <div class="agent-card reveal"><div class="top"><div class="gly" style="background:rgba(96,165,250,.13);color:var(--blue)">⚲</div><div><div class="nm">Hugo</div><div class="rl">Visibilité locale</div></div></div><p>Vous rend visible quand un client cherche votre métier dans votre ville. Plus de chantiers, sans pub.</p><div class="stat-line">🔥 90% cherchent un artisan sur Google</div></div>
+    <div class="agents">
+      <div class="agent">
+        <div class="gly" style="background:var(--rdim);color:var(--red)">&euro;</div>
+        <h3>Marc</h3>
+        <div class="role">Impay&eacute;s &amp; tr&eacute;sorerie</div>
+        <p>Rep&egrave;re vos factures en retard, pr&eacute;pare les relances (avec l'indemnit&eacute; l&eacute;gale de 40 &euro; entre pros) et suit votre tr&eacute;sorerie en temps r&eacute;el. Votre argent rentre plus vite.</p>
+        <div class="foot"><div class="price">19 &euro;<span> /mois</span></div><a href="/connexion.html" class="pick">Je veux cet agent</a></div>
+      </div>
+      <div class="agent">
+        <div class="gly" style="background:var(--bdim);color:var(--blue)">&#9636;</div>
+        <h3>L&eacute;o</h3>
+        <div class="role">Devis &amp; factures</div>
+        <p>D&eacute;crivez le chantier, L&eacute;o r&eacute;dige un devis chiffr&eacute; avec les bons taux de TVA et les mentions obligatoires d&eacute;j&agrave; remplies. Plus d'oubli, plus d'erreur.</p>
+        <div class="foot"><div class="price">19 &euro;<span> /mois</span></div><a href="/connexion.html" class="pick">Je veux cet agent</a></div>
+      </div>
+      <div class="agent">
+        <div class="gly" style="background:var(--adim);color:var(--amber)">&#9733;</div>
+        <h3>Emma</h3>
+        <div class="role">Avis Google</div>
+        <p>Apr&egrave;s chaque chantier termin&eacute;, Emma demande un avis &agrave; votre client avec votre lien Google direct. Votre r&eacute;putation grandit toute seule.</p>
+        <div class="foot"><div class="price">19 &euro;<span> /mois</span></div><a href="/connexion.html" class="pick">Je veux cet agent</a></div>
+      </div>
     </div>
-
-    <div class="coord">
-      <div class="coord-card reveal"><div class="gly" style="color:var(--vlight)">◆</div><div><h3>Baptiste <span style="font-size:12px;color:var(--muted2);font-weight:400">· le coordinateur</span></h3><p>Il chapeaute toute l'équipe. Vous lui parlez (ou vous lui dictez, mains sales sur le chantier), il répartit le travail et vous fait les récaps.</p></div></div>
-      <div class="coord-card reveal"><div class="gly" style="color:var(--vlight)">◈</div><div><h3>Alex <span class="soon">bientôt</span></h3><p>Rédige vos posts LinkedIn et Facebook pour montrer votre savoir-faire et attirer des clients. Bientôt, la publication automatique.</p></div></div>
+    <div class="custom">
+      <h3>Un besoin que ces agents ne couvrent pas ?</h3>
+      <p>Dites-nous la t&acirc;che qui vous prend le plus de temps. Si plusieurs artisans ont le m&ecirc;me besoin, on construit l'agent qu'il vous faut.</p>
+      <a href="/contact.html" class="btn">Demander un agent sur-mesure</a>
     </div>
   </div>
 </section>
-
-<!-- PRICING -->
-<style>
-.price-wrap{max-width:520px;margin:0 auto}
-.price-card{background:var(--card);border:1px solid var(--vborder);border-radius:22px;padding:40px;text-align:center;position:relative;overflow:hidden}
-.price-card .glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:var(--violet);filter:blur(80px);opacity:.25}
-.price-badge{display:inline-block;background:var(--vdim);border:1px solid var(--vborder);color:var(--vlight);font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;margin-bottom:18px;position:relative}
-.price-amt{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:60px;line-height:1;position:relative}
-.price-amt .cur{font-size:28px;vertical-align:top}
-.price-amt .per{font-size:16px;color:var(--muted2);font-weight:500}
-.price-old{color:var(--muted);text-decoration:line-through;font-size:18px;margin-bottom:6px;position:relative}
-.price-feats{list-style:none;text-align:left;margin:26px 0;position:relative}
-.price-feats li{padding:9px 0 9px 28px;position:relative;font-size:15px;color:#d4d4e6}
-.price-feats li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:700}
-.price-note{font-size:13px;color:var(--muted);margin-top:16px;position:relative}
-</style>
-<section class="section">
+<section class="section" id="comment" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
   <div class="container">
-    <div class="section-head reveal">
-      <div class="kick">Tarif unique, simple</div>
-      <h2>Un seul abonnement. Tout dedans.</h2>
-      <p>Fini les 20 € de logiciel devis + 20 € de logiciel compta + 20 € d'outil avis. Tous vos agents, un seul prix.</p>
-    </div>
-    <div class="price-wrap reveal">
-      <div class="price-card">
-        <div class="glow"></div>
-        <span class="price-badge">⚡ Offre fondateur — 30 premiers artisans</span>
-        <div class="price-old">29 €/mois</div>
-        <div class="price-amt"><span class="cur">€</span>19<span class="per">/mois à vie</span></div>
-        <ul class="price-feats">
-          <li>Les 6 agents inclus, sans limite</li>
-          <li>Interface simple, pensée pour le chantier</li>
-          <li>Application mobile (notifications incluses)</li>
-          <li>Conformité facturation 2026 préparée</li>
-          <li>Accompagnement par un humain au démarrage</li>
-          <li>Sans engagement, résiliable à tout moment</li>
-        </ul>
-        <a href="/connexion.html" class="btn btn-lg" style="width:100%;text-align:center">Tester 14 jours gratuitement</a>
-        <p class="price-note">Sans carte bancaire. Le tarif fondateur reste acquis tant que vous restez abonné.</p>
-      </div>
+    <div class="section-head"><div class="kick">Simple comme bonjour</div><h2>Comment &ccedil;a marche</h2></div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Choisissez votre agent</h3><p>Vous prenez l'agent (ou les agents) dont vous avez besoin dans le catalogue.</p></div>
+      <div class="step"><div class="num">2</div><h3>On le configure pour vous</h3><p>On le branche &agrave; vos outils (Stripe ou autre) et on le r&egrave;gle selon votre fa&ccedil;on de travailler.</p></div>
+      <div class="step"><div class="num">3</div><h3>Il bosse, vous validez</h3><p>L'agent pr&eacute;pare le travail. Vous validez d'un clic depuis votre t&eacute;l&eacute;phone. C'est tout.</p></div>
     </div>
   </div>
 </section>
-
-<!-- FAQ -->
-<style>
-.faq-sec{padding:70px 0;border-top:1px solid var(--border)}
-.faq-list{max-width:720px;margin:30px auto 0}
-.faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;margin-bottom:12px;overflow:hidden}
-.faq-q2{padding:18px 22px;font-weight:600;font-size:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:14px}
-.faq-q2 .plus{color:var(--vlight);font-size:22px;transition:transform .25s;flex-shrink:0}
-.faq-item.open .plus{transform:rotate(45deg)}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--muted2);font-size:14.5px;line-height:1.6}
-.faq-item.open .faq-a{max-height:240px}
-.faq-a div{padding:0 22px 18px}
-</style>
-<section class="faq-sec">
+<section class="section trust">
   <div class="container">
-    <div class="section-head reveal">
-      <div class="kick">On répond franchement</div>
-      <h2>Les questions qu'on nous pose</h2>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
-        <div class="faq-q2">C'est compliqué à utiliser ? <span class="plus">+</span></div>
-        <div class="faq-a"><div>Non, c'est l'inverse. Vos agents préparent tout le travail, vous validez d'un clic. Pas de formation, pas de manuel. C'est pensé pour être utilisé en 2 minutes depuis votre téléphone, même entre deux chantiers.</div></div>
-      </div>
-      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
-        <div class="faq-q2">Mes données sont-elles en sécurité ? <span class="plus">+</span></div>
-        <div class="faq-a"><div>Oui. Vos clés et informations sont chiffrées. On ne revend jamais vos données et on ne les utilise pas pour entraîner des IA. Vos données vous appartiennent, point.</div></div>
-      </div>
-      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
-        <div class="faq-q2">Et la réforme de la facturation 2026 ? <span class="plus">+</span></div>
-        <div class="faq-a"><div>La réforme arrive en deux temps : vous devrez pouvoir <b>recevoir</b> des factures électroniques dès le 1er septembre 2026, et les <b>émettre</b> à partir du 1er septembre 2027 (pour les TPE, artisans et indépendants). PageLab prépare vos factures au format structuré (type Factur-X) et se connectera à une plateforme agréée pour la transmission. On ne prétend pas vous rendre conforme à votre place : on vous outille et on vous guide vers l'échéance, sans jargon.</div></div>
-      </div>
-      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
-        <div class="faq-q2">Combien ça coûte ? <span class="plus">+</span></div>
-        <div class="faq-a"><div>Un seul abonnement à 19€/mois pour les premiers artisans (offre fondateur, ce tarif reste acquis). Tous les agents inclus, sans engagement, avec 14 jours d'essai gratuit et sans carte bancaire pour commencer.</div></div>
-      </div>
-      <div class="faq-item reveal" onclick="this.classList.toggle('open')">
-        <div class="faq-q2">Je ne suis pas du tout à l'aise avec l'informatique… <span class="plus">+</span></div>
-        <div class="faq-a"><div>Aucun souci. Pour les premiers artisans, je vous accompagne personnellement à l'installation, par téléphone. Vous n'êtes jamais seul devant l'écran.</div></div>
-      </div>
+    <div class="section-head"><div class="kick">En confiance</div><h2>Vous gardez le contr&ocirc;le, toujours</h2></div>
+    <div class="trust-grid">
+      <div class="trust-item"><div class="ic">&#9995;</div><div><h3>Rien ne part sans vous</h3><p>Les agents pr&eacute;parent, vous validez. Aucune relance n'est envoy&eacute;e sans votre accord.</p></div></div>
+      <div class="trust-item"><div class="ic">&#128274;</div><div><h3>Vos donn&eacute;es prot&eacute;g&eacute;es</h3><p>Vos informations et celles de vos clients sont chiffr&eacute;es. On ne les revend jamais.</p></div></div>
+      <div class="trust-item"><div class="ic">&#129309;</div><div><h3>Un accompagnement humain</h3><p>On configure tout pour vous et on reste joignable. Vous n'&ecirc;tes jamais seul devant l'&eacute;cran.</p></div></div>
     </div>
   </div>
 </section>
-
-<!-- CTA FINAL -->
-<style>
-.final{background:linear-gradient(135deg,var(--violet2),var(--indigo));margin:0 24px 60px;border-radius:24px;padding:60px 30px;text-align:center;max-width:1140px;margin-left:auto;margin-right:auto}
-.final h2{font-size:36px;margin-bottom:14px;color:#fff}
-.final p{color:rgba(255,255,255,.85);font-size:18px;max-width:520px;margin:0 auto 26px}
-.final .btn{background:#fff;color:var(--violet2)}
-.final .btn:hover{background:#f0f0f5}
-</style>
-<section class="final reveal">
-  <h2>Récupérez vos soirées.</h2>
-  <p>Laissez votre équipe IA s'occuper des impayés, des devis et de la paperasse. Vous, retournez à votre métier.</p>
-  <a href="/connexion.html" class="btn btn-lg">Commencer gratuitement</a>
+<section class="final">
+  <div class="container">
+    <h2>Reprenez vos soir&eacute;es.</h2>
+    <p>Laissez votre &eacute;quipe PageLab s'occuper de la paperasse.</p>
+    <a href="/connexion.html" class="btn-primary">Commencer maintenant</a>
+  </div>
 </section>
-
-<!-- FOOTER -->
-<style>
-.footer{border-top:1px solid var(--border);padding:50px 24px 36px}
-.footer .inner{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}
-.footer .brand .logo{margin-bottom:12px}
-.footer .brand p{color:var(--muted);font-size:13.5px;max-width:280px}
-.footer h4{font-size:13px;color:var(--text);margin-bottom:14px;font-family:'Inter',sans-serif;font-weight:600}
-.footer a{display:block;color:var(--muted2);font-size:13.5px;margin-bottom:9px}
-.footer a:hover{color:var(--text)}
-.footer .bottom{max-width:1140px;margin:36px auto 0;padding-top:24px;border-top:1px solid var(--border);
-  display:flex;justify-content:space-between;color:var(--muted);font-size:12.5px;flex-wrap:wrap;gap:10px}
-@media(max-width:760px){.footer .inner{grid-template-columns:1fr;gap:24px}}
-</style>
-<footer class="footer">
-  <div class="inner">
-    <div class="brand">
-      <a href="/" class="logo"><span class="mark">⬡</span> PageLab</a>
-      <p>L'équipe IA des artisans du bâtiment. Vos impayés relancés, vos devis faits, vos soirées récupérées.</p>
-    </div>
+<footer class="foot">
+  <div class="foot-in">
     <div>
-      <h4>Produit</h4>
-      <a href="#agents">Les agents</a>
-      <a href="#hybride">Comment ça marche</a>
-      <a href="/conformite-2026.html">Conformité 2026</a>
+      <a href="/conformite-2026.html">Facturation 2026</a>
       <a href="/blog.html">Blog</a>
-    </div>
-    <div>
-      <h4>Entreprise</h4>
       <a href="/contact.html">Contact</a>
-      <a href="/mentions-legales.html">Mentions légales</a>
-      <a href="/confidentialite.html">Confidentialité</a>
+      <a href="/mentions-legales.html">Mentions l&eacute;gales</a>
       <a href="/cgv.html">CGV</a>
+      <a href="/confidentialite.html">Confidentialit&eacute;</a>
     </div>
-  </div>
-  <div class="bottom">
-    <span>© 2026 PageLab — Fait avec ❤️ pour les artisans.</span>
-    <span>contact@pagelab.fr</span>
+    <div style="font-size:13px;color:#8a87a0">contact@pagelab.fr</div>
+    <div class="small">&copy; 2026 PageLab &mdash; L'&eacute;quipe qui g&egrave;re la paperasse des artisans du b&acirc;timent. PageLab agit comme sous-traitant au sens du RGPD.</div>
   </div>
 </footer>
-
 <script>
-// Animations légères au scroll
-const obs=new IntersectionObserver((entries)=>{
-  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*60);obs.unobserve(e.target)}});
-},{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-
-// Compteurs animés sur la bande de stats (effet léger)
-function animateCount(el){
-  const txt=el.textContent;const m=txt.match(/[\d]+/);
-  if(!m)return;const target=parseInt(m[0]);const suffix=txt.replace(/[\d]+/,'');let cur=0;
-  const step=Math.max(1,Math.ceil(target/30));
-  const id=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(id)}el.textContent=txt.replace(/[\d]+/,cur)},28);
-}
-const statObs=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{if(e.isIntersecting){const n=e.target.querySelector('.num');if(n&&!n.dataset.done){n.dataset.done=1;animateCount(n)}statObs.unobserve(e.target)}});
-},{threshold:.5});
-document.querySelectorAll('.stat-big').forEach(el=>statObs.observe(el));
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='none';obs.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.agent,.step,.trust-item,.pain-grid>div').forEach(el=>{el.style.opacity=0;el.style.transform='translateY(16px)';el.style.transition='.5s ease';obs.observe(el)});
 </script>
 </body>
 </html>

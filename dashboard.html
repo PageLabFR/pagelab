@@ -2,1326 +2,477 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Mon espace — PageLab</title>
-<meta name="robots" content="noindex">
-<link rel="icon" type="image/png" href="/public/logo.png">
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#07070f">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon tableau de bord — PageLab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#07070f;--bg2:#0d0d1a;--bg3:#111120;--card:#12121f;--card2:#16162a;
---border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.12);
---violet:#7c3aed;--vlight:#9d5ff3;--vdim:rgba(124,58,237,.1);--vborder:rgba(124,58,237,.28);--indigo:#4f46e5;
---text:#eeeef8;--muted:#55556a;--muted2:#8888a8;--green:#10b981;--gdim:rgba(16,185,129,.13);
---amber:#f59e0b;--adim:rgba(245,158,11,.13);--red:#f87171;--rdim:rgba(248,113,113,.13);--blue:#60a5fa;--bdim:rgba(96,165,250,.13)}
-html{-webkit-font-smoothing:antialiased}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.55;overflow-x:hidden}
-h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-.02em}
-button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none;color:inherit}
-a{color:inherit;text-decoration:none}
-
-/* LAYOUT */
-.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
-.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:18px 14px;display:flex;flex-direction:column;
-position:sticky;top:0;height:100vh;overflow-y:auto;transition:transform .25s}
-.main{display:flex;flex-direction:column;min-height:100vh;min-width:0}
-
+:root{
+  --bg:#fbfbfd;--bg2:#f4f3f8;--card:#ffffff;--border:#e7e5ee;--border2:#dcdae6;
+  --ink:#1a1825;--ink2:#4a4760;--muted:#8a87a0;
+  --violet:#7c3aed;--vlight:#8b5cf6;--vdim:#f3eefe;--vborder:#e0d4fb;
+  --red:#dc2626;--rdim:#fef2f2;--green:#059669;--gdim:#ecfdf5;--amber:#d97706;--adim:#fffbeb;--blue:#2563eb;--bdim:#eff6ff;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.01em}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:inherit;border:none}
+.layout{display:flex;min-height:100vh}
 /* SIDEBAR */
-.logo{display:flex;align-items:center;gap:9px;padding:6px 8px 18px}
-.logo .mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--violet),var(--indigo));display:flex;align-items:center;justify-content:center;font-size:16px}
-.logo span{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px}
-.side-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 8px 6px}
-.agent-item{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;transition:.15s;margin-bottom:2px}
-.agent-item:hover{background:var(--card)}
-.agent-item.active{background:var(--vdim);border:1px solid var(--vborder)}
-.agent-item .gly{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;font-weight:700}
-.agent-item .nm{font-size:14px;font-weight:500;flex:1}
-.agent-item .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
-.sam-card{margin-top:auto;background:var(--gdim);border:1px solid rgba(16,185,129,.25);border-radius:12px;padding:12px}
-.sam-card .t{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--green)}
-.sam-card .s{font-size:11.5px;color:var(--green);opacity:.8;margin-top:3px}
-.side-foot{padding-top:12px;margin-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
-.soon-mini{font-size:9px;font-weight:700;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);padding:2px 6px;border-radius:10px}
-.connexions-btn{display:flex;align-items:center;gap:10px;margin-top:12px;padding:13px 14px;background:var(--vdim);border:1px solid var(--vborder);border-radius:12px;font-size:14px;font-weight:600;color:var(--vlight);transition:.18s;cursor:pointer}
-.connexions-btn:hover{background:rgba(124,58,237,.18);transform:translateY(-1px)}
-.connexions-btn .arrow{margin-left:auto;transition:transform .18s}
-.connexions-btn:hover .arrow{transform:translateX(3px)}
-.side-foot a{display:block;padding:5px 8px;color:var(--muted2)}
-.side-foot a:hover{color:var(--text)}
-
-/* TOPBAR */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 22px;border-bottom:1px solid var(--border);
-position:sticky;top:0;background:rgba(7,7,15,.85);backdrop-filter:blur(12px);z-index:30}
-.burger{display:none;font-size:22px;cursor:pointer}
-.topbar .title{font-size:15px;font-weight:600}
-.validate-btn{display:flex;align-items:center;gap:9px;background:#fff;color:#000;padding:10px 18px;border-radius:11px;font-weight:600;font-size:14px;transition:.18s;position:relative}
-.validate-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(255,255,255,.12)}
-.validate-btn .badge{background:var(--red);color:#fff;font-size:11px;font-weight:700;min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 5px}
-.validate-btn.empty{background:var(--card);color:var(--muted2);cursor:default}
-.validate-btn.empty:hover{transform:none;box-shadow:none}
-
-/* CONTENT */
-.content{flex:1;padding:22px;max-width:880px;width:100%;margin:0 auto}
-
-/* STAT CARDS */
-.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px}
-.stat-card .l{font-size:12px;color:var(--muted2);margin-bottom:4px}
-.stat-card .v{font-size:23px;font-weight:800;font-family:'Bricolage Grotesque',sans-serif}
-
-/* BAPTISTE CHAT */
-.baptiste{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:18px}
-.baptiste .head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.baptiste .head .av{width:34px;height:34px;border-radius:9px;background:var(--vdim);border:1px solid var(--vborder);display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--vlight)}
-.baptiste .head .nm{font-size:14px;font-weight:600}
-.baptiste .head .st{font-size:11.5px;color:var(--green);display:flex;align-items:center;gap:5px}
-.chat-msgs{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;max-height:340px;overflow-y:auto}
-.msg{max-width:85%;padding:11px 14px;border-radius:13px;font-size:14px;line-height:1.5}
-.msg.bot{background:var(--bg2);border:1px solid var(--border);align-self:flex-start;border-bottom-left-radius:4px}
-.msg.user{background:var(--violet);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
-.chat-input{display:flex;align-items:center;gap:9px;border:1px solid var(--border2);border-radius:12px;padding:9px 12px;background:var(--bg2)}
-.chat-input input{flex:1;background:none;border:none;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;outline:none}
-.chat-input .mic,.chat-input .send{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.chat-input .mic{color:var(--muted2)}.chat-input .mic:hover{color:var(--vlight);background:var(--vdim)}
-.chat-input .send{background:var(--violet);color:#fff}.chat-input .send:hover{background:var(--vlight)}
-
-/* AGENT WORKSPACE */
-.workspace{display:none}
-.workspace.active{display:block;animation:fadeUp .4s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.ws-head{display:flex;align-items:center;gap:13px;margin-bottom:18px}
-.ws-head .gly{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:700}
-.ws-head .nm{font-size:20px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800}
-.ws-head .rl{font-size:13px;color:var(--muted2)}
-.list{border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:16px}
-.list-row{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid var(--border)}
-.list-row:last-child{border-bottom:none}
-.list-row .info .n{font-size:14.5px;font-weight:500}
-.list-row .info .sub{font-size:12.5px;color:var(--muted2)}
-.tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
-.tag.red{background:var(--rdim);color:var(--red)}.tag.amber{background:var(--adim);color:var(--amber)}
-.tag.green{background:var(--gdim);color:var(--green)}.tag.blue{background:var(--bdim);color:var(--blue)}
-.tag.grey{background:var(--card2);color:var(--muted2)}
-.ai-box{background:var(--bdim);border:1px solid rgba(96,165,250,.25);border-radius:13px;padding:14px;margin-bottom:16px}
-.ai-box .t{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--blue);margin-bottom:5px}
-.ai-box .m{font-size:13.5px;color:#bcd;line-height:1.5}
-.ai-box .acts{display:flex;gap:8px;margin-top:11px}
-.ai-box .acts .v{background:#fff;color:#000;font-size:13px;font-weight:600;padding:8px 16px;border-radius:9px}
-.ai-box .acts .e{border:1px solid var(--border2);font-size:13px;padding:8px 16px;border-radius:9px}
-.ws-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:0 0 8px 2px}
-.hist{display:flex;flex-direction:column;gap:8px}
-.hist-item{display:flex;gap:10px;font-size:12.5px}
-.hist-item .d{color:var(--muted);min-width:70px;flex-shrink:0}
-.hist-item .x{color:var(--muted2)}
-.add-btn{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--border2);
-border-radius:9px;padding:8px 14px;font-size:13px;font-weight:500;margin-left:auto}
-.add-btn:hover{border-color:var(--vlight)}
-.subtab{background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:8px 16px;font-size:13.5px;font-weight:500;color:var(--muted2);transition:.15s}
-.subtab.active{background:var(--vdim);border-color:var(--vborder);color:var(--vlight)}
-.locked-box{background:var(--card);border:1px dashed var(--border2);border-radius:18px;padding:50px 30px;text-align:center}
-.locked-ico{font-size:42px;margin-bottom:16px;opacity:.85}
-.locked-title{font-size:22px;font-family:'Bricolage Grotesque';font-weight:800;margin-bottom:12px}
-.locked-desc{font-size:14.5px;color:var(--muted2);line-height:1.6;max-width:440px;margin:0 auto 22px}
-.locked-btn{background:var(--violet);color:#fff;padding:12px 24px;border-radius:11px;font-weight:600;font-size:14px}
-.locked-btn:hover{background:var(--vlight)}
-/* Barre d'actions agent : programmer + exécuter */
-.agent-actions{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
-.btn-run{display:flex;align-items:center;gap:8px;background:var(--violet);color:#fff;padding:12px 20px;border-radius:11px;font-weight:600;font-size:14px;transition:.18s}
-.btn-run:hover{background:var(--vlight);transform:translateY(-1px)}
-.btn-run:disabled{opacity:.6;cursor:not-allowed;transform:none}
-.btn-sched{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border2);color:var(--text);padding:12px 18px;border-radius:11px;font-weight:500;font-size:14px;transition:.18s}
-.btn-sched:hover{border-color:var(--vlight)}
-.sched-info{font-size:12.5px;color:var(--green);display:flex;align-items:center;gap:6px;margin-left:auto;align-self:center}
-/* mini-modal programmation */
-.sched-pop{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:110;display:none;align-items:center;justify-content:center;padding:24px}
-.sched-pop.open{display:flex}
-.sched-card{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:26px;max-width:380px;width:100%}
-.sched-card h3{font-size:18px;margin-bottom:6px}
-.sched-card p{font-size:13.5px;color:var(--muted2);margin-bottom:18px}
-.sched-card select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-family:'Inter';font-size:15px;margin-bottom:16px}
-.sched-card .srow{display:flex;gap:10px}
-.sched-card .save{flex:1;background:var(--violet);color:#fff;padding:12px;border-radius:10px;font-weight:600}
-.sched-card .save:hover{background:var(--vlight)}
-.sched-card .off{flex:1;background:var(--card2);border:1px solid var(--border2);padding:12px;border-radius:10px;color:var(--muted2)}
-.client-type-box{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:15px;margin-bottom:18px}
-.ct-label{font-size:13.5px;font-weight:600;margin-bottom:10px}
-.ct-opts{display:flex;gap:9px;margin-bottom:9px;flex-wrap:wrap}
-.ct-opt{flex:1;min-width:130px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:11px;font-size:13.5px;font-weight:500;color:var(--muted2);transition:.15s}
-.ct-opt.on{background:var(--vdim);border-color:var(--vborder);color:var(--vlight)}
-.ct-hint{font-size:12px;color:var(--muted);line-height:1.45}
-/* Devis Léo */
-.leo-head{display:grid;grid-template-columns:1fr 90px 90px;gap:8px;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);padding:0 4px 6px}
-.leo-lines{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
-.leo-line{display:grid;grid-template-columns:1fr 90px 90px;gap:8px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
-.ll-desc{font-size:13.5px;font-weight:500}
-.ll-sub{font-size:12px;color:var(--muted2);margin-top:2px}
-.ll-tva{background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:6px;color:var(--text);font-size:13px;font-family:'Inter'}
-.ll-tot{font-size:13.5px;font-weight:600;text-align:right}
-.leo-totaux{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:14px}
-.tot-row{display:flex;justify-content:space-between;font-size:13.5px;padding:4px 0;color:var(--muted2)}
-.tot-row.total-ttc{font-size:17px;font-weight:800;color:var(--vlight);border-top:1px solid var(--border2);margin-top:6px;padding-top:10px}
-.leo-mentions{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:6px}
-.lm-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-.lm{font-size:12.5px;color:#c9c9de;line-height:1.6}
-/* popup bloquant générique */
-.popup-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(5px);z-index:120;display:none;align-items:center;justify-content:center;padding:24px}
-.popup-bg.open{display:flex}
-.popup{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:32px 28px;max-width:400px;width:100%;text-align:center;animation:fadeUp .3s ease}
-.popup .pi{font-size:40px;margin-bottom:14px}
-.popup h3{font-size:20px;margin-bottom:10px}
-.popup p{font-size:14px;color:var(--muted2);line-height:1.6;margin-bottom:20px}
-.popup .pbtn{background:var(--violet);color:#fff;padding:12px 26px;border-radius:11px;font-weight:600;font-size:14px;width:100%}
-.popup .pbtn:hover{background:var(--vlight)}
-/* Tour guidé */
-.tour-bg{position:fixed;inset:0;background:rgba(3,3,10,.88);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
-.tour-bg.open{display:flex}
-.tour-card{background:linear-gradient(160deg,var(--card),var(--bg2));border:1px solid var(--vborder);border-radius:24px;padding:30px 28px 22px;max-width:460px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:tourIn .4s cubic-bezier(.2,.8,.2,1)}
-@keyframes tourIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
-.tour-progress{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:24px}
-.tour-bar{height:100%;background:linear-gradient(90deg,var(--violet),var(--vlight));border-radius:4px;width:16%;transition:width .4s ease}
-.tour-step{min-height:230px}
-.tour-emoji{font-size:46px;margin-bottom:14px;display:block}
-.tour-step h2{font-family:'Bricolage Grotesque';font-size:25px;font-weight:800;line-height:1.15;margin-bottom:12px}
-.tour-step p{font-size:15px;color:var(--muted2);line-height:1.65;margin-bottom:12px}
-.tour-step .hl{color:var(--vlight);font-weight:600}
-.tour-feat{display:flex;gap:12px;align-items:flex-start;background:var(--bg3);border:1px solid var(--border);border-radius:13px;padding:13px 14px;margin-bottom:10px}
-.tour-feat .tf-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0}
-.tour-feat .tf-t{font-size:14px;font-weight:600;margin-bottom:2px}
-.tour-feat .tf-d{font-size:12.5px;color:var(--muted2);line-height:1.45}
-.tour-nav{display:flex;align-items:center;justify-content:space-between;margin-top:22px}
-.tour-skip{background:none;color:var(--muted);font-size:13px;padding:8px}
-.tour-skip:hover{color:var(--text)}
-.tour-next{background:var(--violet);color:#fff;padding:12px 24px;border-radius:11px;font-weight:600;font-size:14px}
-.tour-next:hover{background:var(--vlight)}
-.tour-dots{display:flex;gap:6px}
-.tour-dots .td{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:.2s}
-.tour-dots .td.on{background:var(--vlight);width:18px;border-radius:4px}
-.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin:6px 0}
-.bar-chart .bar{flex:1;border-radius:4px 4px 0 0}
-.progress{height:7px;background:var(--bg3);border-radius:20px;overflow:hidden}
-.progress .fill{height:100%;background:var(--amber)}
-
-/* VALIDATION MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.side{width:248px;background:var(--card);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;position:fixed;height:100vh;overflow-y:auto}
+.side .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;font-family:'Bricolage Grotesque';padding:0 8px 18px}
+.side .logo .mk{width:28px;height:28px;border-radius:7px;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:center}
+.side .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);padding:14px 10px 6px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;font-size:14.5px;color:var(--ink2);font-weight:500;width:100%;text-align:left;background:none;margin-bottom:2px}
+.nav-item:hover{background:var(--bg2)}
+.nav-item.active{background:var(--vdim);color:var(--violet);font-weight:600}
+.nav-item .ig{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.nav-item .dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--green)}
+.nav-item .soon{margin-left:auto;font-size:10px;background:var(--bg2);color:var(--muted);padding:2px 7px;border-radius:10px}
+.side-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:3px}
+.side-foot a{font-size:13px;color:var(--muted);padding:7px 10px;border-radius:8px}
+.side-foot a:hover{background:var(--bg2);color:var(--ink)}
+/* MAIN */
+.main{flex:1;margin-left:248px;padding:26px 32px;max-width:980px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.topbar h1{font-size:23px;font-weight:700}
+.validate-btn{display:flex;align-items:center;gap:9px;background:var(--violet);color:#fff;padding:11px 18px;border-radius:11px;font-weight:600;font-size:14px}
+.validate-btn:hover{background:var(--vlight)}
+.validate-btn.empty{background:var(--gdim);color:var(--green)}
+.validate-btn .badge{background:#fff;color:var(--violet);border-radius:20px;padding:1px 9px;font-size:13px;font-weight:700}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+.stat .l{font-size:13px;color:var(--muted)}
+.stat .v{font-size:26px;font-weight:800;font-family:'Bricolage Grotesque';margin-top:4px}
+/* CHAT */
+.chat{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.chat-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.chat-head .av{width:38px;height:38px;border-radius:10px;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px}
+.chat-head .nm{font-weight:700;font-size:15px}
+.chat-head .st{font-size:12.5px;color:var(--green)}
+.chat-body{padding:18px;display:flex;flex-direction:column;gap:12px;max-height:440px;overflow-y:auto}
+.msg{max-width:82%;padding:11px 15px;border-radius:14px;font-size:14px;line-height:1.55}
+.msg.bot{background:var(--bg2);color:var(--ink);align-self:flex-start;border-bottom-left-radius:5px}
+.msg.user{background:var(--violet);color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+.msg.ok{background:var(--gdim);color:var(--green);align-self:flex-start;font-size:13.5px}
+.chat-input{display:flex;gap:9px;padding:14px 16px;border-top:1px solid var(--border)}
+.chat-input input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:12px 15px;font-size:14px;font-family:inherit;color:var(--ink)}
+.chat-input input:focus{outline:none;border-color:var(--violet)}
+.chat-input .send{width:44px;background:var(--violet);color:#fff;border-radius:11px;font-size:18px}
+/* VIEWS */
+.view{display:none}.view.active{display:block}
+.ws{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px}
+.ws h2{font-size:19px;margin-bottom:5px}
+.ws .desc{font-size:14px;color:var(--ink2);margin-bottom:18px}
+.agent-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.btn-run{background:var(--violet);color:#fff;padding:11px 18px;border-radius:10px;font-weight:600;font-size:14px}
+.btn-run:hover{background:var(--vlight)}
+.btn-sched{background:var(--card);color:var(--ink);border:1px solid var(--border2);padding:11px 16px;border-radius:10px;font-weight:500;font-size:14px}
+.sched-info{font-size:13px;color:var(--green);align-self:center}
+.list{display:flex;flex-direction:column;gap:8px}
+.list-row{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:12px 14px}
+.list-row .n{font-size:14px;font-weight:600}
+.list-row .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.tag{font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px}
+.tag.red{background:var(--rdim);color:var(--red)}.tag.green{background:var(--gdim);color:var(--green)}.tag.amber{background:var(--adim);color:var(--amber)}
+.ws-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;margin-bottom:8px}
+textarea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:13px;font-family:inherit;font-size:14px;color:var(--ink);resize:vertical;min-height:90px}
+textarea:focus{outline:none;border-color:var(--violet)}
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(26,24,37,.45);backdrop-filter:blur(3px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
 .modal-bg.open{display:flex}
-.modal{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:24px;max-width:440px;width:100%;max-height:85vh;overflow-y:auto}
-.modal h3{font-size:18px;margin-bottom:4px}
-.modal .msub{font-size:13px;color:var(--muted2);margin-bottom:18px}
-.modal .preview{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:15px;font-size:13.5px;color:#ccd;line-height:1.55;margin-bottom:18px;white-space:pre-line}
-.modal .mbtns{display:flex;gap:10px}
-.modal .mbtns .ok{flex:1;background:var(--green);color:#fff;padding:14px;border-radius:11px;font-weight:600;font-size:15px}
-.modal .mbtns .no{flex:1;background:var(--card2);border:1px solid var(--border2);padding:14px;border-radius:11px;font-weight:600;font-size:15px}
-.modal-close{float:right;font-size:20px;color:var(--muted);cursor:pointer}
-
-/* ONBOARDING OVERLAY */
-.onb{position:fixed;inset:0;background:var(--bg);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
-.onb.open{display:flex}
-.onb-card{max-width:440px;width:100%}
-.onb-card .av{width:46px;height:46px;border-radius:12px;background:var(--vdim);border:1px solid var(--vborder);display:flex;align-items:center;justify-content:center;font-size:23px;color:var(--vlight);margin-bottom:16px}
-.onb-card .q{font-size:21px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;margin-bottom:8px}
-.onb-card .qd{font-size:14px;color:var(--muted2);margin-bottom:20px}
-.metiers{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
-.metier{background:var(--card);border:1px solid var(--border2);border-radius:11px;padding:13px;font-size:14px;text-align:center;cursor:pointer;transition:.15s}
-.metier:hover,.metier.sel{border-color:var(--vlight);background:var(--vdim)}
-.onb-input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:11px;padding:14px;color:var(--text);font-family:'Inter',sans-serif;font-size:16px;margin-bottom:12px}
-.onb-input:focus{outline:none;border-color:var(--vlight)}
-.onb-btn{width:100%;background:var(--violet);color:#fff;border-radius:11px;padding:14px;font-weight:600;font-size:15px}
-.onb-btn:hover{background:var(--vlight)}
-.onb-prog{display:flex;gap:6px;margin-bottom:22px}
-.onb-prog .p{flex:1;height:4px;border-radius:2px;background:var(--border2)}
-.onb-prog .p.on{background:var(--violet)}
-
-/* MOBILE */
-.overlay-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:39}
-@media(max-width:860px){
-  .app{grid-template-columns:1fr}
-  .sidebar{position:fixed;top:0;left:0;z-index:40;width:250px;transform:translateX(-100%)}
-  .sidebar.open{transform:translateX(0)}
-  .overlay-bg.show{display:block}
-  .burger{display:block}
-  .content{padding:16px}
-  .stat-row{grid-template-columns:1fr;gap:10px}
-  .stat-card{display:flex;align-items:center;justify-content:space-between}
-  .stat-card .v{font-size:20px}
-  .validate-btn{padding:9px 14px;font-size:13px}
-  .validate-btn .txt{display:none}
-  .metiers{grid-template-columns:1fr 1fr}
+.modal{background:var(--card);border-radius:18px;max-width:620px;width:100%;padding:24px}
+.modal h2{font-size:20px;margin-bottom:4px}
+.modal .msub{font-size:14px;color:var(--ink2);margin-bottom:18px}
+.act-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px}
+.act-card .ah{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.act-card .ai{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.act-card .at{font-size:13.5px;font-weight:600}
+.act-card .ap{font-size:13px;color:var(--ink2);background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:10px;line-height:1.5;white-space:pre-wrap;max-height:140px;overflow-y:auto}
+.act-card .acts{display:flex;gap:8px}
+.act-card .v{background:var(--violet);color:#fff;padding:7px 15px;border-radius:8px;font-weight:600;font-size:13px}
+.act-card .e{background:var(--card);color:var(--ink);border:1px solid var(--border2);padding:7px 13px;border-radius:8px;font-size:13px}
+.act-card .r{background:none;color:var(--muted);padding:7px 10px;font-size:13px}
+.modal-foot{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}
+.modal-foot .all{flex:1;background:var(--vdim);color:var(--violet);border:1px solid var(--vborder);padding:11px;border-radius:10px;font-weight:600;font-size:14px}
+.modal-foot .close{background:var(--card);color:var(--ink2);border:1px solid var(--border2);padding:11px 18px;border-radius:10px;font-size:14px}
+.empty-state{text-align:center;padding:30px;color:var(--muted);font-size:14px}
+.spinner{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.mobile-top{display:none}
+@media(max-width:880px){
+  .side{transform:translateX(-100%);transition:.3s;z-index:90}
+  .side.open{transform:none}
+  .main{margin-left:0;padding:18px}
+  .mobile-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .burger{font-size:22px;background:none}
 }
 </style>
 </head>
 <body>
-
-<div class="overlay-bg" id="overlayBg" onclick="closeSidebar()"></div>
-
-<div class="app">
+<div class="layout">
   <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="logo"><span class="mark">⬡</span><span>PageLab</span></div>
-    <div class="side-label">Tableau de bord</div>
-    <div class="agent-item active" data-view="home" onclick="showView('home',this)">
-      <span class="gly" style="background:var(--vdim);color:var(--vlight)">◆</span>
-      <span class="nm">Accueil</span>
-    </div>
-    <div class="side-label">Vos agents</div>
-    <div class="agent-item" data-view="marc" onclick="showView('marc',this)">
-      <span class="gly" style="background:var(--rdim);color:var(--red)">€</span><span class="nm">Marc</span><span class="dot"></span>
-    </div>
-    <div class="agent-item" data-view="leo" onclick="showView('leo',this)">
-      <span class="gly" style="background:var(--bdim);color:var(--blue)">▤</span><span class="nm">Léo</span><span class="dot"></span>
-    </div>
-    <div class="agent-item" data-view="lucas" onclick="showView('lucas',this)">
-      <span class="gly" style="background:var(--gdim);color:var(--green)">◷</span><span class="nm">Lucas</span><span class="dot"></span>
-    </div>
-    <div class="agent-item" data-view="emma" onclick="showView('emma',this)">
-      <span class="gly" style="background:var(--adim);color:var(--amber)">★</span><span class="nm">Emma</span><span class="dot"></span>
-    </div>
-    <div class="agent-item" data-view="hugo" onclick="showView('hugo',this)">
-      <span class="gly" style="background:var(--bdim);color:var(--blue)">⚲</span><span class="nm">Hugo</span><span class="dot"></span>
-    </div>
-    <div class="agent-item" data-view="alex" onclick="openSoon()">
-      <span class="gly" style="background:var(--vdim);color:var(--vlight)">◈</span><span class="nm">Alex</span><span class="soon-mini">bientôt</span>
-    </div>
-    <div class="sam-card">
-      <div class="t">🛡 Sam surveille</div>
-      <div class="s">Tout va bien</div>
-    </div>
-    <a href="/integrations.html" class="connexions-btn">
-      <span>🔌</span><span>Mes connexions</span><span class="arrow">→</span>
-    </a>
+  <aside class="side" id="side">
+    <div class="logo"><span class="mk">&#11041;</span> PageLab</div>
+    <div class="lbl">Tableau de bord</div>
+    <button class="nav-item active" data-v="home" onclick="nav('home')"><span class="ig" style="background:var(--vdim);color:var(--violet)">&#9632;</span> Accueil</button>
+    <div class="lbl">Mes agents</div>
+    <button class="nav-item" data-v="marc" onclick="nav('marc')"><span class="ig" style="background:var(--rdim);color:var(--red)">&euro;</span> Marc <span class="dot"></span></button>
+    <button class="nav-item" data-v="leo" onclick="nav('leo')"><span class="ig" style="background:var(--bdim);color:var(--blue)">&#9636;</span> L&eacute;o <span class="dot"></span></button>
+    <button class="nav-item" data-v="emma" onclick="nav('emma')"><span class="ig" style="background:var(--adim);color:var(--amber)">&#9733;</span> Emma <span class="dot"></span></button>
+    <div class="lbl">G&eacute;rer</div>
+    <button class="nav-item" data-v="abo" onclick="nav('abo')"><span class="ig" style="background:var(--gdim);color:var(--green)">&#9733;</span> Mon abonnement</button>
+    <a class="nav-item" href="/integrations.html"><span class="ig" style="background:var(--bg2)">&#128268;</span> Mes connexions</a>
     <div class="side-foot">
-      <a href="#" onclick="startCheckout();return false;" style="color:var(--vlight);font-weight:600">⭐ Passer en illimité</a>
-      <a href="#" onclick="startTour();return false;">Revoir la présentation</a>
+      <a href="#" onclick="startTour();return false;">Revoir la pr&eacute;sentation</a>
       <a href="/contact.html">Aide</a>
-      <a onclick="logout()" style="cursor:pointer">Déconnexion</a>
+      <a href="#" onclick="logout();return false;">D&eacute;connexion</a>
     </div>
   </aside>
 
   <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <div style="display:flex;align-items:center;gap:14px">
-        <span class="burger" onclick="openSidebar()">☰</span>
-        <span class="title" id="topTitle">Bonjour 👋</span>
-      </div>
-      <button class="validate-btn" id="validateBtn" onclick="openValidation()">
-        <span>✓</span><span class="txt">À valider</span><span class="badge" id="valBadge">3</span>
-      </button>
+  <main class="main">
+    <div class="mobile-top">
+      <button class="burger" onclick="document.getElementById('side').classList.toggle('open')">&#9776;</button>
+      <span style="font-weight:700">PageLab</span>
+      <button class="validate-btn" onclick="openValidation()" style="padding:8px 12px"><span id="mBadge">0</span></button>
     </div>
 
-    <div class="content">
-      <!-- VUE ACCUEIL -->
-      <div class="workspace active" id="view-home">
-        <div class="stat-row">
-          <div class="stat-card"><div class="l">Récupéré ce mois</div><div class="v" id="home-recovered" style="color:var(--green)">—</div></div>
-          <div class="stat-card"><div class="l">En attente</div><div class="v" id="home-pending" style="color:var(--red)">—</div></div>
-          <div class="stat-card"><div class="l">À valider</div><div class="v" id="home-tovalidate">—</div></div>
+    <!-- ACCUEIL -->
+    <section class="view active" id="view-home">
+      <div class="topbar">
+        <h1>Bonjour <span id="userName">&#128075;</span></h1>
+        <button class="validate-btn empty" id="validateBtn" onclick="openValidation()"><span>&#10003;</span> Tout est valid&eacute;</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="l">R&eacute;cup&eacute;r&eacute; ce mois</div><div class="v" style="color:var(--green)" id="home-recovered">&mdash;</div></div>
+        <div class="stat"><div class="l">En attente de paiement</div><div class="v" style="color:var(--red)" id="home-pending">&mdash;</div></div>
+        <div class="stat"><div class="l">&Agrave; valider</div><div class="v" id="home-tovalidate">&mdash;</div></div>
+      </div>
+      <div class="chat">
+        <div class="chat-head">
+          <div class="av">&#11041;</div>
+          <div><div class="nm">Baptiste</div><div class="st">&#9679; pilote ton &eacute;quipe &middot; tu valides</div></div>
         </div>
-
-        <div class="baptiste">
-          <div class="head">
-            <div class="av">◆</div>
-            <div style="flex:1"><div class="nm">Baptiste</div><div class="st">● pilote tes agents · tu valides</div></div>
-          </div>
-          <div class="chat-msgs" id="chatMsgs">
-            <div class="msg bot">Salut <span id="userName">!</span> 👋 Je suis Baptiste, je coordonne ton équipe.<br><br>Demande-moi ce que tu veux : <b>« où en sont mes impayés ? »</b>, <b>« lance Marc »</b>, <b>« écris un article sur l'isolation »</b>, <b>« mets Emma en pause »</b>… Je m'occupe de piloter les agents, et tu valides toujours avant tout envoi 👍</div>
-          </div>
-          <div class="chat-input">
-            <button class="mic" title="Parler" onclick="alert('Mode vocal bientôt disponible')">🎤</button>
-            <input type="text" id="chatInput" placeholder="Demande à Baptiste (ex : lance Marc, où en sont mes impayés ?)…" onkeydown="if(event.key==='Enter')sendChat()">
-            <button class="send" onclick="sendChat()">↑</button>
-          </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="Demande &agrave; Baptiste (ex : lance Marc, o&ugrave; en sont mes impay&eacute;s ?)" onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="send" onclick="sendChat()">&#8593;</button>
         </div>
       </div>
+    </section>
 
-      <!-- ATELIER MARC -->
-      <div class="workspace" id="view-marc">
-        <div class="ws-head"><div class="gly" style="background:var(--rdim);color:var(--red)">€</div><div><div class="nm">Marc</div><div class="rl">Récupère l'argent qu'on vous doit</div></div></div>
+    <!-- MARC -->
+    <section class="view" id="view-marc">
+      <div class="topbar"><h1>Marc &mdash; Impay&eacute;s &amp; tr&eacute;sorerie</h1></div>
+      <div class="stats">
+        <div class="stat"><div class="l">&Agrave; r&eacute;cup&eacute;rer</div><div class="v" style="color:var(--red)" id="marc-torecover">&mdash;</div></div>
+        <div class="stat"><div class="l">R&eacute;cup&eacute;r&eacute; ce mois</div><div class="v" style="color:var(--green)" id="marc-recovered">&mdash;</div></div>
+        <div class="stat"><div class="l">Relances pr&ecirc;tes</div><div class="v" id="marc-pending">&mdash;</div></div>
+      </div>
+      <div class="ws">
+        <h2>Atelier de Marc</h2>
+        <div class="desc">Marc lit vos factures Stripe, rep&egrave;re les retards et pr&eacute;pare les relances. Vous validez avant tout envoi.</div>
         <div class="agent-actions">
-          <button class="btn-run" id="run-marc" onclick="runAgent('marc','run-marc')">▶ Exécuter maintenant</button>
-          <button class="btn-sched" onclick="openSchedule('marc')">🕐 Programmer</button>
+          <button class="btn-run" id="run-marc" onclick="runAgent('marc','run-marc')">&#9654; Ex&eacute;cuter maintenant</button>
+          <button class="btn-sched" onclick="openSchedule('marc')">&#128336; Programmer</button>
           <span class="sched-info" id="sched-info-marc"></span>
         </div>
-        <div class="client-type-box">
-          <div class="ct-label">Vos clients sont principalement :</div>
-          <div class="ct-opts">
-            <button class="ct-opt" id="ct-particulier" onclick="setClientType('particulier')">🏠 Des particuliers</button>
-            <button class="ct-opt" id="ct-pro" onclick="setClientType('pro')">🏢 Des professionnels</button>
+        <div class="ct-box" style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:16px">
+          <div style="font-size:13.5px;font-weight:600;margin-bottom:9px">Vos clients sont principalement :</div>
+          <div style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="btn-sched" id="ct-particulier" onclick="setClientType('particulier')">&#127968; Des particuliers</button>
+            <button class="btn-sched" id="ct-pro" onclick="setClientType('pro')">&#127970; Des professionnels</button>
           </div>
-          <div class="ct-hint">L'indemnité légale de 40 € pour retard ne s'applique qu'entre professionnels. Marc l'ajoute uniquement dans ce cas.</div>
-        </div>
-        <div class="stat-row">
-          <div class="stat-card"><div class="l">À récupérer</div><div class="v" id="marc-torecover" style="color:var(--red)">—</div></div>
-          <div class="stat-card"><div class="l">Récupéré (mois)</div><div class="v" id="marc-recovered" style="color:var(--green)">—</div></div>
-          <div class="stat-card"><div class="l">Relances en cours</div><div class="v" id="marc-pending">—</div></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:9px">L'indemnit&eacute; de 40 &euro; pour retard ne s'applique qu'entre pros. Marc l'ajoute seulement dans ce cas.</div>
         </div>
         <div class="ws-label">Vos factures</div>
-        <div class="list" id="marc-invoices">
-          <div class="list-row"><div class="info"><div class="n" style="color:var(--muted2)">Connectez Stripe pour voir vos factures</div></div></div>
-        </div>
-        <div class="ai-box" id="marc-aibox">
-          <div class="t">🤖 Marc prépare vos relances</div>
-          <div class="m">Dès qu'une facture est en retard, Marc rédige la relance (avec la pénalité légale de 40 €) et la met dans « À valider ». Vous l'envoyez d'un clic.</div>
-        </div>
-        <div class="ws-label">Historique de Marc</div>
-        <div class="hist" id="marc-hist">
-          <div class="hist-item"><span class="d">—</span><span class="x">Les relances de Marc apparaîtront ici</span></div>
-        </div>
+        <div class="list" id="marc-invoices"><div class="empty-state">Connecte Stripe pour voir tes factures.</div></div>
       </div>
-
-      <!-- ATELIER LÉO -->
-      <div class="workspace" id="view-leo">
-        <div class="ws-head"><div class="gly" style="background:var(--bdim);color:var(--blue)">▤</div><div><div class="nm">Léo</div><div class="rl">Vos devis, générés en 30 secondes</div></div></div>
-        <div class="ai-box">
-          <div class="t">🤖 Décrivez le chantier, Léo fait le devis</div>
-          <div class="m" style="margin-bottom:10px">Tapez en quelques mots ce qu'il y a à faire. Léo génère un devis chiffré, prêt à ajuster.</div>
-          <textarea id="leo-brief" placeholder="Ex : rénovation salle de bain 6m², dépose ancienne baignoire, pose douche italienne, carrelage mural et sol, plomberie" style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-family:'Inter';font-size:14px;min-height:70px;resize:vertical"></textarea>
-          <div class="acts" style="margin-top:10px"><button class="v" id="leo-gen-btn" onclick="leoGenerate()">Générer le devis</button></div>
-        </div>
-        <div id="leo-result"></div>
-        <div class="ws-label">Historique de Léo</div>
-        <div class="hist" id="leo-hist">
-          <div class="hist-item"><span class="d">—</span><span class="x">Vos devis générés apparaîtront ici</span></div>
-        </div>
+      <div class="ws">
+        <div class="ws-label">Historique des relances</div>
+        <div id="marc-hist"><div class="empty-state">Les relances envoy&eacute;es appara&icirc;tront ici.</div></div>
       </div>
+    </section>
 
-      <!-- ATELIER LUCAS -->
-      <div class="workspace" id="view-lucas">
-        <div class="ws-head"><div class="gly" style="background:var(--gdim);color:var(--green)">◷</div><div><div class="nm">Lucas</div><div class="rl">Votre trésorerie & votre stock</div></div></div>
+    <!-- LEO -->
+    <section class="view" id="view-leo">
+      <div class="topbar"><h1>L&eacute;o &mdash; Devis &amp; factures</h1></div>
+      <div class="ws">
+        <h2>Cr&eacute;er un devis</h2>
+        <div class="desc">D&eacute;crivez le chantier, L&eacute;o pr&eacute;pare un devis chiffr&eacute; avec TVA et mentions l&eacute;gales. Vous ajustez avant d'envoyer.</div>
+        <textarea id="leo-brief" placeholder="Ex : r&eacute;novation salle de bain 6m&sup2; &mdash; d&eacute;pose ancien carrelage, pose fa&iuml;ence, remplacement robinetterie, 3 jours"></textarea>
+        <div style="margin-top:12px"><button class="btn-run" id="leo-gen-btn" onclick="leoGenerate()">G&eacute;n&eacute;rer le devis</button></div>
+        <div id="leo-result" style="margin-top:18px"></div>
+      </div>
+    </section>
+
+    <!-- EMMA -->
+    <section class="view" id="view-emma">
+      <div class="topbar"><h1>Emma &mdash; Avis Google</h1></div>
+      <div class="ws">
+        <h2>Atelier d'Emma</h2>
+        <div class="desc">Emma rep&egrave;re vos clients r&eacute;cents et pr&eacute;pare une demande d'avis Google. Vous validez avant l'envoi.</div>
         <div class="agent-actions">
-          <button class="btn-run" id="run-lucas" onclick="runAgent('lucas','run-lucas')">▶ Exécuter maintenant</button>
-          <button class="btn-sched" onclick="openSchedule('lucas')">🕐 Programmer</button>
-          <span class="sched-info" id="sched-info-lucas"></span>
-        </div>
-        <div class="subtabs" style="display:flex;gap:8px;margin-bottom:16px">
-          <button class="subtab active" id="tab-treso" onclick="lucasTab('treso')">Trésorerie</button>
-          <button class="subtab" id="tab-stock" onclick="lucasTab('stock')">Stock</button>
-        </div>
-        <div id="lucas-treso">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="add-btn">+ Ajouter une dépense</button></div>
-        <div class="stat-card" style="margin-bottom:14px">
-          <div class="l">Solde disponible (Stripe)</div><div class="v" id="lucas-solde" style="color:var(--green)">—</div>
-        </div>
-        <div class="bar-chart" id="lucas-chart">
-          <div class="bar" style="height:55%;background:var(--green)"></div>
-          <div class="bar" style="height:40%;background:var(--green)"></div>
-          <div class="bar" style="height:70%;background:var(--green)"></div>
-          <div class="bar" style="height:85%;background:var(--green)"></div>
-          <div class="bar" style="height:60%;background:var(--green)"></div>
-          <div class="bar" style="height:50%;background:var(--border2)"></div>
-        </div>
-        <div class="stat-row" style="grid-template-columns:1fr 1fr;margin-bottom:16px">
-          <div class="stat-card"><div class="l">Entrées (mois)</div><div class="v" id="lucas-entrees" style="color:var(--green);font-size:18px">—</div></div>
-          <div class="stat-card"><div class="l">Impayés en attente</div><div class="v" id="lucas-impayes" style="color:var(--red);font-size:18px">—</div></div>
-        </div>
-        <div class="ai-box" style="background:var(--adim);border-color:rgba(245,158,11,.25)">
-          <div class="t" style="color:var(--amber)">💡 Lucas travaille avec Marc</div>
-          <div class="m" style="color:#dcb">Quand des factures sont impayées, Lucas le signale à Marc pour qu'il les relance — et votre trésorerie se débloque.</div>
-        </div>
-        <div class="ws-label">Historique de Lucas</div>
-        <div class="hist">
-          <div class="hist-item"><span class="d">—</span><span class="x">Les mouvements analysés par Lucas apparaîtront ici</span></div>
-        </div>
-        </div>
-        <div id="lucas-stock" style="display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div class="stat-card" style="flex:1;margin-right:10px"><div class="l">Valeur du stock</div><div class="v" style="font-size:18px">2 340 €</div></div>
-            <button class="add-btn">+ Ajouter un article</button>
-          </div>
-          <div class="ws-label">Votre matériel</div>
-          <div class="list">
-            <div class="list-row"><div class="info"><div class="n">Tubes cuivre Ø16</div><div class="sub">42 unités</div></div><span class="tag green">en stock</span></div>
-            <div class="list-row"><div class="info"><div class="n">Coudes laiton</div><div class="sub">8 unités</div></div><span class="tag amber">stock bas</span></div>
-            <div class="list-row"><div class="info"><div class="n">Joints fibre</div><div class="sub">0 unité</div></div><span class="tag red">épuisé</span></div>
-          </div>
-          <div class="ai-box">
-            <div class="t">🤖 Lucas surveille votre stock</div>
-            <div class="m">2 articles sont bas ou épuisés. Je peux préparer un bon de commande pour ton fournisseur — dis-le-moi.</div>
-          </div>
-          <div style="font-size:12.5px;color:var(--muted);margin-top:10px">💡 Le suivi de stock automatique depuis tes achats arrive bientôt.</div>
-        </div>
-      </div>
-
-      <!-- ATELIER EMMA -->
-      <div class="workspace" id="view-emma">
-        <div class="ws-head"><div class="gly" style="background:var(--adim);color:var(--amber)">★</div><div><div class="nm">Emma</div><div class="rl">Plus d'avis Google, sans y penser</div></div></div>
-        <div class="agent-actions">
-          <button class="btn-run" id="run-emma" onclick="runAgent('emma','run-emma')">▶ Exécuter maintenant</button>
-          <button class="btn-sched" onclick="openSchedule('emma')">🕐 Programmer</button>
+          <button class="btn-run" id="run-emma" onclick="runAgent('emma','run-emma')">&#9654; Ex&eacute;cuter maintenant</button>
+          <button class="btn-sched" onclick="openSchedule('emma')">&#128336; Programmer</button>
           <span class="sched-info" id="sched-info-emma"></span>
         </div>
-        <div class="ai-box" style="background:var(--adim);border-color:rgba(245,158,11,.25)">
-          <div class="t" style="color:var(--amber)">⭐ Demander un avis à un client</div>
-          <div class="m" style="color:#dcb;margin-bottom:10px">Chantier fini ? Envoyez une demande d'avis en un clic. Le client reçoit un email avec votre lien direct — il note en 30 secondes.</div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <button class="btn-sched" onclick="emmaLoadClients()" style="justify-content:center"><span>📇</span> Piocher dans mes clients Stripe</button>
-            <div id="emma-clients-list" style="display:none;max-height:160px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:6px"></div>
-            <input id="emma-client-name" placeholder="Nom du client (ou choisi ci-dessus)" style="background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px;color:var(--text);font-family:'Inter';font-size:14px">
-            <input id="emma-client-email" type="email" placeholder="Email du client" style="background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px;color:var(--text);font-family:'Inter';font-size:14px">
-          </div>
-          <div class="acts" style="margin-top:10px"><button class="v" id="emma-send-btn" onclick="emmaSend()">Envoyer la demande d'avis</button></div>
-          <div id="emma-feedback" style="font-size:13px;margin-top:8px;min-height:16px"></div>
-        </div>
-        <div class="ai-box">
-          <div class="t">🔗 Votre lien d'avis Google</div>
-          <div class="m" style="margin-bottom:8px">Collez l'ID de votre fiche Google (placeId) pour un lien direct, ou laissez vide pour une recherche par nom.</div>
-          <div style="display:flex;gap:8px">
-            <input id="emma-place" placeholder="placeId Google (optionnel)" style="flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:10px;color:var(--text);font-family:ui-monospace,monospace;font-size:13px">
-            <button class="e" onclick="emmaLink()">Obtenir le lien</button>
-          </div>
-          <div id="emma-link" style="font-size:13px;margin-top:8px;word-break:break-all"></div>
-        </div>
-        <div class="ws-label">Historique d'Emma</div>
-        <div class="hist" id="emma-hist">
-          <div class="hist-item"><span class="d">—</span><span class="x">Vos demandes d'avis envoyées apparaîtront ici</span></div>
-        </div>
+        <div class="ws-label">Lien Google &agrave; utiliser</div>
+        <input id="emma-link" placeholder="Collez votre lien d'avis Google" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:12px 15px;font-size:14px;font-family:inherit;color:var(--ink)">
+        <div style="margin-top:10px"><button class="btn-sched" onclick="emmaSaveLink()">Enregistrer le lien</button></div>
       </div>
+    </section>
 
-      <!-- ATELIER HUGO (SEO / visibilité) -->
-      <div class="workspace" id="view-hugo">
-        <div class="ws-head"><div class="gly" style="background:var(--bdim);color:var(--blue)">⚲</div><div><div class="nm">Hugo</div><div class="rl">Votre visibilité sur Google</div></div></div>
-        <div class="ai-box">
-          <div class="t">🤖 Hugo écrit vos articles de blog</div>
-          <div class="m" style="margin-bottom:10px">Un article bien écrit vous fait remonter sur Google quand un client cherche votre métier. Donnez un sujet, Hugo rédige un article optimisé prêt à publier sur votre site.</div>
-          <input id="hugo-brief" placeholder="Sujet de l'article (ex : comment choisir son chauffe-eau)" style="width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px;color:var(--text);font-family:'Inter';font-size:14px">
-          <div class="acts" style="margin-top:10px"><button class="v" id="hugo-gen-btn" onclick="hugoGenerate()">Générer l'article</button></div>
+    <!-- ABONNEMENT -->
+    <section class="view" id="view-abo">
+      <div class="topbar"><h1>Mon abonnement</h1></div>
+      <div class="ws">
+        <h2>Votre formule</h2>
+        <div class="desc" id="abo-desc">Chargement&hellip;</div>
+        <div class="list" style="margin-bottom:16px">
+          <div class="list-row"><div><div class="n">Marc &mdash; Impay&eacute;s &amp; tr&eacute;sorerie</div><div class="sub">19 &euro;/mois</div></div><span class="tag green">actif</span></div>
         </div>
-        <div id="hugo-result"></div>
-        <div class="ws-label">Connexion WordPress</div>
-        <div id="hugo-wp" style="font-size:13px;color:var(--muted2)">Connectez votre site WordPress dans « Mes connexions » pour publier en un clic. Sinon, Hugo génère l'article et vous le copiez-collez.</div>
+        <button class="btn-run" onclick="startCheckout()">&#11088; G&eacute;rer mon abonnement</button>
       </div>
-
-      <!-- ATELIER ALEX (réseaux sociaux — bientôt, verrouillé) -->
-      <div class="workspace" id="view-alex">
-        <div class="ws-head"><div class="gly" style="background:var(--vdim);color:var(--vlight)">◈</div><div><div class="nm">Alex <span class="soon-mini">bientôt</span></div><div class="rl">Vos posts LinkedIn, rédigés pour vous</div></div></div>
-        <div class="locked-box">
-          <div class="locked-ico">🔒</div>
-          <div class="locked-title">Alex arrive bientôt</div>
-          <div class="locked-desc">Alex rédigera vos posts LinkedIn et Facebook et les publiera automatiquement (via Zernio). On met la dernière main dessus.<br><br>En attendant, vos 5 autres agents sont déjà au travail 💪</div>
-          <button class="locked-btn" onclick="showView('marc',document.querySelector('[data-view=marc]'))">Voir mes agents actifs</button>
-        </div>
+      <div class="ws">
+        <div class="ws-label">Ajouter un agent</div>
+        <div class="desc">Renforcez votre &eacute;quipe avec un agent suppl&eacute;mentaire.</div>
+        <button class="btn-sched" onclick="window.location.href='/#agents'">Voir le catalogue</button>
       </div>
-
-    </div>
-  </div>
+    </section>
+  </main>
 </div>
 
-<!-- MODAL VALIDATION (revue groupée) -->
-<div class="modal-bg" id="modalBg">
+<!-- MODAL VALIDATION -->
+<div class="modal-bg" id="valModal">
   <div class="modal">
-    <span class="modal-close" onclick="closeValidation()">✕</span>
-    <h3>À valider</h3>
-    <p class="msub">Cochez ce que vous voulez envoyer. Rien ne part sans vous.</p>
-    <div id="modalContent">
-      <div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l'instant. Dès que vos agents préparent une action, elle apparaît ici.</div>
-    </div>
-    <div class="mbtns" id="modalBtns" style="display:none;flex-wrap:wrap">
-      <button class="ok" id="btnValidateSel" onclick="validateSelection(false)">✓ Valider la sélection</button>
-      <button class="no" onclick="validateSelection(true)" title="Les envois partent dans 24h, annulables à tout moment">🛡 Valider avec sécurité 24h</button>
-      <button class="no" onclick="validateAll()">Tout valider</button>
-    </div>
-  </div>
-</div>
-<style>
-.review-item{display:flex;gap:11px;padding:12px;border:1px solid var(--border);border-radius:11px;margin-bottom:10px;align-items:flex-start}
-.review-item .chk{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border2);background:var(--bg2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px}
-.review-item .chk.on{background:var(--violet);border-color:var(--violet);color:#fff}
-.review-item .ri-body{flex:1;min-width:0}
-.review-item .ri-head{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;margin-bottom:5px}
-.review-item .ri-gly{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
-.review-item .ri-preview{font-size:12.5px;color:var(--muted2);line-height:1.5;max-height:80px;overflow-y:auto;white-space:pre-line;background:var(--bg2);border-radius:8px;padding:8px 10px}
-</style>
-
-<!-- ONBOARDING -->
-<div class="onb" id="onb">
-  <div class="onb-card">
-    <div class="onb-prog"><div class="p on" id="p1"></div><div class="p" id="p2"></div><div class="p" id="p3"></div></div>
-    <div class="av">◆</div>
-    <!-- étape 1 métier -->
-    <div id="onb1">
-      <div class="q">Salut ! Moi c'est Baptiste 👋</div>
-      <div class="qd">Je coordonne ton équipe. Dis-moi ton métier, et je configure tout pour toi.</div>
-      <div class="metiers">
-        <div class="metier" onclick="pickMetier(this,'Plombier')">🔧 Plombier</div>
-        <div class="metier" onclick="pickMetier(this,'Électricien')">⚡ Électricien</div>
-        <div class="metier" onclick="pickMetier(this,'Maçon')">🧱 Maçon</div>
-        <div class="metier" onclick="pickMetier(this,'Menuisier')">🪵 Menuisier</div>
-        <div class="metier" onclick="pickMetier(this,'Peintre')">🎨 Peintre</div>
-        <div class="metier" onclick="pickMetier(this,'Chauffagiste')">🔥 Chauffagiste</div>
-        <div class="metier" onclick="pickMetier(this,'Carreleur')">◧ Carreleur</div>
-        <div class="metier" onclick="pickMetier(this,'Autre BTP')">🏗 Autre BTP</div>
-      </div>
-    </div>
-    <!-- étape 2 prénom -->
-    <div id="onb2" style="display:none">
-      <div class="q">Comment tu t'appelles ?</div>
-      <div class="qd">Pour que je m'adresse à toi correctement.</div>
-      <input class="onb-input" id="onbPrenom" placeholder="Ton prénom" autocomplete="given-name">
-      <button class="onb-btn" onclick="onbStep3()">Continuer</button>
-    </div>
-    <!-- étape 3 ville -->
-    <div id="onb3" style="display:none">
-      <div class="q">Tu bosses dans quelle ville ?</div>
-      <div class="qd">Pour t'aider à être trouvé localement (Hugo s'en occupera).</div>
-      <input class="onb-input" id="onbVille" placeholder="Ex : Cergy" autocomplete="address-level2">
-      <button class="onb-btn" onclick="finishOnboarding()">C'est parti 🚀</button>
+    <h2>&Agrave; valider</h2>
+    <div class="msub">Vos agents proposent, vous d&eacute;cidez. Rien ne part sans votre accord.</div>
+    <div id="actList"></div>
+    <div class="modal-foot">
+      <button class="all" onclick="validateAll()">&#10003; Tout valider</button>
+      <button class="all" style="background:var(--gdim);color:var(--green);border-color:#a7f3d0" onclick="validateAll(true)" title="Envoi diff&eacute;r&eacute; de 24h, annulable">&#128737; Valider avec s&eacute;curit&eacute; 24h</button>
+      <button class="close" onclick="closeValidation()">Fermer</button>
     </div>
   </div>
 </div>
 
-<!-- TOUR GUIDÉ (concept, après 1re connexion) -->
-<div class="tour-bg" id="tourBg">
-  <div class="tour-card">
-    <div class="tour-progress"><div class="tour-bar" id="tourBar"></div></div>
-    <div class="tour-step" id="tourStep"></div>
-    <div class="tour-nav">
-      <button class="tour-skip" onclick="endTour()">Passer</button>
-      <div class="tour-dots" id="tourDots"></div>
-      <button class="tour-next" id="tourNext" onclick="nextTour()">Suivant →</button>
-    </div>
-  </div>
-</div>
-
-<!-- POPUP BLOQUANT (Alex bientôt) -->
-<div class="popup-bg" id="popupSoon">
-  <div class="popup">
-    <div class="pi">🔒</div>
-    <h3>Alex arrive bientôt</h3>
-    <p>Cet agent n'est pas encore disponible. Alex rédigera et publiera vos posts LinkedIn et Facebook automatiquement. Vos 5 autres agents sont déjà au travail !</p>
-    <button class="pbtn" onclick="closeSoon()">J'ai compris</button>
-  </div>
-</div>
-
-<!-- MODAL PROGRAMMATION AGENT -->
-<div class="sched-pop" id="schedPop">
-  <div class="sched-card">
-    <h3 id="schedTitle">Programmer l'agent</h3>
-    <p>Choisissez l'heure à laquelle cet agent vérifie et prépare son travail, chaque jour automatiquement.</p>
-    <select id="schedHour">
-      <option value="">— Désactivé (manuel uniquement) —</option>
-    </select>
-    <div class="srow">
-      <button class="save" onclick="saveSchedule()">Enregistrer</button>
-      <button class="off" onclick="closeSchedule()">Annuler</button>
+<!-- MODAL SCHEDULE -->
+<div class="modal-bg" id="schedModal">
+  <div class="modal" style="max-width:380px">
+    <h2 id="sched-title">Programmer l'agent</h2>
+    <div class="msub">Choisissez l'heure &agrave; laquelle il tournera chaque jour, tout seul.</div>
+    <input type="time" id="sched-time" value="09:00" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:11px;padding:12px;font-size:15px;font-family:inherit;margin-bottom:14px">
+    <div class="modal-foot">
+      <button class="all" onclick="saveSchedule()">Activer</button>
+      <button class="close" onclick="document.getElementById('schedModal').classList.remove('open')">Annuler</button>
     </div>
   </div>
 </div>
 
 <script>
 const API='/.netlify/functions';
-
-// --- Session guard ---
 function getSession(){return localStorage.getItem('pl_session')||sessionStorage.getItem('pl_session')}
 function getUid(){return localStorage.getItem('pl_uid')||sessionStorage.getItem('pl_uid')}
-function sessionValid(){
-  const s=getSession();
-  if(!s)return false;
-  try{
-    const data=JSON.parse(atob(s.replace(/-/g,'+').replace(/_/g,'/')));
-    return data.exp && data.exp>Date.now();
-  }catch(e){return false}
-}
-if(!sessionValid() && !new URLSearchParams(location.search).get('demo')){
-  // session absente ou expirée → on nettoie et on renvoie à la connexion
-  localStorage.removeItem('pl_session');sessionStorage.removeItem('pl_session');
-  window.location.replace('/connexion.html');
+function logout(){localStorage.removeItem('pl_session');localStorage.removeItem('pl_uid');sessionStorage.clear();window.location.href='/connexion.html'}
+
+let PENDING=[],selected=new Set(),schedAgent=null,marcLoaded=false,clientTypePref=null;
+
+function nav(v){
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  const item=document.querySelector('.nav-item[data-v="'+v+'"]');if(item)item.classList.add('active');
+  document.getElementById('side').classList.remove('open');
+  if(v==='marc'&&!marcLoaded){loadMarcData();loadClientType();}
+  if(v==='abo')loadAbo();
 }
 
-// --- Données réelles : pending actions + profil ---
-let PENDING=[];        // actions à valider (réelles)
-let pendingIndex=0;
+function addMsg(text,cls){
+  const b=document.getElementById('chatBody');
+  const d=document.createElement('div');d.className='msg '+(cls||'bot');d.textContent=text;
+  b.appendChild(d);b.scrollTop=b.scrollHeight;
+}
+
 function loadDashboardData(){
-  const s=getSession();
-  if(!s)return; // mode démo : on garde les exemples en dur
-  fetch(API+'/dashboard-data?s='+encodeURIComponent(s))
-    .then(r=>r.json()).then(d=>{
-      if(d.error)return;
-      // prénom
-      if(d.profile && d.profile.prenom){
-        document.getElementById('userName').textContent=d.profile.prenom;
-        document.getElementById('topTitle').textContent='Bonjour '+d.profile.prenom+' 👋';
-      }
-      // actions à valider
-      PENDING=d.actions||[];
-      updateValidateBadge(d.pendingCount||0);
-      // Stats d'accueil
-      const hv=document.getElementById('home-tovalidate'); if(hv)hv.textContent=(d.pendingCount||0);
-      // Récupéré / en attente : on les remplit depuis marc-data (chargé à la volée)
-      fetch(API+'/marc-data?s='+encodeURIComponent(getSession())).then(r=>r.json()).then(m=>{
-        if(m&&m.connected){
-          const hr=document.getElementById('home-recovered');if(hr)hr.textContent=Number(m.recoveredMonth).toLocaleString('fr-FR')+' €';
-          const hp=document.getElementById('home-pending');if(hp)hp.textContent=Number(m.toRecover).toLocaleString('fr-FR')+' €';
-        }else{
-          const hr=document.getElementById('home-recovered');if(hr)hr.textContent='0 €';
-          const hp=document.getElementById('home-pending');if(hp)hp.textContent='0 €';
-        }
-      }).catch(()=>{});
-      // Honnêteté des ateliers : si l'outil requis n'est pas connecté,
-      // on masque les données d'exemple et on invite à connecter.
-      applyAgentStates(d.connected||[]);
-    }).catch(()=>{/* garde l'UI telle quelle */});
-}
-
-// --- Lucas : vraie trésorerie Stripe ---
-let lucasLoaded=false;
-function loadLucasData(){
-  const s=getSession();
-  if(!s||lucasLoaded)return;
-  lucasLoaded=true;
-  fetch(API+'/lucas-data?s='+encodeURIComponent(s))
-    .then(r=>r.json()).then(d=>{
-      if(d.error||!d.connected)return;
-      const solde=document.getElementById('lucas-solde');
-      if(solde&&d.balance!=null)solde.textContent='+ '+Number(d.balance).toLocaleString('fr-FR')+' €';
-      const ent=document.getElementById('lucas-entrees');
-      if(ent)ent.textContent='+ '+Number(d.entriesMonth).toLocaleString('fr-FR')+' €';
-      // graphique réel
-      const chart=document.getElementById('lucas-chart');
-      if(chart&&d.chart){
-        chart.innerHTML=d.chart.map(m=>'<div class="bar" style="height:'+Math.max(5,m.pct)+'%;background:var(--green)" title="'+m.label+' : '+m.total+' €"></div>').join('');
-      }
-    }).catch(()=>{lucasLoaded=false;});
-}
-
-// --- Léo : génération de devis réelle ---
-let leoDevis=null;
-function leoGenerate(){
-  const s=getSession();
-  const brief=document.getElementById('leo-brief').value.trim();
-  const btn=document.getElementById('leo-gen-btn');
-  const res=document.getElementById('leo-result');
-  if(!brief){res.innerHTML='<div style="color:var(--amber);font-size:13px;padding:8px">Décris d\'abord le chantier 🙂</div>';return;}
-  if(!s){res.innerHTML='<div style="color:var(--muted2);font-size:13px;padding:8px">Connecte-toi pour générer un vrai devis.</div>';return;}
-  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
-  fetch(API+'/leo-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,brief})})
-    .then(r=>r.json()).then(d=>{
-      btn.innerHTML='Générer le devis';btn.disabled=false;
-      if(d.error){res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">'+d.error+'</div>';return;}
-      leoDevis=d;
-      renderLeoDevis();
-      document.getElementById('leo-result').scrollIntoView({behavior:'smooth',block:'nearest'});
-    }).catch(()=>{btn.innerHTML='Générer le devis';btn.disabled=false;res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">Erreur réseau, réessaie.</div>';});
-}
-function leoSetTva(i,val){ if(leoDevis&&leoDevis.lignes[i]){leoDevis.lignes[i].tva=parseFloat(val);renderLeoDevis();} }
-function renderLeoDevis(){
-  const d=leoDevis; if(!d)return;
-  const fmt=n=>Number(n).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
-  // recalcul
-  let totalHT=0; const tvaParTaux={};
-  d.lignes.forEach(l=>{const ht=(l.quantite||1)*(l.prixUnitaire||0);l.totalHT=ht;totalHT+=ht;tvaParTaux[l.tva]=(tvaParTaux[l.tva]||0)+ht*(l.tva/100);});
-  const totalTVA=Object.values(tvaParTaux).reduce((s,v)=>s+v,0);
-  const totalTTC=totalHT+totalTVA;
-  const opt=t=>[20,10,5.5,0].map(v=>'<option value="'+v+'"'+(v===t?' selected':'')+'>'+(v===0?'0 %':v+' %')+'</option>').join('');
-  const lignes=d.lignes.map((l,i)=>
-    '<div class="leo-line"><div class="ll-main"><div class="ll-desc">'+l.designation+'</div>'+
-    '<div class="ll-sub">'+l.quantite+' '+l.unite+' × '+fmt(l.prixUnitaire)+' €</div></div>'+
-    '<select class="ll-tva" onchange="leoSetTva('+i+',this.value)">'+opt(l.tva)+'</select>'+
-    '<div class="ll-tot">'+fmt(l.totalHT)+' €</div></div>'
-  ).join('');
-  const tvaLines=Object.keys(tvaParTaux).filter(t=>tvaParTaux[t]>0).map(t=>
-    '<div class="tot-row"><span>dont TVA '+(t==='5.5'?'5,5':t)+' %</span><span>'+fmt(tvaParTaux[t])+' €</span></div>').join('');
-  const m=d.mentions||{};
-  const mentionsHtml='<div class="leo-mentions"><div class="lm-title">Mentions légales (modifiables)</div>'+
-    '<div class="lm">• '+m.assuranceDecennale+'</div>'+
-    '<div class="lm">• '+m.validite+'</div>'+
-    '<div class="lm">• '+m.paiement+'</div>'+
-    '<div class="lm">• '+m.retractation+'</div>'+
-    (m.tva?'<div class="lm">• '+m.tva+'</div>':'')+
-    '<div class="lm">• SIRET : '+m.siret+'</div></div>';
-  document.getElementById('leo-result').innerHTML=
-    '<div class="ws-label">'+d.titre+'</div>'+
-    '<div class="leo-head"><span>Prestation</span><span>TVA</span><span>Total HT</span></div>'+
-    '<div class="leo-lines">'+lignes+'</div>'+
-    '<div class="leo-totaux">'+
-      '<div class="tot-row"><span>Total HT</span><span>'+fmt(totalHT)+' €</span></div>'+
-      tvaLines+
-      '<div class="tot-row total-ttc"><span>Total TTC</span><span>'+fmt(totalTTC)+' €</span></div>'+
-    '</div>'+
-    mentionsHtml+
-    '<div class="acts" style="margin:14px 0"><button class="v" onclick="alert(\'Bientôt : export PDF Factur-X + envoi au client\')">Exporter en PDF</button><button class="e" onclick="leoGenerate()">Régénérer</button></div>'+
-    '<div style="font-size:11.5px;color:var(--muted)">💡 Léo a proposé les taux de TVA. Vérifiez-les et ajustez avant d\'envoyer : 20 % (neuf), 10 % (rénovation +2 ans), 5,5 % (rénovation énergétique).</div>';
-}
-
-// --- Emma : demande d'avis réelle ---
-// --- Emma : piocher dans les clients Stripe ---
-function emmaLoadClients(){
-  const s=getSession();
-  const box=document.getElementById('emma-clients-list');
-  if(!s){box.style.display='block';box.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:8px">Connecte-toi pour voir tes clients.</div>';return;}
-  box.style.display='block';box.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:8px"><span class="spinner"></span> Chargement…</div>';
-  fetch(API+'/emma-review',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,action:'clients'})})
-    .then(r=>r.json()).then(d=>{
-      if(d.error){box.innerHTML='<div style="font-size:13px;color:var(--red);padding:8px">'+d.error+'</div>';return;}
-      if(!d.connected){box.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:8px">Connecte Stripe dans « Mes connexions » pour retrouver tes clients ici. Sinon, saisis l\'email manuellement ci-dessous 👇</div>';return;}
-      if(!d.clients||d.clients.length===0){box.innerHTML='<div style="font-size:13px;color:var(--muted2);padding:8px">Aucun client avec email trouvé dans Stripe. Saisis-le manuellement 👇</div>';return;}
-      box.innerHTML=d.clients.map(c=>'<div onclick="emmaPickClient(\''+(c.name||'').replace(/\x27/g,'')+'\',\''+c.email+'\')" style="padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;gap:8px" onmouseover="this.style.background=\'var(--card2)\'" onmouseout="this.style.background=\'\'"><span>'+(c.name||c.email)+'</span><span style="color:var(--muted)">'+c.email+'</span></div>').join('');
-    }).catch(()=>{box.innerHTML='<div style="font-size:13px;color:var(--red);padding:8px">Erreur réseau.</div>';});
-}
-function emmaPickClient(name,email){
-  document.getElementById('emma-client-name').value=name||'';
-  document.getElementById('emma-client-email').value=email||'';
-  document.getElementById('emma-clients-list').style.display='none';
-}
-
-function emmaSend(){
-  const s=getSession();
-  const name=document.getElementById('emma-client-name').value.trim();
-  const email=document.getElementById('emma-client-email').value.trim();
-  const place=document.getElementById('emma-place').value.trim();
-  const fb=document.getElementById('emma-feedback');
-  const btn=document.getElementById('emma-send-btn');
-  if(!email){fb.style.color='var(--amber)';fb.textContent='Entre l\'email du client.';return;}
-  if(!s){fb.style.color='var(--muted2)';fb.textContent='Connecte-toi pour envoyer.';return;}
-  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
-  fetch(API+'/emma-review',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,action:'send',clientName:name,clientEmail:email,placeId:place})})
-    .then(r=>r.json()).then(d=>{
-      btn.innerHTML='Envoyer la demande d\'avis';btn.disabled=false;
-      if(d.error){fb.style.color='var(--red)';fb.textContent=d.error;return;}
-      fb.style.color='var(--green)';fb.textContent='✓ Demande d\'avis envoyée à '+email+' !';
-      document.getElementById('emma-client-name').value='';document.getElementById('emma-client-email').value='';
-      const h=document.getElementById('emma-hist');
-      if(h.querySelector('.d')?.textContent==='—')h.innerHTML='';
-      h.insertAdjacentHTML('afterbegin','<div class="hist-item"><span class="d">à l\'instant</span><span class="x">Demande d\'avis envoyée à '+(name||email)+'</span></div>');
-    }).catch(()=>{btn.innerHTML='Envoyer la demande d\'avis';btn.disabled=false;fb.style.color='var(--red)';fb.textContent='Erreur réseau.';});
-}
-function emmaLink(){
-  const s=getSession();const place=document.getElementById('emma-place').value.trim();
-  const out=document.getElementById('emma-link');
-  if(!s){out.textContent='Connecte-toi pour obtenir ton lien.';return;}
-  fetch(API+'/emma-review',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,action:'link',placeId:place})})
-    .then(r=>r.json()).then(d=>{
-      if(d.link)out.innerHTML='<a href="'+d.link+'" target="_blank" style="color:var(--vlight)">'+d.link+'</a>';
-      else out.textContent=d.error||'Souci, réessaie.';
-    }).catch(()=>out.textContent='Erreur réseau.');
-}
-
-// --- Hugo : génération d'article SEO ---
-function hugoGenerate(){
-  const s=getSession();
-  const brief=document.getElementById('hugo-brief').value.trim();
-  const btn=document.getElementById('hugo-gen-btn');
-  const res=document.getElementById('hugo-result');
-  if(!brief){res.innerHTML='<div style="color:var(--amber);font-size:13px;padding:8px">Donne un sujet d\'article 🙂</div>';return;}
-  if(!s){res.innerHTML='<div style="color:var(--muted2);font-size:13px;padding:8px">Connecte-toi pour générer.</div>';return;}
-  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
-  fetch(API+'/hugo-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,brief})})
-    .then(r=>r.json()).then(d=>{
-      btn.innerHTML='Générer l\'article';btn.disabled=false;
-      if(d.error){res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">'+d.error+'</div>';return;}
-      const tmp=document.createElement('div');tmp.innerHTML=d.html;const plain=(tmp.textContent||'');
-      res.innerHTML='<div class="ws-label">'+d.title+'</div>'+
-        '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:14px;line-height:1.6;color:#c9c9de;max-height:340px;overflow-y:auto">'+d.html+'</div>'+
-        '<div class="acts" style="margin:12px 0"><button class="v" onclick="copyText(`'+plain.replace(/`/g,"'").replace(/\\/g,'')+'`,this)">Copier le texte</button><button class="e" onclick="hugoGenerate()">Régénérer</button></div>';
-      res.scrollIntoView({behavior:'smooth',block:'nearest'});
-    }).catch(()=>{btn.innerHTML='Générer l\'article';btn.disabled=false;res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">Erreur réseau.</div>';});
-}
-
-// --- Alex : génération post LinkedIn ---
-function alexGenerate(){
-  const s=getSession();
-  const brief=document.getElementById('alex-brief').value.trim();
-  const btn=document.getElementById('alex-gen-btn');
-  const res=document.getElementById('alex-result');
-  if(!brief){res.innerHTML='<div style="color:var(--amber);font-size:13px;padding:8px">Décris ce que tu veux raconter 🙂</div>';return;}
-  if(!s){res.innerHTML='<div style="color:var(--muted2);font-size:13px;padding:8px">Connecte-toi pour générer.</div>';return;}
-  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
-  fetch(API+'/alex-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,brief})})
-    .then(r=>r.json()).then(d=>{
-      btn.innerHTML='Générer le post';btn.disabled=false;
-      if(d.error){res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">'+d.error+'</div>';return;}
-      res.innerHTML='<div class="ws-label">Votre post LinkedIn</div>'+
-        '<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:14px;line-height:1.65;color:#e0e0ef;white-space:pre-wrap">'+d.post.replace(/</g,'&lt;')+'</div>'+
-        '<div class="acts" style="margin:12px 0"><button class="v" onclick="copyText(`'+d.post.replace(/`/g,"'").replace(/\\/g,'')+'`,this)">Copier le post</button><button class="e" onclick="alexGenerate()">Régénérer</button></div>';
-      res.scrollIntoView({behavior:'smooth',block:'nearest'});
-    }).catch(()=>{btn.innerHTML='Générer le post';btn.disabled=false;res.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px">Erreur réseau.</div>';});
-}
-
-// --- Copier dans le presse-papier ---
-function copyText(txt,btn){
-  navigator.clipboard.writeText(txt).then(()=>{const o=btn.textContent;btn.textContent='✓ Copié !';setTimeout(()=>btn.textContent=o,1800);}).catch(()=>{});
-}
-
-// --- Popup Alex (bientôt) ---
-function openSoon(){document.getElementById('popupSoon').classList.add('open');closeSidebar();}
-function closeSoon(){document.getElementById('popupSoon').classList.remove('open');}
-
-// --- Exécuter un agent maintenant (via agent-run) ---
-function runAgent(slug,btnId){
-  const s=getSession();
-  const btn=document.getElementById(btnId);
-  if(!s){addBotMsg("Connecte-toi d'abord 🙂");return;}
-  const original=btn.innerHTML;
-  btn.innerHTML='<span class="spinner"></span> En cours…';btn.disabled=true;
-  fetch(API+'/agent-run',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,agent:slug})})
-    .then(r=>r.json()).then(d=>{
-      btn.innerHTML='✓ Lancé !';
-      setTimeout(()=>{btn.innerHTML=original;btn.disabled=false;},2200);
-      // recharge les actions à valider + données de l'agent
-      loadDashboardData();
-      if(slug==='marc'){marcLoaded=false;loadMarcData();}
-      if(slug==='lucas'){lucasLoaded=false;loadLucasData();}
-      const label={marc:'Marc a vérifié vos impayés',leo:'Léo a préparé un devis',lucas:'Lucas a fait le point sur votre trésorerie',emma:'Emma a préparé vos demandes d\'avis',hugo:'Hugo a rédigé un article'};
-      addBotMsg((label[slug]||'Agent lancé')+" ✅ Regarde dans « À valider » en haut à droite si une action t'attend.");
-    }).catch(()=>{btn.innerHTML=original;btn.disabled=false;addBotMsg("Souci au lancement, réessaie dans un instant.");});
-}
-
-// --- Programmation horaire ---
-let schedAgent=null;
-let SCHEDULES={};
-function buildHourOptions(){
-  const sel=document.getElementById('schedHour');
-  if(sel.options.length>1)return; // déjà construit
-  for(let h=6;h<=21;h++){
-    const o=document.createElement('option');o.value=h;o.textContent=String(h).padStart(2,'0')+'h00';
-    sel.appendChild(o);
-  }
-}
-function openSchedule(slug){
-  schedAgent=slug;
-  buildHourOptions();
-  const names={marc:'Marc',leo:'Léo',lucas:'Lucas',emma:'Emma',hugo:'Hugo'};
-  document.getElementById('schedTitle').textContent='Programmer '+(names[slug]||'l\'agent');
-  const cur=SCHEDULES[slug];
-  document.getElementById('schedHour').value=(cur&&cur.hour!=null)?String(cur.hour):'';
-  document.getElementById('schedPop').classList.add('open');
-}
-function closeSchedule(){document.getElementById('schedPop').classList.remove('open');}
-function saveSchedule(){
-  const s=getSession();
-  const hour=document.getElementById('schedHour').value;
-  if(!s){closeSchedule();return;}
-  fetch(API+'/agent-schedule',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,agent:schedAgent,hour:hour===''?null:hour})})
-    .then(r=>r.json()).then(d=>{
-      if(!d.error){
-        SCHEDULES[schedAgent]={hour:hour===''?null:parseInt(hour)};
-        renderSchedInfo(schedAgent);
-        addBotMsg(hour===''?(schedAgent+' repasse en mode manuel.'):('C\'est noté ! Cet agent tournera chaque jour à '+String(hour).padStart(2,'0')+'h00 ✅'));
-      }
-      closeSchedule();
-    }).catch(()=>closeSchedule());
-}
-function renderSchedInfo(slug){
-  const el=document.getElementById('sched-info-'+slug);
-  if(!el)return;
-  const c=SCHEDULES[slug];
-  if(c&&c.hour!=null)el.textContent='🟢 auto chaque jour à '+String(c.hour).padStart(2,'0')+'h';
-  else el.textContent='';
-}
-function loadSchedules(){
-  const s=getSession();
-  if(!s)return;
-  fetch(API+'/agent-schedule?s='+encodeURIComponent(s))
-    .then(r=>r.json()).then(d=>{
-      if(d.schedules){
-        for(const slug in d.schedules){SCHEDULES[slug]={hour:d.schedules[slug].hour};}
-        ['marc','lucas','emma'].forEach(renderSchedInfo);
-      }
-    }).catch(()=>{});
-}
-
-// Quel outil alimente quel agent
-const AGENT_NEEDS={marc:'stripe',lucas:'stripe'};
-
-// --- Onglets Lucas (trésorerie / stock) ---
-function lucasTab(t){
-  document.getElementById('lucas-treso').style.display=(t==='treso')?'block':'none';
-  document.getElementById('lucas-stock').style.display=(t==='stock')?'block':'none';
-  document.getElementById('tab-treso').classList.toggle('active',t==='treso');
-  document.getElementById('tab-stock').classList.toggle('active',t==='stock');
-}
-
-// --- Type de clients par défaut (règle des 40€) ---
-let clientTypePref=null;
-function loadClientType(){
-  const s=getSession();if(!s)return;
-  fetch(API+'/user-settings?s='+encodeURIComponent(s)).then(r=>r.json()).then(d=>{
-    clientTypePref=(d.settings&&d.settings.clientType)||null;
-    renderClientType();
+  const s=getSession();if(!s){return;}
+  fetch(API+'/dashboard-data?s='+encodeURIComponent(s)).then(r=>r.json()).then(d=>{
+    if(d.error)return;
+    if(d.prenom)document.getElementById('userName').textContent=d.prenom+' 👋';
+    PENDING=d.actions||[];
+    updateBadge(PENDING.length);
+    if(d.recoveredMonth!=null)document.getElementById('home-recovered').textContent=Number(d.recoveredMonth).toLocaleString('fr-FR')+' €';
+    if(d.toRecover!=null)document.getElementById('home-pending').textContent=Number(d.toRecover).toLocaleString('fr-FR')+' €';
   }).catch(()=>{});
 }
-function renderClientType(){
-  const p=document.getElementById('ct-particulier'),pr=document.getElementById('ct-pro');
-  if(!p||!pr)return;
-  p.classList.toggle('on',clientTypePref==='particulier');
-  pr.classList.toggle('on',clientTypePref==='pro');
-}
-function setClientType(t){
-  clientTypePref=t;renderClientType();
-  const s=getSession();if(!s)return;
-  fetch(API+'/user-settings',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,settings:{clientType:t}})}).catch(()=>{});
-  addBotMsg(t==='pro'?"C'est noté : tes clients sont des pros. Marc pourra mentionner l'indemnité de 40 € dans ses relances 👍":"C'est noté : tes clients sont des particuliers. Marc ne mentionnera jamais de pénalité de 40 € (c'est la règle légale) 👍");
-}
-
-// --- Marc : vraies données Stripe (lecture seule) ---
-let marcLoaded=false;
-function loadMarcData(){
-  const s=getSession();
-  if(!s||marcLoaded)return;
-  marcLoaded=true;
-  fetch(API+'/marc-data?s='+encodeURIComponent(s))
-    .then(r=>r.json()).then(d=>{
-      if(d.error||!d.connected)return;
-      const f=document.getElementById('marc-torecover'); if(!f)return;
-      document.getElementById('marc-torecover').textContent=Number(d.toRecover).toLocaleString('fr-FR')+' €';
-      document.getElementById('marc-recovered').textContent=Number(d.recoveredMonth).toLocaleString('fr-FR')+' €';
-      document.getElementById('marc-pending').textContent=d.pendingRelances;
-      const list=document.getElementById('marc-invoices');
-      if(!d.invoices||d.invoices.length===0){
-        list.innerHTML='<div class="list-row"><div class="info"><div class="n" style="color:var(--muted2)">Aucune facture impayée 🎉</div></div></div>';
-      }else{
-        list.innerHTML=d.invoices.map(function(inv){
-          var tag;
-          if(inv.status==='relance')tag='<span class="tag green">relancé'+(inv.nbRelances>1?' '+inv.nbRelances+'×':'')+'</span>';
-          else if(inv.status==='retard')tag='<span class="tag red">retard '+inv.daysLate+'j</span>';
-          else tag='<span class="tag amber">envoyée</span>';
-          return '<div class="list-row"><div class="info"><div class="n">'+inv.client+'</div><div class="sub">'+Number(inv.amount).toLocaleString('fr-FR')+' '+inv.currency+'</div></div>'+tag+'</div>';
-        }).join('');
-      }
-      // Historique de Marc (relances envoyées)
-      var hist=document.getElementById('marc-hist');
-      if(hist){
-        if(d.history&&d.history.length>0){
-          hist.innerHTML=d.history.map(function(h){
-            return '<div class="hist-item"><span class="d">'+h.date+'</span><span class="x">✅ '+h.label+'</span></div>';
-          }).join('');
-        }else{
-          hist.innerHTML='<div class="hist-item"><span class="d">—</span><span class="x">Les relances de Marc apparaîtront ici</span></div>';
-        }
-      }
-    }).catch(()=>{marcLoaded=false;});
-}
-
-function applyAgentStates(connectedTools){
-  Object.keys(AGENT_NEEDS).forEach(agent=>{
-    const need=AGENT_NEEDS[agent];
-    const view=document.getElementById('view-'+agent);
-    if(!view)return;
-    const ok=connectedTools.includes(need);
-    // retire un ancien voile éventuel
-    view.querySelector('.empty-state')?.remove();
-    const body=[...view.children].filter(c=>!c.classList.contains('ws-head'));
-    if(!ok){
-      // grise tout sauf le titre + ajoute une bannière d'invitation
-      body.forEach(c=>{c.style.opacity='.25';c.style.pointerEvents='none';c.style.filter='blur(1.5px)';});
-      const labels={stripe:'Stripe',wordpress:'votre site WordPress',brevo:'Brevo'};
-      const banner=document.createElement('div');
-      banner.className='empty-state';
-      banner.style.cssText='background:var(--vdim);border:1px solid var(--vborder);border-radius:14px;padding:18px;margin-bottom:16px;text-align:center';
-      banner.innerHTML='<div style="font-size:15px;font-weight:600;margin-bottom:6px">Cet agent attend vos données 🔌</div>'+
-        '<div style="font-size:13.5px;color:var(--muted2);margin-bottom:13px">Connectez '+(labels[need]||need)+' pour que je travaille avec vos vraies informations. En attendant, voici un aperçu de ce que je ferai.</div>'+
-        '<a href="/integrations.html" style="display:inline-block;background:var(--violet);color:#fff;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600">Connecter maintenant</a>';
-      view.querySelector('.ws-head').after(banner);
-    }else{
-      body.forEach(c=>{c.style.opacity='';c.style.pointerEvents='';c.style.filter='';});
-    }
-  });
-}
-function updateValidateBadge(n){
+function updateBadge(n){
   const btn=document.getElementById('validateBtn');
-  const badge=document.getElementById('valBadge');
-  if(n>0){
-    btn.classList.remove('empty');
-    btn.innerHTML='<span>✓</span><span class="txt">À valider</span><span class="badge" id="valBadge">'+n+'</span>';
-  }else{
-    btn.classList.add('empty');
-    btn.innerHTML='<span>✓</span><span class="txt">Tout est validé</span>';
-  }
-  // Synchronise aussi le compteur de l'accueil
-  const hv=document.getElementById('home-tovalidate');
-  if(hv)hv.textContent=n;
+  if(n>0){btn.classList.remove('empty');btn.innerHTML='<span>✓</span> À valider <span class="badge">'+n+'</span>';}
+  else{btn.classList.add('empty');btn.innerHTML='<span>✓</span> Tout est validé';}
+  const hv=document.getElementById('home-tovalidate');if(hv)hv.textContent=n;
+  const mb=document.getElementById('mBadge');if(mb)mb.textContent=n;
 }
 
-// --- Navigation entre vues ---
-const titles={home:'Bonjour 👋',marc:'Marc · Impayés',leo:'Léo · Devis & factures',lucas:'Lucas · Trésorerie',emma:'Emma · Avis Google',hugo:'Hugo · Visibilité',alex:'Alex · Réseaux sociaux'};
-function showView(v,el){
-  document.querySelectorAll('.workspace').forEach(w=>w.classList.remove('active'));
-  document.getElementById('view-'+v).classList.add('active');
-  document.querySelectorAll('.agent-item').forEach(a=>a.classList.remove('active'));
-  if(el)el.classList.add('active');
-  document.getElementById('topTitle').textContent=titles[v]||'';
-  if(v==='marc'){loadMarcData();loadClientType();}
-  if(v==='lucas')loadLucasData();
-  closeSidebar();
-  window.scrollTo(0,0);
-}
-
-// --- Sidebar mobile ---
-function openSidebar(){document.getElementById('sidebar').classList.add('open');document.getElementById('overlayBg').classList.add('show')}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlayBg').classList.remove('show')}
-
-// --- Validation : revue groupée (cases + tout valider) ---
-let selectedActions=new Set();
+const AG={marc:{i:'€',c:'var(--red)',b:'var(--rdim)'},leo:{i:'▤',c:'var(--blue)',b:'var(--bdim)'},emma:{i:'★',c:'var(--amber)',b:'var(--adim)'}};
 function openValidation(){
-  const btns=document.getElementById('modalBtns');
-  const content=document.getElementById('modalContent');
-  if(PENDING.length===0){
-    content.innerHTML='<div style="text-align:center;color:var(--muted2);font-size:14px;padding:20px 0">Rien à valider pour l\'instant. Dès que vos agents préparent une action, elle apparaît ici.</div>';
-    if(btns)btns.style.display='none';
-    document.getElementById('modalBg').classList.add('open');
-    return;
+  const list=document.getElementById('actList');
+  if(PENDING.length===0){list.innerHTML='<div class="empty-state">Rien à valider pour le moment 🎉<br>Vos agents vous préviendront dès qu\'ils ont préparé quelque chose.</div>';}
+  else{
+    list.innerHTML=PENDING.map(a=>{
+      const ag=AG[a.agent_slug]||{i:'•',c:'var(--violet)',b:'var(--vdim)'};
+      const body=(a.payload&&(a.payload.body||a.payload.message))||a.summary||'';
+      return '<div class="act-card"><div class="ah"><span class="ai" style="background:'+ag.b+';color:'+ag.c+'">'+ag.i+'</span><span class="at">'+(a.summary||'Action')+'</span></div>'+
+        '<div class="ap">'+body.substring(0,400)+'</div>'+
+        '<div class="acts"><button class="v" onclick="approve(\''+a.id+'\',false)">✓ Valider l\'envoi</button>'+
+        '<button class="r" onclick="reject(\''+a.id+'\')">Refuser</button></div></div>';
+    }).join('');
   }
-  // tout coché par défaut
-  selectedActions=new Set(PENDING.map(a=>a.id));
-  renderReviewList();
-  if(btns)btns.style.display='flex';
-  document.getElementById('modalBg').classList.add('open');
+  document.getElementById('valModal').classList.add('open');
 }
-function renderReviewList(){
-  const labels={marc:['€','var(--red)','var(--rdim)'],leo:['▤','var(--blue)','var(--bdim)'],
-    lucas:['◷','var(--green)','var(--gdim)'],emma:['★','var(--amber)','var(--adim)'],
-    hugo:['⚲','var(--blue)','var(--bdim)'],alex:['◈','var(--vlight)','var(--vdim)']};
-  const html=PENDING.map(a=>{
-    const lb=labels[a.agent_slug]||['◆','var(--vlight)','var(--vdim)'];
-    const p=a.payload||{};
-    let preview=(p.subject?('Objet : '+p.subject+'\n'):'');
-    if(p.body||p.message)preview+=(p.body||p.message);
-    else if(p.text)preview+=p.text;
-    else if(p.html){const t=document.createElement('div');t.innerHTML=p.html;preview+=(t.textContent||'').trim();}
-    else preview+=(a.summary||'(aperçu indisponible)');
-    const on=selectedActions.has(a.id);
-    return '<div class="review-item">'+
-      '<div class="chk'+(on?' on':'')+'" onclick="toggleAction(\''+a.id+'\',this)">'+(on?'✓':'')+'</div>'+
-      '<div class="ri-body">'+
-        '<div class="ri-head"><span class="ri-gly" style="background:'+lb[2]+';color:'+lb[1]+'">'+lb[0]+'</span>'+(a.summary||a.action_type)+'</div>'+
-        '<div class="ri-preview">'+String(preview).slice(0,400).replace(/</g,'&lt;')+'</div>'+
-      '</div></div>';
-  }).join('');
-  document.getElementById('modalContent').innerHTML=html;
-  updateSelCount();
-}
-function toggleAction(id,el){
-  if(selectedActions.has(id)){selectedActions.delete(id);el.classList.remove('on');el.textContent='';}
-  else{selectedActions.add(id);el.classList.add('on');el.textContent='✓';}
-  updateSelCount();
-}
-function updateSelCount(){
-  const b=document.getElementById('btnValidateSel');
-  if(b)b.textContent='✓ Valider la sélection ('+selectedActions.size+')';
-}
-function closeValidation(){document.getElementById('modalBg').classList.remove('open')}
+function closeValidation(){document.getElementById('valModal').classList.remove('open')}
 
-function validateAll(){
-  selectedActions=new Set(PENDING.map(a=>a.id));
-  validateSelection(false);
-}
-function validateSelection(delay24h){
-  const s=getSession();
-  const ids=[...selectedActions];
-  if(ids.length===0){addBotMsg("Coche au moins une action 🙂");return;}
-  const okBtn=document.getElementById('btnValidateSel');
-  const allBtn=document.querySelector('#modalBtns .no');
-  okBtn.textContent='Envoi…';okBtn.disabled=true;if(allBtn)allBtn.disabled=true;
-  if(!s){ // démo
-    PENDING=PENDING.filter(a=>!selectedActions.has(a.id));
-    updateValidateBadge(PENDING.length);closeValidation();
-    addBotMsg(ids.length+" action(s) validée(s) ✅");
-    okBtn.disabled=false;if(allBtn)allBtn.disabled=false;okBtn.textContent='✓ Valider la sélection';
-    return;
-  }
-  // Envoi réel via actions-approve (avec ou sans délai de sécurité 24h)
-  let done=0,errors=0;
-  Promise.all(ids.map(id=>
-    fetch(API+'/actions-approve',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({session:s,actionId:id,delay24h:!!delay24h})})
-      .then(r=>r.json()).then(d=>{if(d.error)errors++;else done++;}).catch(()=>errors++)
-  )).then(()=>{
-    PENDING=PENDING.filter(a=>!selectedActions.has(a.id));
-    selectedActions.clear();
-    updateValidateBadge(PENDING.length);
-    okBtn.disabled=false;if(allBtn)allBtn.disabled=false;okBtn.textContent='✓ Valider la sélection';
-    closeValidation();
-    // Rafraîchit toutes les données (compteurs accueil, Marc, historique) après envoi
-    marcLoaded=false;lucasLoaded=false;
-    setTimeout(()=>{loadDashboardData();if(document.getElementById('view-marc').classList.contains('active'))loadMarcData();},800);
-    if(done){
-      if(delay24h)addBotMsg(done+" action(s) programmée(s) 🛡 Elles partiront dans 24h. Tu peux les annuler à tout moment dans « Programmées ».");
-      else addBotMsg(done+" action(s) envoyée(s) ✅"+(errors?(' · '+errors+' en erreur, je réessaierai.'):' Je m\'occupe du suivi.'));
-    }
-    else addBotMsg("Souci à l'envoi, réessaie dans un instant.");
-  });
-}
-
-// --- Chat Baptiste (branché sur baptiste-chat.js) ---
-function addBotMsg(t){
-  const c=document.getElementById('chatMsgs');
-  const d=document.createElement('div');d.className='msg bot';d.textContent=t;
-  c.appendChild(d);c.scrollTop=c.scrollHeight;
-}
-function addUserMsg(t){
-  const c=document.getElementById('chatMsgs');
-  const d=document.createElement('div');d.className='msg user';d.textContent=t;
-  c.appendChild(d);c.scrollTop=c.scrollHeight;
-}
-let chatHistory=[]; // {role, content}
-function sendChat(){
-  const inp=document.getElementById('chatInput');
-  const txt=inp.value.trim();
-  if(!txt)return;
-  addUserMsg(txt);inp.value='';
-  chatHistory.push({role:'user',content:txt});
-  const typing=document.createElement('div');typing.className='msg bot';typing.textContent='…';typing.id='typing';
-  document.getElementById('chatMsgs').appendChild(typing);
-  const s=getSession();
-  fetch(API+'/baptiste-chat',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,messages:chatHistory})})
-    .then(r=>r.json()).then(d=>{
-      document.getElementById('typing')?.remove();
-      if(d.error){addBotMsg("Hmm, souci : "+d.error);return;}
-      // Baptiste renvoie 'response' (+ éventuellement action / runResult / agentsUpdated)
-      const reply=d.response||d.reply||"C'est noté 👍";
-      chatHistory.push({role:'assistant',content:reply});
-      addBotMsg(reply);
-      // Si Baptiste a déclenché un agent, on recharge les actions à valider
-      if(d.runResult&&d.runResult.success){
-        // L'agent tourne en arrière-plan (10-15s). On informe, puis on recharge "À valider"
-        // plusieurs fois pour capter les actions dès qu'elles sont prêtes.
-        setTimeout(()=>addBotMsg("⏳ C'est lancé ! Je prépare ça en arrière-plan, le résultat apparaîtra dans « À valider » d'ici une minute."),500);
-        let tries=0;
-        const poll=setInterval(()=>{
-          tries++;
-          loadDashboardData();marcLoaded=false;lucasLoaded=false;
-          if(tries>=6)clearInterval(poll); // ~30s (6 × 5s)
-        },5000);
-      }
-      // Si Baptiste a activé/mis en pause des agents, on rafraîchit les programmations
-      if(d.agentsUpdated){loadSchedules();}
-    }).catch(()=>{
-      document.getElementById('typing')?.remove();
-      addBotMsg("Petite coupure réseau, réessaie 🙂");
-    });
-}
-
-// --- Onboarding ---
-let onbData={metier:'',prenom:'',ville:''};
-function pickMetier(el,m){
-  document.querySelectorAll('.metier').forEach(x=>x.classList.remove('sel'));
-  el.classList.add('sel');onbData.metier=m;
-  setTimeout(()=>{
-    document.getElementById('onb1').style.display='none';
-    document.getElementById('onb2').style.display='block';
-    document.getElementById('p2').classList.add('on');
-    document.getElementById('onbPrenom').focus();
-  },200);
-}
-function onbStep3(){
-  const p=document.getElementById('onbPrenom').value.trim();
-  if(!p)return;
-  onbData.prenom=p;
-  document.getElementById('onb2').style.display='none';
-  document.getElementById('onb3').style.display='block';
-  document.getElementById('p3').classList.add('on');
-  document.getElementById('onbVille').focus();
-}
-function finishOnboarding(){
-  onbData.ville=document.getElementById('onbVille').value.trim();
-  const s=getSession();
-  // onboarding-save attend { session, prenom, secteur, ... } (secteur = métier ici)
-  fetch(API+'/onboarding-save',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s,prenom:onbData.prenom,secteur:onbData.metier,painPoints:[],tools:[],apiKeys:{},autonomy:'validate'})})
+function approve(id,delay){
+  const s=getSession();if(!s)return;
+  fetch(API+'/actions-approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,actionId:id,delay24h:!!delay})})
     .then(r=>r.json()).then(()=>{
-      // on stocke aussi métier/ville côté users via le champ secteur déjà géré ; ville en complément
-      if(onbData.ville){fetch(API+'/onboarding-save',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({session:s,prenom:onbData.prenom,secteur:onbData.metier})}).catch(()=>{});}
-    }).catch(()=>{});
-  document.getElementById('onb').classList.remove('open');
-  document.getElementById('userName').textContent=onbData.prenom;
-  // Tour guidé du concept juste après
-  setTimeout(startTour,400);
+      PENDING=PENDING.filter(a=>a.id!==id);updateBadge(PENDING.length);openValidation();
+      addMsg(delay?'Action programmée 🛡 elle partira dans 24h, annulable à tout moment.':'Action envoyée ✅ je m\'occupe du suivi.','ok');
+      marcLoaded=false;
+    }).catch(()=>addMsg('Souci à l\'envoi, réessaie.','ok'));
 }
-document.getElementById('onbPrenom').addEventListener('keydown',e=>{if(e.key==='Enter')onbStep3()});
-document.getElementById('onbVille').addEventListener('keydown',e=>{if(e.key==='Enter')finishOnboarding()});
-
-// --- Logout ---
-function logout(){
-  localStorage.removeItem('pl_session');localStorage.removeItem('pl_uid');
-  sessionStorage.removeItem('pl_session');sessionStorage.removeItem('pl_uid');
-  window.location.href='/connexion.html';
+function reject(id){
+  const s=getSession();if(!s)return;
+  fetch(API+'/actions-cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,actionId:id,mode:'cancel'})}).catch(()=>{});
+  PENDING=PENDING.filter(a=>a.id!==id);updateBadge(PENDING.length);openValidation();
+}
+function validateAll(delay){
+  const s=getSession();if(!s||PENDING.length===0){closeValidation();return;}
+  const ids=PENDING.map(a=>a.id);
+  Promise.all(ids.map(id=>fetch(API+'/actions-approve',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,actionId:id,delay24h:!!delay})}).catch(()=>{})))
+    .then(()=>{PENDING=[];updateBadge(0);closeValidation();marcLoaded=false;addMsg(delay?ids.length+' action(s) programmée(s) 🛡':ids.length+' action(s) envoyée(s) ✅','ok');setTimeout(loadDashboardData,800);});
 }
 
-// --- Abonnement Stripe Checkout ---
-function startCheckout(){
-  const s=getSession();
-  if(!s){addBotMsg("Connecte-toi d'abord 🙂");return;}
-  addBotMsg("Je t'emmène vers le paiement sécurisé… 💳");
-  fetch(API+'/stripe-checkout',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({session:s})})
+function sendChat(){
+  const inp=document.getElementById('chatInput');const t=inp.value.trim();if(!t)return;
+  addMsg(t,'user');inp.value='';
+  const s=getSession();if(!s){addMsg('Connecte-toi pour me parler 🙂');return;}
+  fetch(API+'/baptiste-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,messages:[{role:'user',content:t}]})})
     .then(r=>r.json()).then(d=>{
-      if(d.url){window.location.href=d.url;}
-      else{addBotMsg("Souci avec le paiement : "+(d.error||'réessaie dans un instant')+". Tu peux aussi m'écrire à contact@pagelab.fr.");}
-    }).catch(()=>addBotMsg("Erreur réseau, réessaie."));
+      if(d.response)addMsg(d.response);
+      if(d.runResult&&d.runResult.success){
+        addMsg('⏳ C\'est lancé ! Le résultat apparaîtra dans « À valider » d\'ici une minute.','ok');
+        let n=0;const iv=setInterval(()=>{n++;loadDashboardData();marcLoaded=false;if(n>=6)clearInterval(iv);},5000);
+      }
+    }).catch(()=>addMsg('Souci de connexion, réessaie.','ok'));
 }
 
-// --- Retour de paiement ---
-(function(){
-  const q=new URLSearchParams(location.search);
-  if(q.get('paye')==='1'){setTimeout(()=>addBotMsg("Paiement confirmé, merci ! 🎉 Ton abonnement est actif. On bosse pour toi."),400);}
-  if(q.get('paiement_annule')==='1'){setTimeout(()=>addBotMsg("Pas de souci, le paiement a été annulé. Tu peux réessayer quand tu veux 🙂"),400);}
-})();
+function runAgent(slug,btnId){
+  const s=getSession();if(!s){addMsg('Connecte-toi d\'abord 🙂');return;}
+  const btn=document.getElementById(btnId);const old=btn.innerHTML;btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  fetch(API+'/agent-run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,agent:slug})})
+    .then(r=>r.json()).then(()=>{btn.innerHTML=old;btn.disabled=false;nav('home');addMsg(slug.charAt(0).toUpperCase()+slug.slice(1)+' a tourné ✅ Regarde dans « À valider ».','ok');setTimeout(loadDashboardData,1200);})
+    .catch(()=>{btn.innerHTML=old;btn.disabled=false;addMsg('Souci, réessaie.','ok');});
+}
 
-// --- Tour guidé du concept (après 1re connexion) ---
-const TOUR_STEPS=[
-  {emoji:'👋',title:'Bienvenue dans votre équipe',html:'<p>PageLab, ce n\'est pas un logiciel de plus à apprendre. C\'est une <span class="hl">équipe d\'agents qui travaillent pour vous</span>, pendant que vous êtes sur le chantier.</p><p>Laissez-moi vous montrer comment ça marche, en 1 minute. 👇</p>'},
-  {emoji:'🤖',title:'Vos agents bossent tout seuls',html:'<p>Chaque agent surveille un domaine et <span class="hl">prépare le travail automatiquement</span> :</p>'+
-    '<div class="tour-feat"><div class="tf-ico" style="background:var(--rdim);color:var(--red)">€</div><div><div class="tf-t">Marc — Impayés</div><div class="tf-d">Repère vos factures en retard et rédige les relances</div></div></div>'+
-    '<div class="tour-feat"><div class="tf-ico" style="background:var(--gdim);color:var(--green)">◷</div><div><div class="tf-t">Lucas — Trésorerie</div><div class="tf-d">Suit vos entrées et votre solde en temps réel</div></div></div>'+
-    '<div class="tour-feat"><div class="tf-ico" style="background:var(--adim);color:var(--amber)">★</div><div><div class="tf-t">Emma — Avis Google</div><div class="tf-d">Demande un avis à vos clients après chaque chantier</div></div></div>'},
-  {emoji:'✅',title:'Vous validez d\'un seul clic',html:'<p>Les agents <span class="hl">ne font rien dans votre dos</span>. Ils préparent, vous décidez.</p><p>Tout ce qu\'ils proposent (une relance, un avis, un article…) atterrit dans le bouton <span class="hl">« À valider »</span> en haut à droite. Vous cochez ce qui vous va, et ça part. C\'est vous le patron. 💪</p>'},
-  {emoji:'💬',title:'Baptiste, votre bras droit',html:'<p>En bas à gauche, il y a <span class="hl">Baptiste</span>. C\'est lui qui coordonne toute l\'équipe.</p><p>Parlez-lui normalement, comme à un employé :</p>'+
-    '<div class="tour-feat"><div class="tf-ico" style="background:var(--vdim);color:var(--vlight)">»</div><div><div class="tf-d">« <b>Où en sont mes impayés ?</b> »</div></div></div>'+
-    '<div class="tour-feat"><div class="tf-ico" style="background:var(--vdim);color:var(--vlight)">»</div><div><div class="tf-d">« <b>Lance Marc</b> » ou « <b>écris un article sur l\'isolation</b> »</div></div></div>'+
-    '<div class="tour-feat"><div class="tf-ico" style="background:var(--vdim);color:var(--vlight)">»</div><div><div class="tf-d">« <b>Mets Emma en pause cette semaine</b> »</div></div></div>'+
-    '<p style="margin-top:10px">Il s\'occupe du reste. 🙌</p>'},
-  {emoji:'🎛️',title:'Ou faites-le vous-même',html:'<p>Vous préférez garder la main ? Chaque agent a son atelier (menu de gauche) avec deux boutons :</p>'+
-    '<div class="tour-feat"><div class="tf-ico" style="background:var(--violet);color:#fff">▶</div><div><div class="tf-t">Exécuter maintenant</div><div class="tf-d">L\'agent fait son travail tout de suite</div></div></div>'+
-    '<div class="tour-feat"><div class="tf-ico" style="background:var(--card2);color:var(--text);border:1px solid var(--border2)">🕐</div><div><div class="tf-t">Programmer</div><div class="tf-d">Il tournera tout seul chaque jour à l\'heure choisie</div></div></div>'},
-  {emoji:'🔌',title:'Une dernière chose',html:'<p>Pour que vos agents travaillent sur <span class="hl">vos vraies données</span>, connectez vos outils (Stripe pour les factures, WordPress pour le blog…).</p><p>Cliquez sur <span class="hl">« Mes connexions »</span> dans le menu de gauche. Ça prend 2 minutes, et après, toute l\'équipe est opérationnelle. 🚀</p>'}
+function openSchedule(slug){schedAgent=slug;document.getElementById('sched-title').textContent='Programmer '+slug.charAt(0).toUpperCase()+slug.slice(1);document.getElementById('schedModal').classList.add('open');}
+function saveSchedule(){
+  const s=getSession();if(!s)return;
+  const time=document.getElementById('sched-time').value;
+  fetch(API+'/agent-schedule',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,agent:schedAgent,time})}).catch(()=>{});
+  document.getElementById('schedModal').classList.remove('open');
+  document.getElementById('sched-info-'+schedAgent).textContent='🟢 auto chaque jour à '+time;
+}
+
+function loadMarcData(){
+  marcLoaded=true;const s=getSession();if(!s)return;
+  fetch(API+'/marc-data?s='+encodeURIComponent(s)).then(r=>r.json()).then(d=>{
+    if(d.error||!d.connected)return;
+    document.getElementById('marc-torecover').textContent=Number(d.toRecover||0).toLocaleString('fr-FR')+' €';
+    document.getElementById('marc-recovered').textContent=Number(d.recoveredMonth||0).toLocaleString('fr-FR')+' €';
+    document.getElementById('marc-pending').textContent=d.pendingRelances||0;
+    const list=document.getElementById('marc-invoices');
+    if(!d.invoices||!d.invoices.length){list.innerHTML='<div class="empty-state">Aucune facture impayée 🎉</div>';}
+    else{list.innerHTML=d.invoices.map(function(inv){
+      var tag=inv.status==='relance'?'<span class="tag green">relancé'+(inv.nbRelances>1?' '+inv.nbRelances+'×':'')+'</span>':(inv.status==='retard'?'<span class="tag red">retard '+inv.daysLate+'j</span>':'<span class="tag amber">envoyée</span>');
+      return '<div class="list-row"><div><div class="n">'+inv.client+'</div><div class="sub">'+Number(inv.amount).toLocaleString('fr-FR')+' '+inv.currency+'</div></div>'+tag+'</div>';}).join('');}
+    var hist=document.getElementById('marc-hist');
+    if(d.history&&d.history.length){hist.innerHTML='<div class="list">'+d.history.map(function(h){return '<div class="list-row"><div class="n" style="font-weight:500">✅ '+h.label+'</div><div class="sub">'+h.date+'</div></div>';}).join('')+'</div>';}
+  }).catch(()=>{marcLoaded=false;});
+}
+
+function loadClientType(){
+  const s=getSession();if(!s)return;
+  fetch(API+'/user-settings?s='+encodeURIComponent(s)).then(r=>r.json()).then(d=>{clientTypePref=(d.settings&&d.settings.clientType)||null;renderCT();}).catch(()=>{});
+}
+function renderCT(){const p=document.getElementById('ct-particulier'),pr=document.getElementById('ct-pro');if(!p)return;
+  p.style.background=clientTypePref==='particulier'?'var(--vdim)':'';p.style.color=clientTypePref==='particulier'?'var(--violet)':'';
+  pr.style.background=clientTypePref==='pro'?'var(--vdim)':'';pr.style.color=clientTypePref==='pro'?'var(--violet)':'';}
+function setClientType(t){clientTypePref=t;renderCT();const s=getSession();if(!s)return;
+  fetch(API+'/user-settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,settings:{clientType:t}})}).catch(()=>{});}
+
+let leoDevis=null;
+function leoGenerate(){
+  const s=getSession();const brief=document.getElementById('leo-brief').value.trim();const btn=document.getElementById('leo-gen-btn');const res=document.getElementById('leo-result');
+  if(!brief){res.innerHTML='<div style="color:var(--amber);font-size:13px">Décris d\'abord le chantier 🙂</div>';return;}
+  if(!s){res.innerHTML='<div style="color:var(--muted);font-size:13px">Connecte-toi pour générer un devis.</div>';return;}
+  btn.innerHTML='<span class="spinner"></span>';btn.disabled=true;
+  fetch(API+'/leo-generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,brief})}).then(r=>r.json()).then(d=>{
+    btn.innerHTML='Générer le devis';btn.disabled=false;
+    if(d.error){res.innerHTML='<div style="color:var(--red);font-size:13px">'+d.error+'</div>';return;}
+    leoDevis=d;renderLeo();
+  }).catch(()=>{btn.innerHTML='Générer le devis';btn.disabled=false;res.innerHTML='<div style="color:var(--red);font-size:13px">Erreur réseau.</div>';});
+}
+function leoSetTva(i,v){if(leoDevis&&leoDevis.lignes[i]){leoDevis.lignes[i].tva=parseFloat(v);renderLeo();}}
+function renderLeo(){
+  const d=leoDevis;if(!d)return;const fmt=n=>Number(n).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  let ht=0;const tvaT={};d.lignes.forEach(l=>{const t=(l.quantite||1)*(l.prixUnitaire||0);l.totalHT=t;ht+=t;tvaT[l.tva]=(tvaT[l.tva]||0)+t*(l.tva/100);});
+  const tva=Object.values(tvaT).reduce((s,v)=>s+v,0);const ttc=ht+tva;
+  const opt=t=>[20,10,5.5,0].map(v=>'<option value="'+v+'"'+(v===t?' selected':'')+'>'+(v===0?'0 %':(v+' %'))+'</option>').join('');
+  const lignes=d.lignes.map((l,i)=>'<div class="list-row"><div><div class="n">'+l.designation+'</div><div class="sub">'+l.quantite+' '+l.unite+' × '+fmt(l.prixUnitaire)+' €</div></div><div style="display:flex;gap:10px;align-items:center"><select onchange="leoSetTva('+i+',this.value)" style="background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:5px;font-family:inherit">'+opt(l.tva)+'</select><span style="font-weight:600;min-width:80px;text-align:right">'+fmt(l.totalHT)+' €</span></div></div>').join('');
+  const m=d.mentions||{};
+  var res_html='<div class="ws-label">'+(d.titre||'Devis')+'</div><div class="list">'+lignes+'</div>'+
+    '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:12px">'+
+    '<div style="display:flex;justify-content:space-between;font-size:14px;color:var(--ink2)"><span>Total HT</span><span>'+fmt(ht)+' €</span></div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:14px;color:var(--ink2);margin-top:4px"><span>TVA</span><span>'+fmt(tva)+' €</span></div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:18px;font-weight:800;color:var(--violet);border-top:1px solid var(--border2);margin-top:8px;padding-top:8px"><span>Total TTC</span><span>'+fmt(ttc)+' €</span></div></div>'+
+    '<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:10px;font-size:12.5px;color:var(--ink2);line-height:1.7">'+
+    '• '+m.assuranceDecennale+'<br>• '+m.validite+'<br>• '+m.paiement+'<br>• '+m.retractation+(m.tva?'<br>• '+m.tva:'')+'<br>• SIRET : '+m.siret+'</div>'+
+    '<div style="margin-top:12px"><button class="btn-run" onclick="alert(\'Bientôt : export PDF + envoi au client\')">Exporter en PDF</button></div>'+
+    '<div style="font-size:11.5px;color:var(--muted);margin-top:10px">💡 Léo a proposé les taux de TVA. Vérifiez-les : 20 % (neuf), 10 % (rénovation +2 ans), 5,5 % (rénovation énergétique).</div>';
+  document.getElementById('leo-result').innerHTML=res_html;
+}
+
+function emmaSaveLink(){const s=getSession();if(!s)return;const link=document.getElementById('emma-link').value.trim();
+  fetch(API+'/user-settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s,settings:{googleReviewLink:link}})}).then(()=>addMsg('Lien Google enregistré ✅','ok')).catch(()=>{});}
+
+function loadAbo(){const s=getSession();document.getElementById('abo-desc').textContent=s?'Vous gérez votre abonnement et votre carte directement via Stripe.':'Connecte-toi pour voir ton abonnement.';}
+function startCheckout(){const s=getSession();if(!s){window.location.href='/connexion.html';return;}
+  fetch(API+'/stripe-checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({session:s})}).then(r=>r.json()).then(d=>{if(d.url)window.location.href=d.url;else addMsg('Souci avec le paiement, réessaie.','ok');}).catch(()=>{});}
+
+// Tour guidé
+const TOUR=[
+  {t:'Bienvenue 👋',x:'PageLab, c\'est une équipe qui bosse pour vous pendant que vous êtes sur le chantier. Laissez-moi vous montrer en 30 secondes.'},
+  {t:'Vos agents',x:'Marc gère vos impayés et votre trésorerie, Léo vos devis, Emma vos avis Google. Ils préparent le travail tout seuls.'},
+  {t:'Vous validez',x:'Tout ce qu\'ils proposent arrive dans « À valider » en haut. Vous validez d\'un clic, et c\'est envoyé. Rien ne part sans vous.'},
+  {t:'Baptiste',x:'En bas, parlez à Baptiste comme à un employé : « lance Marc », « où en sont mes impayés ? ». Il pilote l\'équipe pour vous.'},
+  {t:'C\'est parti 🚀',x:'Commencez par connecter vos outils via « Mes connexions », et laissez votre équipe bosser.'}
 ];
-let tourIndex=0;
-function startTour(){
-  tourIndex=0;
-  const dots=document.getElementById('tourDots');
-  dots.innerHTML=TOUR_STEPS.map((_,i)=>'<div class="td'+(i===0?' on':'')+'"></div>').join('');
-  renderTour();
-  document.getElementById('tourBg').classList.add('open');
+function startTour(){let i=0;showTour(i);}
+function showTour(i){
+  if(i>=TOUR.length){try{localStorage.setItem('pl_tour_done','1')}catch(e){}return;}
+  // simple : on passe par le chat pour rester sobre
 }
-function renderTour(){
-  const s=TOUR_STEPS[tourIndex];
-  document.getElementById('tourStep').innerHTML='<span class="tour-emoji">'+s.emoji+'</span><h2>'+s.title+'</h2>'+s.html;
-  document.getElementById('tourBar').style.width=((tourIndex+1)/TOUR_STEPS.length*100)+'%';
-  document.getElementById('tourNext').textContent=(tourIndex===TOUR_STEPS.length-1)?'C\'est parti ! 🚀':'Suivant →';
-  document.querySelectorAll('#tourDots .td').forEach((d,i)=>d.classList.toggle('on',i===tourIndex));
-}
-function nextTour(){
-  if(tourIndex<TOUR_STEPS.length-1){tourIndex++;renderTour();}
-  else endTour();
-}
-function endTour(){
-  document.getElementById('tourBg').classList.remove('open');
-  try{localStorage.setItem('pl_tour_done','1');}catch(e){}
-  addBotMsg('Et voilà ! Pose-moi une question quand tu veux, ou clique sur « Mes connexions » pour brancher tes outils 👍');
-}
-
-// --- Init : déclenche l'onboarding si ?onboarding=1 ---
-if(new URLSearchParams(location.search).get('onboarding')==='1'){
-  document.getElementById('onb').classList.add('open');
-}else{
-  // Charge les vraies données (profil, actions à valider) si connecté
+// Init
+(function(){
+  const s=getSession();
+  if(!s){window.location.href='/connexion.html';return;}
+  addMsg('Salut 👋 Je suis Baptiste, je coordonne ton équipe. Demande-moi « où en sont mes impayés ? » ou « lance Marc », et je m\'en occupe. Tu valides toujours avant tout envoi 👍');
   loadDashboardData();
-  loadSchedules();
-  // Première visite (pas d'onboarding mais tour jamais vu) → on explique le concept
-  try{
-    if(!localStorage.getItem('pl_tour_done')){setTimeout(startTour,600);}
-  }catch(e){}
-}
+  if(new URLSearchParams(location.search).get('paye')==='1')setTimeout(()=>addMsg('Paiement confirmé, merci ! 🎉 Ton abonnement est actif.','ok'),500);
+})();
 </script>
 </body>
 </html>
