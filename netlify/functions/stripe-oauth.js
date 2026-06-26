@@ -21,7 +21,7 @@ exports.handler = async (event) => {
     const u = new URL('https://connect.stripe.com/oauth/authorize');
     u.searchParams.set('response_type', 'code');
     u.searchParams.set('client_id', clientId);
-    u.searchParams.set('scope', 'read_only');
+    u.searchParams.set('scope', 'read_write');
     u.searchParams.set('redirect_uri', callbackUrl());
     u.searchParams.set('state', signState(ctx.companyId));
     return json({ url: u.toString() });
