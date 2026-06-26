@@ -1,13 +1,8 @@
 {
   "name": "pagelab",
   "version": "1.0.0",
-  "description": "PageLab — 10 agents IA autonomes",
-  "scripts": {
-    "build": "echo 'Static site - no build needed'"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
+  "private": true,
+  "description": "PageLab — agents IA pour artisans du BTP",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
   }

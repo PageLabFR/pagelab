@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /dashboard.html
-Disallow: /connexion.html
-Disallow: /integrations.html
-
-Sitemap: https://pagelab.fr/sitemap.xml
