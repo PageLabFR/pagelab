@@ -12,3 +12,15 @@
 # Prépare les relances d'impayés ; rien n'est envoyé sans validation.
 [functions."cron-sync"]
   schedule = "0 5 * * *"
+
+# En-têtes de sécurité appliqués à tout le site.
+# - frame-ancestors / X-Frame-Options : empêchent l'affichage du site dans une iframe (anti-clickjacking).
+# - X-Content-Type-Options : empêche la triche sur le type de fichier.
+# - Referrer-Policy : limite les infos envoyées en quittant le site.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    Content-Security-Policy = "frame-ancestors 'none'"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

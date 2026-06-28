@@ -365,12 +365,12 @@ async function renderInteg(){
   const icons={commercial:'◆',devis_facturation:'€',telephone:'☎'};
   v.innerHTML=`
     <div class="block"><div class="block-h"><h2>Votre offre</h2></div>${meterHTML(u)}
-      <div class="form-card" style="margin-top:10px"><div class="field"><label>Changer d'offre</label>
-        <select id="planSel">
-          <option value="starter"${plan==='starter'?' selected':''}>Starter — 79 €/mois · Agent Commercial</option>
-          <option value="pro"${plan==='pro'?' selected':''}>Pro — 149 €/mois · + Devis & Facturation</option>
-          <option value="premium"${plan==='premium'?' selected':''}>Premium — 299 €/mois · + Téléphone</option>
-        </select></div></div></div>
+      <div class="form-card" style="margin-top:10px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="flex:1;min-width:0"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px">Offre ${PLANS[plan].label}</div>
+            <div style="font-size:13px;color:var(--muted)">${plan==='starter'?'Agent Commercial':plan==='pro'?'Commercial + Devis & Facturation':'Tous les agents + Téléphone'}</div></div>
+          <button class="btn btn-ghost" id="planManage">Changer d'offre</button>
+        </div></div></div>
     <div class="block"><div class="block-h"><h2>Connexions</h2><span class="hint">les secrets restent côté serveur</span></div>
       <div class="integ"><div class="meta"><b>Stripe</b><div>Lecture des factures impayées</div></div><span class="state ${status.stripe?'on':''}">${status.stripe?'Connecté':'Non connecté'}</span></div>
       <div class="two" style="margin-bottom:10px"><button class="btn btn-ghost" id="stripeBtn"><span class="blogo stripe"><span>S</span></span>${status.stripe?'Reconnecter Stripe':'Connecter Stripe'}</button><button class="btn" id="stripeSync"${status.stripe?'':' disabled style=\"opacity:.5\"'}>Synchroniser</button></div>
@@ -380,7 +380,7 @@ async function renderInteg(){
     </div>
     <div class="block"><div class="block-h"><h2>Vos agents</h2><span class="hint">activez / désactivez</span></div>
       ${(cat||[]).map(a=>{const allowed=planAllows(a.slug);return `<div class="agent-row ${allowed?'':'lock-row'}" data-aid="${a.id}" data-slug="${a.slug}"><div class="ic">${icons[a.slug]||'◆'}</div><div class="meta"><b>${a.name}</b><div>${a.tagline||''}</div></div>${allowed?`<button class="toggle ${map[a.id]?'on':''}"></button>`:`<span class="lock-pill">🔒 Offre ${planNameFor(a.slug)}</span>`}</div>`;}).join('')}</div>`;
-  el('planSel').addEventListener('change',async e=>{const p=e.target.value;const {error}=await sb.from('companies').update({plan:p}).eq('id',companyId);if(error){toast(error.message,true);return;}plan=p;toast('Offre mise à jour ✓');renderInteg();});
+  el('planManage').addEventListener('click',()=>toast("Le changement d'offre se fera via le paiement en ligne (bientôt)"));
   el('stripeBtn').addEventListener('click',async()=>{const r=await callFn('stripe-oauth',{action:'start'});if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Erreur Stripe',true);});
   el('stripeSync').addEventListener('click',async()=>{if(!status.stripe)return;toast('Synchronisation…');const r=await callFn('sync-stripe');if(r.ok)toast(`${r.json.created} relance(s) créée(s) ✓`);else toast(r.json.error||'Erreur',true);});
   el('googleBtn').addEventListener('click',async()=>{const r=await callFn('google-oauth',{action:'start'});if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Erreur Google',true);});
