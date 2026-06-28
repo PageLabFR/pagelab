@@ -2,10 +2,13 @@
 # ⚠️ Si tu as déjà un netlify.toml, fusionne ces réglages avec le tien.
 
 [build]
-  # Les pages HTML sont à la racine du repo.
   publish = "."
   functions = "netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
-  # Node 18+ fournit fetch() nativement (utilisé par les fonctions).
+
+# Synchro Stripe automatique chaque nuit à 05:00 UTC (≈ 07:00 en France l'été).
+# Prépare les relances d'impayés ; rien n'est envoyé sans validation.
+[functions."cron-sync"]
+  schedule = "0 5 * * *"

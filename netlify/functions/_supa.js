@@ -90,7 +90,7 @@ async function sendEmail(to, subject, text, replyTo, senderName) {
   return { ok: true };
 }
 
-const QUOTAS = { starter: 50, pro: 250, premium: 1000 };
+const QUOTAS = { starter: 300, pro: 1000, premium: 3000 };
 
 // Générations IA du mois (= actions créées). C'est le seul vrai compteur de coût.
 async function usageThisMonth(svc, companyId) {
@@ -100,4 +100,56 @@ async function usageThisMonth(svc, companyId) {
   return count || 0;
 }
 
-module.exports = { cors, json, redirect, service, resolveCompany, signState, verifyState, claude, sendEmail, QUOTAS, usageThisMonth };
+// Synchronise les factures impayées d'UNE entreprise depuis son compte Stripe connecté.
+// Utilisé par le bouton "Synchroniser" (sync-stripe) ET par le cron de nuit (cron-sync).
+async function syncStripeForCompany(svc, companyId) {
+  const { data: tok } = await svc.from('integration_tokens')
+    .select('access_token').eq('company_id', companyId).eq('provider', 'stripe').single();
+  if (!tok || !tok.access_token) return { stripe: false, created: 0 };
+  const account = tok.access_token;
+
+  const { data: company } = await svc.from('companies').select('plan').eq('id', companyId).single();
+  const limit = QUOTAS[(company && company.plan) || 'pro'] || 1000;
+  let used = await usageThisMonth(svc, companyId);
+
+  const res = await fetch('https://api.stripe.com/v1/invoices?status=open&limit=50', {
+    headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`, 'Stripe-Account': account },
+  });
+  if (!res.ok) return { stripe: true, created: 0, error: 'stripe-read' };
+  const { data: invoices } = await res.json();
+
+  const now = Date.now() / 1000;
+  let created = 0;
+  for (const inv of invoices || []) {
+    if (!inv.due_date || inv.due_date >= now) continue;
+    const ref = `stripe_${inv.id}`;
+    const { data: exists } = await svc.from('invoices').select('id').eq('company_id', companyId).eq('ref', ref).maybeSingle();
+    if (exists) continue;
+
+    const amount = (inv.amount_due || 0) / 100;
+    const days = Math.floor((now - inv.due_date) / 86400);
+    const client = inv.customer_name || inv.customer_email || 'Client';
+
+    const { data: row } = await svc.from('invoices').insert({
+      company_id: companyId, client_name: client, client_email: inv.customer_email,
+      ref, amount_cents: inv.amount_due || 0,
+      due_date: new Date(inv.due_date * 1000).toISOString().slice(0, 10), status: 'unpaid', source: 'stripe',
+    }).select('id').single();
+    if (!row) continue;
+
+    const draft = ((used < limit) ? await claude(
+      "Tu rédiges une relance de facture impayée pour un artisan du BTP, en français. Ton courtois et professionnel, ferme sans être agressif, 4 phrases max, mentionne l'indemnité forfaitaire légale de 40 € entre professionnels. Donne uniquement le corps du message.",
+      `Facture ${inv.number || ref}, client ${client}, montant ${amount} €, retard ${days} jours.`
+    ) : null) || `Bonjour, je me permets de revenir vers vous concernant la facture ${inv.number || ref} (${amount.toLocaleString('fr-FR')} €), échue depuis ${days} jours. Pourriez-vous procéder au règlement sous 8 jours ? Une indemnité forfaitaire de 40 € s'applique entre professionnels. Bien à vous.`;
+    used++;
+
+    await svc.from('pending_actions').insert({
+      company_id: companyId, agent: 'devis_facturation', type: 'relance_facture',
+      target_table: 'invoices', target_id: row.id, draft_text: draft, status: 'pending',
+    });
+    created++;
+  }
+  return { stripe: true, created };
+}
+
+module.exports = { cors, json, redirect, service, resolveCompany, signState, verifyState, claude, sendEmail, QUOTAS, usageThisMonth, syncStripeForCompany };
