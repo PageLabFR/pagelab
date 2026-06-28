@@ -143,3 +143,54 @@ section{padding:64px 0}
 .demo-flag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--ochre);background:var(--ochre-soft);padding:4px 10px;border-radius:999px}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+
+/* ============================================================
+   v2 — Logo, marques, verrouillage offre, finitions
+   ============================================================ */
+
+/* Marque (tuile fiole) — remplace l'ancien .hex */
+.brand .mark{display:grid;place-items:center;width:33px;height:33px;background:var(--ink);border-radius:9px;flex:0 0 auto;box-shadow:0 1px 2px rgba(21,32,46,.12)}
+.brand .mark svg{width:20px;height:20px;display:block}
+.brand .mark .fl{fill:#fff}
+.brand .wm{font-family:'Bricolage Grotesque';font-weight:800;letter-spacing:-.02em}
+
+/* Boutons avec logo de marque */
+.btn .blogo{width:18px;height:18px;display:grid;place-items:center;border-radius:4px;flex:0 0 auto}
+.btn .blogo svg{width:18px;height:18px;display:block}
+.blogo.stripe{background:#635bff}
+.blogo.stripe span{color:#fff;font-weight:800;font-size:12px;font-family:'Bricolage Grotesque';line-height:1}
+
+/* Verrouillage des fonctionnalités hors offre */
+.lock-row{opacity:.62}
+.lock-pill{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--ochre);background:var(--ochre-soft);padding:5px 10px;border-radius:999px;white-space:nowrap}
+.lock-note{display:flex;gap:10px;align-items:flex-start;background:var(--ochre-soft);border:1px solid #ecd9bf;border-radius:14px;padding:15px 16px;color:#7a4f1d;font-size:13.5px;line-height:1.5}
+.lock-note b{font-family:'Bricolage Grotesque';display:block;font-size:15px;color:#5e3c14;margin-bottom:2px}
+.upsell{text-align:center;padding:40px 22px;border:1.5px dashed var(--line);border-radius:var(--radius);background:#fff}
+.upsell .lk{width:50px;height:50px;border-radius:14px;background:var(--ochre-soft);color:var(--ochre);display:grid;place-items:center;margin:0 auto 14px;font-size:24px}
+.upsell h3{font-family:'Bricolage Grotesque';font-size:19px}
+.upsell p{color:var(--ink-soft);font-size:14px;margin:7px 0 16px;max-width:34ch;margin-inline:auto}
+
+/* Tuile d'intégration mise en avant sur les pages agents */
+.integ-cta{display:flex;align-items:center;gap:13px;background:linear-gradient(180deg,#fff, #fbfaf7);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.integ-cta .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;flex:0 0 auto}
+.integ-cta .ic.ok{background:var(--green-soft)}
+.integ-cta .meta{flex:1;min-width:0}
+.integ-cta .meta b{font-family:'Bricolage Grotesque';font-size:15px}
+.integ-cta .meta div{font-size:12.5px;color:var(--muted);margin-top:1px}
+
+/* Aperçu du formulaire à coller (rendu propre) */
+.embed-prev{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--paper)}
+.embed-prev .pf{display:flex;flex-direction:column;gap:9px}
+.embed-prev input,.embed-prev textarea{width:100%;font-family:inherit;font-size:14px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.embed-prev textarea{min-height:64px;resize:none}
+.embed-prev .pbtn{background:var(--ink);color:#fff;border:0;border-radius:10px;padding:12px;font-weight:700;font-family:inherit;font-size:14px}
+.code-wrap{position:relative}
+.code-wrap textarea{width:100%;min-height:104px;font-family:ui-monospace,Menlo,monospace;font-size:11px;line-height:1.5;border:1px solid var(--line);border-radius:12px;padding:13px;background:var(--ink);color:#c9d4e3;resize:vertical}
+
+/* Onglet verrouillé */
+.tab .tlock{font-size:11px;margin-left:5px;opacity:.8}
+
+/* Finitions */
+.kpi{transition:transform .12s} .kpi:hover{transform:translateY(-1px)}
+.btn:focus-visible,.tab:focus-visible,.toggle:focus-visible,.oauth:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.section-label{font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;letter-spacing:.02em;color:var(--ochre);text-transform:uppercase;margin-bottom:9px}

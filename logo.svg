@@ -1,0 +1,7 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PageLab">
+  <path d="M16 6h22l10 10v38a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4V10a4 4 0 0 1 4-4z" fill="#15202e"/>
+  <path d="M38 6l10 10H42a4 4 0 0 1-4-4V6z" fill="#41506a"/>
+  <path d="M28.4 22h7.2a1.1 1.1 0 0 1 0 2.2H35v6.1l7 12.9a2 2 0 0 1-1.8 3H23.8a2 2 0 0 1-1.8-3l7-12.9v-6.1h-.6a1.1 1.1 0 0 1 0-2.2z" fill="#ffffff"/>
+  <circle cx="30" cy="40" r="1.5" fill="#15202e"/>
+  <circle cx="34" cy="43.5" r="1.1" fill="#15202e"/>
+</svg>

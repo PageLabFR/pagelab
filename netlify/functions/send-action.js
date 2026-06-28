@@ -53,7 +53,7 @@ exports.handler = async (event) => {
     return json({ error: "type d'action inconnu" }, 400);
   }
 
-  const sent = await sendEmail(to, subject, body, replyTo);
+  const sent = await sendEmail(to, subject, body, replyTo, (company && company.name) || 'PageLab');
   if (!sent.ok) return json({ error: sent.error }, 502);
 
   await svc.from('pending_actions').update({ status: 'sent', sent_at: new Date().toISOString() }).eq('id', id);

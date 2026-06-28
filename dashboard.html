@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Mon espace — PageLab</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"/>
 <link rel="stylesheet" href="pagelab.css"/>
 <style>
   .dwrap{max-width:600px;margin:0 auto;padding:0 16px 60px}
@@ -76,7 +77,7 @@
 <header class="nav">
   <div class="dwrap" style="padding-bottom:0">
     <div style="display:flex;align-items:center;justify-content:space-between;height:60px">
-      <a class="brand" href="index.html"><span class="hex">⬡</span> PageLab</a>
+      <a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fl" d="M9.6 3h4.8a1 1 0 0 1 0 2H14v4.4l5.4 9.9a2 2 0 0 1-1.8 3H6.4a2 2 0 0 1-1.8-3L10 9.4V5h-.4a1 1 0 0 1 0-2z"/><circle cx="10.5" cy="16" r="1.1" fill="#15202e"/><circle cx="13" cy="18.4" r=".8" fill="#15202e"/></svg></span> <span class="wm">PageLab</span></a>
       <div style="display:flex;align-items:center;gap:12px">
         <span class="who"><span class="av" id="avatar">··</span><span id="companyName">…</span></span>
         <button class="logout" onclick="signOut()">Déconnexion</button>
@@ -88,7 +89,7 @@
 <main class="dwrap">
   <div id="cfgWarn" class="card" style="display:none;padding:18px;margin-top:20px">
     <b style="font-family:'Bricolage Grotesque'">⚙️ Configuration manquante</b>
-    <p style="color:var(--ink-soft);font-size:14px;margin-top:6px">Remplis <code>config.js</code> + lance <code>schema.sql</code> + déploie les Edge Functions (voir <code>README-BACKEND.md</code>).</p>
+    <p style="color:var(--ink-soft);font-size:14px;margin-top:6px">Renseignez vos clés dans <code>config.js</code>, lancez <code>schema.sql</code> dans Supabase, puis déployez sur Netlify (voir <code>README-START.md</code>).</p>
   </div>
 
   <div id="app" style="display:none">
@@ -113,6 +114,12 @@
 <script src="auth.js"></script>
 <script>
 const PLANS={starter:{label:'Starter',limit:300},pro:{label:'Pro',limit:1000},premium:{label:'Premium',limit:3000}};
+const PLAN_RANK={starter:1,pro:2,premium:3};
+const AGENT_MIN_PLAN={commercial:'starter',devis_facturation:'pro',telephone:'premium'};
+const PLAN_OF_SLUG={commercial:'starter',devis_facturation:'pro',telephone:'premium'};
+function planAllows(slug){return PLAN_RANK[plan]>=PLAN_RANK[AGENT_MIN_PLAN[slug]||'premium'];}
+function planNameFor(slug){return PLANS[AGENT_MIN_PLAN[slug]||'premium'].label;}
+const GOOGLE_G='<span class="blogo" style="background:#fff"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.56-2.76c-.98.66-2.23 1.06-3.72 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.84 14.11a6.6 6.6 0 0 1 0-4.22V7.05H2.18a11 11 0 0 0 0 9.9l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.05l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/></svg></span>';
 const AGENT_LABEL={commercial:['Commercial','com'],devis_facturation:['Devis & Factu','dev'],telephone:['Téléphone','']};
 const TYPE_LABEL={reponse_lead:'Réponse à un prospect',relance_devis:'Relance devis',relance_facture:'Relance facture',demande_avis:"Demande d'avis Google"};
 const eur=n=>(n||0).toLocaleString('fr-FR'); const money=c=>eur((c||0)/100);
@@ -145,14 +152,26 @@ async function boot(){
   if(q.get('stripe')==='ok'){toast('Stripe connecté ✓');history.replaceState({},'','dashboard.html');}
   if(q.get('stripe')==='error'){toast('Échec connexion Stripe',true);history.replaceState({},'','dashboard.html');}
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+  if(!planAllows('devis_facturation')){const t=document.querySelector('.tab[data-tab="dev"]');if(t)t.innerHTML='Devis &amp; Factu <span class="tlock">🔒</span>';}
   renderHome();
 }
 function switchTab(n){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===n));
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
   el('view-'+n).classList.add('on');
+  if(n==='dev' && !planAllows('devis_facturation')){
+    el('view-dev').innerHTML=upsellHTML('Devis & Facturation','€','Devis, relances de devis et recouvrement des impayés (Stripe + saisie manuelle).','devis_facturation');
+    wireUpsell(el('view-dev')); return;
+  }
   ({home:renderHome,com:renderCom,dev:renderDev,integ:renderInteg}[n])();
 }
+function upsellHTML(title,icon,desc,slug){
+  return `<div class="block"><div class="upsell"><div class="lk">🔒</div>
+    <h3>${title}</h3><p>${desc}</p>
+    <div class="lock-pill" style="margin:0 auto 14px;display:inline-flex">Inclus dans l'offre ${planNameFor(slug)}</div>
+    <div><button class="btn btn-ochre" id="upPlan">Passer à l'offre ${planNameFor(slug)}</button></div></div></div>`;
+}
+function wireUpsell(scope){const b=scope.querySelector('#upPlan');if(b)b.addEventListener('click',()=>switchTab('integ'));}
 async function usage(){const {data}=await sb.rpc('monthly_usage');return data||0;}
 function meterHTML(u){const lim=PLANS[plan].limit;const p=Math.min(100,Math.round(u/lim*100));const cls=p>=100?'over':p>=80?'warn':'';
   return `<div class="meter"><div class="row"><span>Générations IA ce mois — offre ${PLANS[plan].label}</span><b>${u}/${lim}</b></div><div class="bar"><div class="fill ${cls}" style="width:${p}%"></div></div></div>`;}
@@ -219,40 +238,60 @@ async function renderCom(){
   const ahtml=avis.map(a=>`<div class="row-item"><div class="meta"><b>${a.client_name}</b><div>${a.chantier||''}</div></div>
     <span class="badge ${a.status==='sent'?'g':'o'}" style="margin-left:auto">${a.status==='sent'?'Envoyé':'À demander'}</span></div>`).join('')||'<div class="empty">Aucune demande d\'avis.</div>';
   v.innerHTML=`
-    <div class="block"><div class="form-card"><h3>Formulaire de demande de devis pour votre site</h3>
-      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">Collez ce code sur votre site. Chaque demande arrive ici, qualifiée par l'agent, avec une réponse prête à valider.</p>
-      <textarea id="embedCode" readonly style="width:100%;min-height:120px;font-family:monospace;font-size:11.5px;border:1px solid var(--line);border-radius:10px;padding:11px;background:var(--paper);color:var(--ink-soft)"></textarea>
-      <button class="btn btn-block btn-ghost" id="copyEmbed" style="margin-top:8px">Copier le code</button></div></div>
+    <div class="block"><div class="section-label">Capter les demandes</div>
+      <div class="form-card"><h3>Formulaire pour votre site</h3>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px">Voici à quoi il ressemblera. Chaque demande arrive ici, qualifiée par l'agent, avec une réponse prête à valider.</p>
+        <div class="embed-prev"><div class="pf">
+          <input placeholder="Votre nom" disabled><input placeholder="Email" disabled><input placeholder="Téléphone" disabled>
+          <textarea placeholder="Décrivez vos travaux" disabled></textarea><button class="pbtn" type="button" disabled>Demander un devis</button>
+        </div></div>
+        <div class="code-wrap" style="margin-top:12px"><textarea id="embedCode" readonly></textarea></div>
+        <button class="btn btn-block btn-ghost" id="copyEmbed" style="margin-top:8px">Copier le code à coller sur mon site</button></div></div>
+
     <div class="block"><div class="block-h"><h2>Prospects</h2><span class="hint">qualifiés par l'agent</span></div>${lhtml}</div>
-    <div class="block"><div class="form-card"><h3>Demander un avis Google</h3>
+
+    <div class="block"><div class="section-label">Avis Google</div>
+      <div class="form-card"><h3>Votre lien d'avis Google</h3>
+        <p style="font-size:13px;color:var(--ink-soft);margin-bottom:10px">Collez le lien où vos clients laissent un avis. Il sera inséré automatiquement dans les demandes.</p>
+        <div class="field"><input id="e_link" placeholder="https://g.page/r/..." value="${(googleLink||'').replace(/"/g,'&quot;')}"></div>
+        <button class="btn btn-block" id="e_save">Enregistrer le lien</button></div></div>
+
+    <div class="block"><div class="form-card"><h3>Demander un avis</h3>
       <div class="two"><div class="field"><label>Client</label><input id="a_client" placeholder="M. Dupont"></div>
         <div class="field"><label>Email</label><input id="a_email" type="email" placeholder="client@mail.fr"></div></div>
       <div class="field"><label>Chantier</label><input id="a_ch" placeholder="Terrasse bois"></div>
       <button class="btn btn-block" id="a_add">Préparer la demande</button></div></div>
     <div class="block"><div class="block-h"><h2>Demandes d'avis</h2></div>${ahtml}</div>`;
+  el('e_save').addEventListener('click',async()=>{
+    const link=el('e_link').value.trim();
+    const {error}=await sb.from('companies').update({google_review_link:link}).eq('id',companyId);
+    if(error){toast(error.message,true);return;} googleLink=link; toast('Lien enregistré ✓');
+  });
   el('a_add').addEventListener('click',async()=>{
     const client=el('a_client').value.trim(),email=el('a_email').value.trim(),ch=el('a_ch').value.trim();
     if(!client){toast('Client requis',true);return;}
     const {data:av,error}=await sb.from('avis_requests').insert({company_id:companyId,client_name:client,client_email:email||null,chantier:ch||null,status:'pending'}).select('id').single();
     if(error){toast(error.message,true);return;}
     await sb.from('pending_actions').insert({company_id:companyId,agent:'commercial',type:'demande_avis',target_table:'avis_requests',target_id:av.id,
-      draft_text:`Bonjour ${client}, merci pour votre confiance${ch?(' sur le chantier « '+ch+' »'):''}. Votre avis Google nous aiderait beaucoup : {lien}`});
+      draft_text:`Bonjour ${client}, un grand merci pour votre confiance${ch?(' sur le chantier « '+ch+' »'):''}. Si vous avez un instant, votre avis Google nous aiderait beaucoup et compte énormément pour nous : {lien}`});
     toast('Demande préparée → à valider dans Accueil ✓'); renderCom();
   });
+  const O=location.origin, T=websiteToken;
   const snippet =
-'<form id="pl-form">\n'+
-'  <input name="name" placeholder="Votre nom" required>\n'+
-'  <input name="email" type="email" placeholder="Email">\n'+
-'  <input name="phone" placeholder="Téléphone">\n'+
-'  <textarea name="message" placeholder="Décrivez vos travaux"></textarea>\n'+
-'  <button type="submit">Demander un devis</button>\n'+
+'<!-- Formulaire PageLab -->\n'+
+'<form id="pl-form" style="max-width:420px;font-family:system-ui,sans-serif;display:flex;flex-direction:column;gap:10px">\n'+
+'  <input name="name" placeholder="Votre nom" required style="padding:12px;border:1px solid #d8d8d8;border-radius:10px;font-size:15px">\n'+
+'  <input name="email" type="email" placeholder="Email" style="padding:12px;border:1px solid #d8d8d8;border-radius:10px;font-size:15px">\n'+
+'  <input name="phone" placeholder="Téléphone" style="padding:12px;border:1px solid #d8d8d8;border-radius:10px;font-size:15px">\n'+
+'  <textarea name="message" placeholder="Décrivez vos travaux" style="padding:12px;border:1px solid #d8d8d8;border-radius:10px;font-size:15px;min-height:90px"></textarea>\n'+
+'  <button type="submit" style="padding:13px;border:0;border-radius:10px;background:#15202e;color:#fff;font-size:15px;font-weight:600;cursor:pointer">Demander un devis</button>\n'+
 '</form>\n'+
 '<scr'+'ipt>\n'+
 'document.getElementById("pl-form").addEventListener("submit",async function(e){\n'+
-'  e.preventDefault();var f=e.target;\n'+
-'  await fetch("'+location.origin+'/.netlify/functions/lead-intake",{method:"POST",headers:{"Content-Type":"application/json"},\n'+
-'    body:JSON.stringify({website_token:"'+websiteToken+'",name:f.name.value,email:f.email.value,phone:f.phone.value,message:f.message.value})});\n'+
-'  f.innerHTML="<p>Merci, nous revenons vers vous tres vite.</p>";\n'+
+'  e.preventDefault();var f=e.target,b=f.querySelector("button");b.disabled=true;b.textContent="Envoi...";\n'+
+'  await fetch("'+O+'/.netlify/functions/lead-intake",{method:"POST",headers:{"Content-Type":"application/json"},\n'+
+'    body:JSON.stringify({website_token:"'+T+'",name:f.name.value,email:f.email.value,phone:f.phone.value,message:f.message.value})});\n'+
+'  f.innerHTML="<p style=\\"font-family:system-ui;color:#2f7d5b\\">Merci, nous revenons vers vous très vite.</p>";\n'+
 '});\n'+
 '<\/scr'+'ipt>';
   el('embedCode').value = snippet;
@@ -273,6 +312,10 @@ async function renderDev(){
   const ihtml=inv.map(i=>{const dl=daysLate(i.due_date);return `<div class="row-item"><div class="meta"><b>${i.client_name}</b><div>Facture ${i.ref||''}</div></div>
     <div class="right"><span class="amt">${money(i.amount_cents)} €</span><div>${dl!==null?`<span class="badge">+${dl} j</span>`:''}</div></div></div>`;}).join('')||'<div class="empty">Aucun impayé 🎉</div>';
   v.innerHTML=`
+    <div class="block"><div class="section-label">Encaissement & relances</div>
+      <div class="integ-cta"><div class="ic ${status.stripe?'ok':''}"><span class="blogo stripe"><span>S</span></span></div>
+        <div class="meta"><b>Stripe</b><div>${status.stripe?'Connecté — vos impayés se synchronisent':'Reliez Stripe pour récupérer vos factures impayées'}</div></div>
+        ${status.stripe?'<button class="btn" id="dev_sync">Synchroniser</button>':'<button class="btn" id="dev_stripe">Connecter</button>'}</div></div>
     <div class="block"><div class="form-card"><h3>Nouveau devis</h3>
       <div class="two"><div class="field"><label>Client</label><input id="d_client" placeholder="M. Renaud"></div>
         <div class="field"><label>Email</label><input id="d_email" type="email" placeholder="client@mail.fr"></div></div>
@@ -289,6 +332,8 @@ async function renderDev(){
       <div class="field"><label>Échéance</label><input id="i_due" type="date"></div>
       <button class="btn btn-block" id="i_add">Ajouter — l'agent prépare la relance</button></div></div>
     <div class="block"><div class="block-h"><h2>Impayés</h2><span class="hint">relances à valider dans Accueil</span></div>${ihtml}</div>`;
+  const dvs=el('dev_stripe'); if(dvs)dvs.addEventListener('click',async()=>{const r=await callFn('stripe-oauth',{action:'start'});if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Erreur Stripe',true);});
+  const dvy=el('dev_sync'); if(dvy)dvy.addEventListener('click',async()=>{toast('Synchronisation…');const r=await callFn('sync-stripe');if(r.ok)toast(`${r.json.created} relance(s) créée(s) ✓`);else toast(r.json.error||'Erreur',true);});
   el('d_add').addEventListener('click',async()=>{
     const client=el('d_client').value.trim(),email=el('d_email').value.trim(),title=el('d_title').value.trim();
     const ht=parseFloat(el('d_ht').value),tva=el('d_tva').value;
@@ -322,19 +367,19 @@ async function renderInteg(){
     <div class="block"><div class="block-h"><h2>Votre offre</h2></div>${meterHTML(u)}
       <div class="form-card" style="margin-top:10px"><div class="field"><label>Changer d'offre</label>
         <select id="planSel">
-          <option value="starter"${plan==='starter'?' selected':''}>Starter — 50 actions/mois</option>
-          <option value="pro"${plan==='pro'?' selected':''}>Pro — 250 actions/mois</option>
-          <option value="premium"${plan==='premium'?' selected':''}>Premium — 1000 actions/mois</option>
+          <option value="starter"${plan==='starter'?' selected':''}>Starter — 79 €/mois · Agent Commercial</option>
+          <option value="pro"${plan==='pro'?' selected':''}>Pro — 149 €/mois · + Devis & Facturation</option>
+          <option value="premium"${plan==='premium'?' selected':''}>Premium — 299 €/mois · + Téléphone</option>
         </select></div></div></div>
     <div class="block"><div class="block-h"><h2>Connexions</h2><span class="hint">les secrets restent côté serveur</span></div>
       <div class="integ"><div class="meta"><b>Stripe</b><div>Lecture des factures impayées</div></div><span class="state ${status.stripe?'on':''}">${status.stripe?'Connecté':'Non connecté'}</span></div>
-      <div class="two" style="margin-bottom:10px"><button class="btn btn-ghost" id="stripeBtn">${status.stripe?'Reconnecter Stripe':'Connecter Stripe'}</button><button class="btn" id="stripeSync"${status.stripe?'':' disabled style=\"opacity:.5\"'}>Synchroniser</button></div>
+      <div class="two" style="margin-bottom:10px"><button class="btn btn-ghost" id="stripeBtn"><span class="blogo stripe"><span>S</span></span>${status.stripe?'Reconnecter Stripe':'Connecter Stripe'}</button><button class="btn" id="stripeSync"${status.stripe?'':' disabled style=\"opacity:.5\"'}>Synchroniser</button></div>
       <div class="integ"><div class="meta"><b>Google (Gmail + Agenda)</b><div>Connexion sécurisée</div></div><span class="state ${status.google?'on':''}">${status.google?'Connecté':'Non connecté'}</span></div>
-      <button class="btn btn-block" id="googleBtn">${status.google?'Reconnecter Google':'Connecter Google'}</button>
-      <p style="font-size:12.5px;color:var(--muted);margin-top:14px">Pennylane / Obat : OAuth en cours d'activation partenaire. Resend (emails) & Claude (IA) : configurés côté plateforme (README-BACKEND).</p>
+      <button class="btn btn-block btn-ghost" id="googleBtn">${GOOGLE_G}${status.google?'Reconnecter Google':'Connecter Google'}</button>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:14px">Pennylane / Obat : connexion en cours d'activation partenaire. Emails et IA : déjà configurés côté plateforme.</p>
     </div>
     <div class="block"><div class="block-h"><h2>Vos agents</h2><span class="hint">activez / désactivez</span></div>
-      ${(cat||[]).map(a=>`<div class="agent-row" data-aid="${a.id}"><div class="ic">${icons[a.slug]||'◆'}</div><div class="meta"><b>${a.name}</b><div>${a.tagline||''}</div></div><button class="toggle ${map[a.id]?'on':''}"></button></div>`).join('')}</div>`;
+      ${(cat||[]).map(a=>{const allowed=planAllows(a.slug);return `<div class="agent-row ${allowed?'':'lock-row'}" data-aid="${a.id}" data-slug="${a.slug}"><div class="ic">${icons[a.slug]||'◆'}</div><div class="meta"><b>${a.name}</b><div>${a.tagline||''}</div></div>${allowed?`<button class="toggle ${map[a.id]?'on':''}"></button>`:`<span class="lock-pill">🔒 Offre ${planNameFor(a.slug)}</span>`}</div>`;}).join('')}</div>`;
   el('planSel').addEventListener('change',async e=>{const p=e.target.value;const {error}=await sb.from('companies').update({plan:p}).eq('id',companyId);if(error){toast(error.message,true);return;}plan=p;toast('Offre mise à jour ✓');renderInteg();});
   el('stripeBtn').addEventListener('click',async()=>{const r=await callFn('stripe-oauth',{action:'start'});if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Erreur Stripe',true);});
   el('stripeSync').addEventListener('click',async()=>{if(!status.stripe)return;toast('Synchronisation…');const r=await callFn('sync-stripe');if(r.ok)toast(`${r.json.created} relance(s) créée(s) ✓`);else toast(r.json.error||'Erreur',true);});
