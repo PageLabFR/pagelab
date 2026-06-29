@@ -194,3 +194,33 @@ section{padding:64px 0}
 .kpi{transition:transform .12s} .kpi:hover{transform:translateY(-1px)}
 .btn:focus-visible,.tab:focus-visible,.toggle:focus-visible,.oauth:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
 .section-label{font-family:'Bricolage Grotesque';font-weight:800;font-size:13px;letter-spacing:.02em;color:var(--ochre);text-transform:uppercase;margin-bottom:9px}
+
+/* ============================================================
+   v2 — Animations (sobres, désactivées si reduced-motion)
+   ============================================================ */
+@keyframes plUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes plFade{from{opacity:0}to{opacity:1}}
+
+/* Dashboard : révélation douce des vues et blocs */
+section.view.on{animation:plUp .34s cubic-bezier(.22,.61,.36,1) both}
+.kpis .kpi{animation:plUp .34s cubic-bezier(.22,.61,.36,1) both}
+.kpis .kpi:nth-child(2){animation-delay:.05s}
+.kpis .kpi:nth-child(3){animation-delay:.1s}
+.kpis .kpi:nth-child(4){animation-delay:.15s}
+.block{animation:plUp .4s cubic-bezier(.22,.61,.36,1) both}
+
+/* Landing : entrée du hero + cartes agents en cascade */
+.hero h1{animation:plUp .5s cubic-bezier(.22,.61,.36,1) both}
+.hero .lead{animation:plUp .5s cubic-bezier(.22,.61,.36,1) both;animation-delay:.08s}
+.hero .cta{animation:plUp .5s cubic-bezier(.22,.61,.36,1) both;animation-delay:.16s}
+.grid3 .agent-card{animation:plUp .5s cubic-bezier(.22,.61,.36,1) both}
+.grid3 .agent-card:nth-child(2){animation-delay:.08s}
+.grid3 .agent-card:nth-child(3){animation-delay:.16s}
+
+/* Micro-interactions */
+.agent-card,.plan{transition:transform .18s ease, box-shadow .18s ease}
+.agent-card:hover,.plan:hover{transform:translateY(-3px);box-shadow:0 6px 22px rgba(21,32,46,.1)}
+.btn{transition:transform .12s,filter .12s,box-shadow .12s}
+.btn:not(.btn-ghost):hover{box-shadow:0 6px 18px rgba(21,32,46,.18)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto}}

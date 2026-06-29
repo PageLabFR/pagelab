@@ -136,6 +136,14 @@ async function callFn(name,body){
   let j={};try{j=await res.json();}catch(e){}
   return {ok:res.ok,status:res.status,json:j};
 }
+async function goCheckout(p){const r=await callFn('create-checkout',{plan:p});if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Paiement indisponible',true);}
+function upgradeButtonsHTML(){
+  const order=['starter','pro','premium'];
+  const labels={pro:'Passer à Pro — 149,99 €',premium:'Passer à Premium — 299,99 €'};
+  const higher=order.filter(p=>PLAN_RANK[p]>PLAN_RANK[plan]);
+  if(!higher.length)return '<div style="font-size:12.5px;color:var(--green);font-weight:600;margin-top:12px">Vous êtes sur l\'offre la plus complète 🎉</div>';
+  return '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">'+higher.map(p=>`<button class="btn" data-up="${p}">${labels[p]}</button>`).join('')+'</div>';
+}
 
 async function boot(){
   if(!window.PAGELAB_READY){el('loading').style.display='none';el('cfgWarn').style.display='block';return;}
@@ -151,6 +159,8 @@ async function boot(){
   if(q.get('google')==='ok'){toast('Google connecté ✓');history.replaceState({},'','dashboard.html');}
   if(q.get('stripe')==='ok'){toast('Stripe connecté ✓');history.replaceState({},'','dashboard.html');}
   if(q.get('stripe')==='error'){toast('Échec connexion Stripe',true);history.replaceState({},'','dashboard.html');}
+  if(q.get('checkout')==='success'){toast('Paiement reçu — votre offre est activée ✓');history.replaceState({},'','dashboard.html');}
+  if(q.get('checkout')==='cancel'){toast('Paiement annulé');history.replaceState({},'','dashboard.html');}
   document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
   if(!planAllows('devis_facturation')){const t=document.querySelector('.tab[data-tab="dev"]');if(t)t.innerHTML='Devis &amp; Factu <span class="tlock">🔒</span>';}
   renderHome();
@@ -161,7 +171,7 @@ function switchTab(n){
   el('view-'+n).classList.add('on');
   if(n==='dev' && !planAllows('devis_facturation')){
     el('view-dev').innerHTML=upsellHTML('Devis & Facturation','€','Devis, relances de devis et recouvrement des impayés (Stripe + saisie manuelle).','devis_facturation');
-    wireUpsell(el('view-dev')); return;
+    wireUpsell(el('view-dev'),'devis_facturation'); return;
   }
   ({home:renderHome,com:renderCom,dev:renderDev,integ:renderInteg}[n])();
 }
@@ -171,7 +181,7 @@ function upsellHTML(title,icon,desc,slug){
     <div class="lock-pill" style="margin:0 auto 14px;display:inline-flex">Inclus dans l'offre ${planNameFor(slug)}</div>
     <div><button class="btn btn-ochre" id="upPlan">Passer à l'offre ${planNameFor(slug)}</button></div></div></div>`;
 }
-function wireUpsell(scope){const b=scope.querySelector('#upPlan');if(b)b.addEventListener('click',()=>switchTab('integ'));}
+function wireUpsell(scope,slug){const b=scope.querySelector('#upPlan');if(b)b.addEventListener('click',()=>goCheckout(AGENT_MIN_PLAN[slug]||'pro'));}
 async function usage(){const {data}=await sb.rpc('monthly_usage');return data||0;}
 function meterHTML(u){const lim=PLANS[plan].limit;const p=Math.min(100,Math.round(u/lim*100));const cls=p>=100?'over':p>=80?'warn':'';
   return `<div class="meter"><div class="row"><span>Générations IA ce mois — offre ${PLANS[plan].label}</span><b>${u}/${lim}</b></div><div class="bar"><div class="fill ${cls}" style="width:${p}%"></div></div></div>`;}
@@ -366,11 +376,12 @@ async function renderInteg(){
   v.innerHTML=`
     <div class="block"><div class="block-h"><h2>Votre offre</h2></div>${meterHTML(u)}
       <div class="form-card" style="margin-top:10px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="flex:1;min-width:0"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px">Offre ${PLANS[plan].label}</div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:140px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px">Offre ${PLANS[plan].label}</div>
             <div style="font-size:13px;color:var(--muted)">${plan==='starter'?'Agent Commercial':plan==='pro'?'Commercial + Devis & Facturation':'Tous les agents + Téléphone'}</div></div>
-          <button class="btn btn-ghost" id="planManage">Changer d'offre</button>
-        </div></div></div>
+        </div>
+        ${upgradeButtonsHTML()}
+      </div></div>
     <div class="block"><div class="block-h"><h2>Connexions</h2><span class="hint">les secrets restent côté serveur</span></div>
       <div class="integ"><div class="meta"><b>Stripe</b><div>Lecture des factures impayées</div></div><span class="state ${status.stripe?'on':''}">${status.stripe?'Connecté':'Non connecté'}</span></div>
       <div class="two" style="margin-bottom:10px"><button class="btn btn-ghost" id="stripeBtn"><span class="blogo stripe"><span>S</span></span>${status.stripe?'Reconnecter Stripe':'Connecter Stripe'}</button><button class="btn" id="stripeSync"${status.stripe?'':' disabled style=\"opacity:.5\"'}>Synchroniser</button></div>
@@ -380,7 +391,7 @@ async function renderInteg(){
     </div>
     <div class="block"><div class="block-h"><h2>Vos agents</h2><span class="hint">activez / désactivez</span></div>
       ${(cat||[]).map(a=>{const allowed=planAllows(a.slug);return `<div class="agent-row ${allowed?'':'lock-row'}" data-aid="${a.id}" data-slug="${a.slug}"><div class="ic">${icons[a.slug]||'◆'}</div><div class="meta"><b>${a.name}</b><div>${a.tagline||''}</div></div>${allowed?`<button class="toggle ${map[a.id]?'on':''}"></button>`:`<span class="lock-pill">🔒 Offre ${planNameFor(a.slug)}</span>`}</div>`;}).join('')}</div>`;
-  el('planManage').addEventListener('click',()=>toast("Le changement d'offre se fera via le paiement en ligne (bientôt)"));
+  v.querySelectorAll('[data-up]').forEach(b=>b.addEventListener('click',()=>goCheckout(b.dataset.up)));
   el('stripeBtn').addEventListener('click',async()=>{const r=await callFn('stripe-oauth',{action:'start'});if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Erreur Stripe',true);});
   el('stripeSync').addEventListener('click',async()=>{if(!status.stripe)return;toast('Synchronisation…');const r=await callFn('sync-stripe');if(r.ok)toast(`${r.json.created} relance(s) créée(s) ✓`);else toast(r.json.error||'Erreur',true);});
   el('googleBtn').addEventListener('click',async()=>{const r=await callFn('google-oauth',{action:'start'});if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Erreur Google',true);});

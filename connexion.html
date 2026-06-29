@@ -116,6 +116,15 @@
         options: { data: { company } }
       });
       if (error) return show(error.message, false);
+      // Email de bienvenue (best effort) puis redirection
+      try {
+        const { data: { session } } = await window.sb.auth.getSession();
+        if (session) {
+          fetch('/.netlify/functions/welcome-email', { method: 'POST', headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' }, body: '{}' }).catch(() => {});
+          location.replace('dashboard.html');
+          return;
+        }
+      } catch (e) {}
       show('✅ Compte créé. Vérifiez vos emails si une confirmation est demandée, puis connectez-vous.', true);
     } else {
       const { error } = await window.sb.auth.signInWithPassword({ email, password });
