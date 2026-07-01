@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tarifs — PageLab</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="pagelab.css"/>
+<style>
+  .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+  @media(max-width:820px){.pricing{grid-template-columns:1fr}}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);position:relative}
+  .plan.feat{border-color:var(--ochre);border-width:2px}
+  .plan .tag{position:absolute;top:-11px;left:24px;background:var(--ochre);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 11px;border-radius:999px}
+  .plan h3{font-size:19px}
+  .plan .price{font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;letter-spacing:-.02em;margin-top:8px}
+  .plan .price span{font-size:14px;color:var(--muted);font-weight:500}
+  .plan ul{list-style:none;margin:16px 0 0;display:flex;flex-direction:column;gap:9px}
+  .plan li{display:flex;gap:9px;font-size:14px;color:var(--ink-soft)}
+  .plan li::before{content:"✓";color:var(--green);font-weight:700}
+  .plan .btn{margin-top:18px;width:100%;justify-content:center}
+  .ph{text-align:center;max-width:620px;margin:0 auto;padding:56px 22px 8px}
+  .ph h1{font-family:'Bricolage Grotesque';font-weight:800;font-size:clamp(30px,6vw,44px);letter-spacing:-.02em;line-height:1.05}
+  .ph p{color:var(--ink-soft);font-size:16px;margin-top:12px}
+  .pwrap{max-width:1000px;margin:0 auto;padding:24px 22px 10px}
+  .founder{max-width:1000px;margin:0 auto;padding:0 22px}
+  .founder .box{background:var(--ink);color:#fff;border-radius:var(--radius);padding:22px 24px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .founder .box b{font-family:'Bricolage Grotesque';font-size:18px}
+  .founder .box p{color:#c9d2df;font-size:14px;margin-top:3px}
+  .faq{max-width:720px;margin:0 auto;padding:44px 22px 70px}
+  .faq h2{font-family:'Bricolage Grotesque';font-size:22px;margin-bottom:16px}
+  .qa{border-top:1px solid var(--line);padding:16px 0}
+  .qa b{font-family:'Bricolage Grotesque';font-size:15.5px}
+  .qa p{color:var(--ink-soft);font-size:14px;margin-top:5px;line-height:1.55}
+</style>
+</head>
+<body>
+<header class="nav"><div class="container row">
+  <a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fl" d="M9.6 3h4.8a1 1 0 0 1 0 2H14v4.4l5.4 9.9a2 2 0 0 1-1.8 3H6.4a2 2 0 0 1-1.8-3L10 9.4V5h-.4a1 1 0 0 1 0-2z"/><circle cx="10.5" cy="16" r="1.1" fill="#15202e"/><circle cx="13" cy="18.4" r=".8" fill="#15202e"/></svg></span> <span class="wm">PageLab</span></a>
+  <nav class="nav-links"><a href="index.html">Accueil</a><a class="btn" href="connexion.html">Connexion</a></nav>
+</div></header>
+
+<main>
+  <div class="ph">
+    <h1>Un tarif simple, à vie</h1>
+    <p>Vos agents travaillent, vous validez. Choisissez l'offre adaptée à votre activité — sans engagement, résiliable en un clic.</p>
+  </div>
+
+  <div class="pwrap">
+    <div class="pricing">
+      <div class="plan">
+        <h3>Starter</h3>
+        <div class="price">79,99 € <span>/mois à vie</span></div>
+        <ul>
+          <li>Agent Commercial</li>
+          <li>Qualification des prospects</li>
+          <li>Réponses préparées + relances</li>
+          <li>Dashboard & validation humaine</li>
+        </ul>
+        <a class="btn btn-ghost" href="connexion.html">Commencer</a>
+      </div>
+      <div class="plan feat">
+        <span class="tag">Le plus choisi</span>
+        <h3>Pro</h3>
+        <div class="price">149,99 € <span>/mois à vie</span></div>
+        <ul>
+          <li>Tout Starter</li>
+          <li>Agent Devis & Facturation</li>
+          <li>Relances devis & impayés</li>
+          <li>Connecteurs (Gmail, Pennylane…)</li>
+          <li>Support prioritaire</li>
+        </ul>
+        <a class="btn" href="connexion.html">Commencer</a>
+      </div>
+      <div class="plan">
+        <h3>Premium</h3>
+        <div class="price">299,99 € <span>/mois à vie</span></div>
+        <ul>
+          <li>Tout Pro</li>
+          <li>Agent Téléphonique IA</li>
+          <li>Numéro dédié & résumés d'appels</li>
+          <li>Automatisations sur mesure</li>
+        </ul>
+        <a class="btn btn-ghost" href="connexion.html">Commencer</a>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:13.5px;color:var(--ink-soft);margin-top:16px">Utilisation incluse adaptée à la taille de votre entreprise.</p>
+  </div>
+
+  <div class="founder">
+    <div class="box">
+      <div style="flex:1;min-width:220px"><b>Offre Fondateur — 10 premiers clients</b><p>Tarif préférentiel conservé à vie, en échange de vos retours pour construire PageLab avec vous.</p></div>
+      <a class="btn btn-ghost" style="background:#fff;border-color:#fff" href="connexion.html">Rejoindre</a>
+    </div>
+  </div>
+
+  <div class="faq">
+    <h2>Questions fréquentes</h2>
+    <div class="qa"><b>Y a-t-il un engagement ?</b><p>Non. Vous pouvez résilier à tout moment depuis votre espace, en un clic — l'abonnement s'arrête à la fin de la période en cours.</p></div>
+    <div class="qa"><b>« À vie », ça veut dire quoi ?</b><p>Le tarif auquel vous souscrivez aujourd'hui reste le vôtre tant que votre abonnement est actif, même si nos prix augmentent plus tard.</p></div>
+    <div class="qa"><b>Est-ce que PageLab envoie des messages à ma place sans mon accord ?</b><p>Jamais. Chaque réponse, relance ou demande d'avis est préparée par l'agent, mais n'est envoyée qu'après votre validation.</p></div>
+    <div class="qa"><b>Quelle offre choisir ?</b><p>Starter si vous voulez surtout gérer vos prospects. Pro si vous voulez aussi automatiser devis et impayés (le plus choisi). Premium si vous voulez en plus un agent qui répond au téléphone.</p></div>
+    <div style="text-align:center;margin-top:28px"><a class="btn" href="connexion.html">Créer mon compte</a></div>
+  </div>
+</main>
+
+<footer style="border-top:1px solid var(--line);padding:26px 22px;text-align:center;color:var(--muted);font-size:13px">
+  <a href="cgv.html" style="color:var(--muted)">Conditions</a> · PageLab
+</footer>
+</body>
+</html>

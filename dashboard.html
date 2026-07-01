@@ -70,42 +70,83 @@
   .loading{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
   .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:13px 18px;border-radius:12px;font-size:14px;font-weight:500;box-shadow:0 10px 30px rgba(21,32,46,.3);opacity:0;pointer-events:none;transition:.25s;z-index:50;max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.toast.bad{background:var(--late)}
+
+  /* ---- Shell : sidebar PC / barre en bas mobile ---- */
+  .dash{display:flex;min-height:100vh}
+  .side{width:232px;flex:0 0 232px;background:#fff;border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+  .side .brand{margin:4px 8px 18px}
+  .nav-list{display:flex;flex-direction:column;gap:3px}
+  .nav-i{display:flex;align-items:center;gap:11px;width:100%;font-family:inherit;font-weight:600;font-size:14.5px;color:var(--ink-soft);background:transparent;border:0;border-radius:11px;padding:11px 12px;cursor:pointer;text-align:left;transition:background .15s,color .15s}
+  .nav-i svg{width:19px;height:19px;flex:0 0 auto;opacity:.75}
+  .nav-i:hover{background:var(--paper)}
+  .nav-i.on{background:var(--ink);color:#fff}
+  .nav-i.on svg{opacity:1}
+  .nav-i .tlock{margin-left:auto;font-size:12px}
+  .side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:13px}
+  .content{flex:1;min-width:0;display:flex;flex-direction:column}
+  .topbar{display:none}
+  .views{flex:1;width:100%;max-width:720px;margin:0 auto;padding:26px 22px 46px}
+  .bottomnav{display:none}
+
+  @media(max-width:820px){
+    .dash{display:block}
+    .side{display:none}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 16px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:30}
+    .views{padding:18px 15px 96px}
+    .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);z-index:40;padding:6px 4px;padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+    .bottomnav .nav-i{flex:1;flex-direction:column;gap:3px;font-size:10.5px;font-weight:600;padding:6px 2px;border-radius:10px;justify-content:center;text-align:center}
+    .bottomnav .nav-i svg{width:22px;height:22px;opacity:.9}
+    .bottomnav .nav-i.on{background:transparent;color:var(--ink)}
+    .bottomnav .nav-i.on svg{opacity:1}
+    .bottomnav .nav-i .tlock{display:none}
+  }
 </style>
 </head>
 <body>
 
-<header class="nav">
-  <div class="dwrap" style="padding-bottom:0">
-    <div style="display:flex;align-items:center;justify-content:space-between;height:60px">
-      <a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fl" d="M9.6 3h4.8a1 1 0 0 1 0 2H14v4.4l5.4 9.9a2 2 0 0 1-1.8 3H6.4a2 2 0 0 1-1.8-3L10 9.4V5h-.4a1 1 0 0 1 0-2z"/><circle cx="10.5" cy="16" r="1.1" fill="#15202e"/><circle cx="13" cy="18.4" r=".8" fill="#15202e"/></svg></span> <span class="wm">PageLab</span></a>
-      <div style="display:flex;align-items:center;gap:12px">
-        <span class="who"><span class="av" id="avatar">··</span><span id="companyName">…</span></span>
-        <button class="logout" onclick="signOut()">Déconnexion</button>
-      </div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-home" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-com" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M4 5h16v10H8l-4 4z"/></symbol>
+  <symbol id="i-dev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M6 3h8l4 4v14l-2.2-1.5L13.7 21 12 19.6 10.3 21 8.2 19.5 6 21z"/><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M9 9.5h6M9 13h6"/></symbol>
+  <symbol id="i-integ" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 7V4M15 7V4M8 7h8v3a4 4 0 0 1-8 0zM12 14v6"/></symbol>
+  <symbol id="i-abo" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path stroke="currentColor" stroke-width="1.8" d="M3 10.5h18"/></symbol>
+</defs></svg>
+
+<div class="dash">
+  <aside class="side">
+    <a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fl" d="M9.6 3h4.8a1 1 0 0 1 0 2H14v4.4l5.4 9.9a2 2 0 0 1-1.8 3H6.4a2 2 0 0 1-1.8-3L10 9.4V5h-.4a1 1 0 0 1 0-2z"/><circle cx="10.5" cy="16" r="1.1" fill="#15202e"/><circle cx="13" cy="18.4" r=".8" fill="#15202e"/></svg></span> <span class="wm">PageLab</span></a>
+    <nav class="nav-list" id="navMain"></nav>
+    <div class="side-foot">
+      <div class="who" style="margin-bottom:11px"><span class="av" id="avatar">··</span><span id="companyName">…</span></div>
+      <button class="logout" style="width:100%" onclick="signOut()">Déconnexion</button>
     </div>
-  </div>
-</header>
+  </aside>
 
-<main class="dwrap">
-  <div id="cfgWarn" class="card" style="display:none;padding:18px;margin-top:20px">
-    <b style="font-family:'Bricolage Grotesque'">⚙️ Configuration manquante</b>
-    <p style="color:var(--ink-soft);font-size:14px;margin-top:6px">Renseignez vos clés dans <code>config.js</code>, lancez <code>schema.sql</code> dans Supabase, puis déployez sur Netlify (voir <code>README-START.md</code>).</p>
+  <div class="content">
+    <header class="topbar">
+      <a class="brand" href="index.html" style="font-size:17px"><span class="mark" style="width:26px;height:26px"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fl" d="M9.6 3h4.8a1 1 0 0 1 0 2H14v4.4l5.4 9.9a2 2 0 0 1-1.8 3H6.4a2 2 0 0 1-1.8-3L10 9.4V5h-.4a1 1 0 0 1 0-2z"/><circle cx="10.5" cy="16" r="1.1" fill="#15202e"/><circle cx="13" cy="18.4" r=".8" fill="#15202e"/></svg></span> <span class="wm">PageLab</span></a>
+      <button class="logout" onclick="signOut()">Déconnexion</button>
+    </header>
+
+    <main class="views">
+      <div id="cfgWarn" class="card" style="display:none;padding:18px">
+        <b style="font-family:'Bricolage Grotesque'">⚙️ Configuration manquante</b>
+        <p style="color:var(--ink-soft);font-size:14px;margin-top:6px">Renseignez vos clés dans <code>config.js</code>, lancez <code>schema.sql</code> dans Supabase, puis déployez sur Netlify (voir <code>README-START.md</code>).</p>
+      </div>
+
+      <div id="app" style="display:none">
+        <section class="view on" id="view-home"></section>
+        <section class="view" id="view-com"></section>
+        <section class="view" id="view-dev"></section>
+        <section class="view" id="view-integ"></section>
+        <section class="view" id="view-abo"></section>
+      </div>
+      <div class="loading" id="loading">Chargement de votre espace…</div>
+    </main>
   </div>
 
-  <div id="app" style="display:none">
-    <nav class="tabs">
-      <button class="tab on" data-tab="home">Accueil</button>
-      <button class="tab" data-tab="com">Commercial</button>
-      <button class="tab" data-tab="dev">Devis &amp; Factu</button>
-      <button class="tab" data-tab="integ">Intégrations</button>
-    </nav>
-    <section class="view on" id="view-home"></section>
-    <section class="view" id="view-com"></section>
-    <section class="view" id="view-dev"></section>
-    <section class="view" id="view-integ"></section>
-  </div>
-  <div class="loading" id="loading">Chargement de votre espace…</div>
-</main>
+  <nav class="bottomnav" id="navBottom"></nav>
+</div>
 
 <div class="toast" id="toast"></div>
 
@@ -145,6 +186,9 @@ function upgradeButtonsHTML(){
   return '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">'+higher.map(p=>`<button class="btn" data-up="${p}">${labels[p]}</button>`).join('')+'</div>';
 }
 
+const NAV=[['home','Accueil','i-home'],['com','Commercial','i-com'],['dev','Devis','i-dev'],['integ','Connexions','i-integ'],['abo','Abonnement','i-abo']];
+function navHTML(){return NAV.map(([t,l,i])=>`<button class="nav-i${t==='home'?' on':''}" data-tab="${t}"><svg viewBox="0 0 24 24"><use href="#${i}"/></svg><span class="lbl">${l}</span></button>`).join('');}
+
 async function boot(){
   if(!window.PAGELAB_READY){el('loading').style.display='none';el('cfgWarn').style.display='block';return;}
   const session=await requireSession(); if(!session)return;
@@ -161,19 +205,22 @@ async function boot(){
   if(q.get('stripe')==='error'){toast('Échec connexion Stripe',true);history.replaceState({},'','dashboard.html');}
   if(q.get('checkout')==='success'){toast('Paiement reçu — votre offre est activée ✓');history.replaceState({},'','dashboard.html');}
   if(q.get('checkout')==='cancel'){toast('Paiement annulé');history.replaceState({},'','dashboard.html');}
-  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
-  if(!planAllows('devis_facturation')){const t=document.querySelector('.tab[data-tab="dev"]');if(t)t.innerHTML='Devis &amp; Factu <span class="tlock">🔒</span>';}
-  renderHome();
+  el('navMain').innerHTML=navHTML(); el('navBottom').innerHTML=navHTML();
+  document.querySelectorAll('.nav-i').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+  if(!planAllows('devis_facturation')){document.querySelectorAll('.nav-i[data-tab="dev"] .lbl').forEach(s=>s.innerHTML='Devis <span class="tlock">🔒</span>');}
+  const tab=q.get('tab');
+  if(tab&&NAV.some(n=>n[0]===tab)){history.replaceState({},'','dashboard.html');switchTab(tab);}
+  else renderHome();
 }
 function switchTab(n){
-  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===n));
+  document.querySelectorAll('.nav-i').forEach(b=>b.classList.toggle('on',b.dataset.tab===n));
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
   el('view-'+n).classList.add('on');
   if(n==='dev' && !planAllows('devis_facturation')){
     el('view-dev').innerHTML=upsellHTML('Devis & Facturation','€','Devis, relances de devis et recouvrement des impayés (Stripe + saisie manuelle).','devis_facturation');
     wireUpsell(el('view-dev'),'devis_facturation'); return;
   }
-  ({home:renderHome,com:renderCom,dev:renderDev,integ:renderInteg}[n])();
+  ({home:renderHome,com:renderCom,dev:renderDev,integ:renderInteg,abo:renderAbo}[n])();
 }
 function upsellHTML(title,icon,desc,slug){
   return `<div class="block"><div class="upsell"><div class="lk">🔒</div>
@@ -374,14 +421,6 @@ async function renderInteg(){
   const map={}; (mine||[]).forEach(r=>map[r.agent_id]=r.active);
   const icons={commercial:'◆',devis_facturation:'€',telephone:'☎'};
   v.innerHTML=`
-    <div class="block"><div class="block-h"><h2>Votre offre</h2></div>${meterHTML(u)}
-      <div class="form-card" style="margin-top:10px">
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-          <div style="flex:1;min-width:140px"><div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px">Offre ${PLANS[plan].label}</div>
-            <div style="font-size:13px;color:var(--muted)">${plan==='starter'?'Agent Commercial':plan==='pro'?'Commercial + Devis & Facturation':'Tous les agents + Téléphone'}</div></div>
-        </div>
-        ${upgradeButtonsHTML()}
-      </div></div>
     <div class="block"><div class="block-h"><h2>Connexions</h2><span class="hint">les secrets restent côté serveur</span></div>
       <div class="integ"><div class="meta"><b>Stripe</b><div>Lecture des factures impayées</div></div><span class="state ${status.stripe?'on':''}">${status.stripe?'Connecté':'Non connecté'}</span></div>
       <div class="two" style="margin-bottom:10px"><button class="btn btn-ghost" id="stripeBtn"><span class="blogo stripe"><span>S</span></span>${status.stripe?'Reconnecter Stripe':'Connecter Stripe'}</button><button class="btn" id="stripeSync"${status.stripe?'':' disabled style=\"opacity:.5\"'}>Synchroniser</button></div>
@@ -396,6 +435,26 @@ async function renderInteg(){
   el('stripeSync').addEventListener('click',async()=>{if(!status.stripe)return;toast('Synchronisation…');const r=await callFn('sync-stripe');if(r.ok)toast(`${r.json.created} relance(s) créée(s) ✓`);else toast(r.json.error||'Erreur',true);});
   el('googleBtn').addEventListener('click',async()=>{const r=await callFn('google-oauth',{action:'start'});if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Erreur Google',true);});
   v.querySelectorAll('.toggle').forEach(btn=>btn.addEventListener('click',async()=>{const aid=btn.closest('[data-aid]').dataset.aid;const next=!btn.classList.contains('on');btn.classList.toggle('on',next);const {error}=await sb.from('company_agents').upsert({company_id:companyId,agent_id:aid,active:next},{onConflict:'company_id,agent_id'});if(error){btn.classList.toggle('on',!next);toast(error.message,true);}}));
+}
+
+async function renderAbo(){
+  const v=el('view-abo'); v.innerHTML='<div class="loading">…</div>';
+  const u=await usage();
+  const desc=plan==='starter'?'Agent Commercial':plan==='pro'?'Commercial + Devis & Facturation':'Tous les agents + Téléphone';
+  v.innerHTML=`
+    <div class="block"><div class="block-h"><h2>Mon abonnement</h2></div>
+      <div class="form-card">
+        <div style="font-family:'Bricolage Grotesque';font-weight:800;font-size:23px">Offre ${PLANS[plan].label}</div>
+        <div style="font-size:13.5px;color:var(--muted);margin-top:3px">${desc}</div>
+        ${upgradeButtonsHTML()}
+        <div style="border-top:1px solid var(--line);margin-top:18px;padding-top:15px">
+          <button class="btn btn-ghost" id="billing">Gérer / résilier mon abonnement</button>
+          <p style="font-size:12px;color:var(--muted);margin-top:9px">Ouvre votre espace sécurisé Stripe : facture, moyen de paiement, résiliation. Sans engagement.</p>
+        </div>
+      </div></div>
+    <div class="block"><div class="block-h"><h2>Consommation</h2></div>${meterHTML(u)}</div>`;
+  v.querySelectorAll('[data-up]').forEach(b=>b.addEventListener('click',()=>goCheckout(b.dataset.up)));
+  el('billing').addEventListener('click',async()=>{toast("Ouverture de l'espace Stripe…");const r=await callFn('billing-portal');if(r.ok&&r.json.url)location.href=r.json.url;else toast(r.json.error||'Aucun abonnement actif',true);});
 }
 
 boot();
