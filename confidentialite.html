@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Politique de confidentialité — PageLab</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="pagelab.css"/>
+<style>
+  .legal{max-width:760px;margin:0 auto;padding:44px 22px 70px}
+  .legal h1{font-family:'Bricolage Grotesque';font-weight:800;font-size:32px;letter-spacing:-.02em}
+  .legal .upd{color:var(--muted);font-size:13px;margin-top:6px}
+  .legal .note{background:var(--ochre-soft);border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-size:13px;color:var(--ink-soft);margin:18px 0 8px}
+  .legal h2{font-family:'Bricolage Grotesque';font-weight:700;font-size:19px;margin-top:30px}
+  .legal p,.legal li{color:var(--ink-soft);font-size:14.5px;line-height:1.65}
+  .legal ul{margin:8px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+  .legal a{color:var(--ochre);font-weight:500}
+  .legal .tbl{width:100%;border-collapse:collapse;margin-top:12px;font-size:13.5px}
+  .legal .tbl td,.legal .tbl th{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  .legal .tbl th{background:var(--paper);font-weight:600;color:var(--ink)}
+</style>
+</head>
+<body>
+<header class="nav"><div class="container row">
+  <a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fl" d="M9.6 3h4.8a1 1 0 0 1 0 2H14v4.4l5.4 9.9a2 2 0 0 1-1.8 3H6.4a2 2 0 0 1-1.8-3L10 9.4V5h-.4a1 1 0 0 1 0-2z"/><circle cx="10.5" cy="16" r="1.1" fill="#15202e"/><circle cx="13" cy="18.4" r=".8" fill="#15202e"/></svg></span> <span class="wm">PageLab</span></a>
+  <nav class="nav-links"><a href="index.html">Accueil</a><a href="pricing.html">Tarifs</a><a class="btn" href="connexion.html">Connexion</a></nav>
+</div></header>
+
+<main class="legal">
+  <h1>Politique de confidentialité</h1>
+  <p class="upd">Dernière mise à jour : juillet 2026</p>
+  <div class="note">⚠️ Modèle de lancement. À faire valider par un professionnel du droit / DPO avant mise en production définitive.</div>
+
+  <p style="margin-top:18px">La présente politique explique comment PageLab traite les données personnelles dans le cadre de son service, conformément au Règlement (UE) 2016/679 (RGPD) et à la loi Informatique et Libertés.</p>
+
+  <h2>1. Responsable de traitement</h2>
+  <p>Pour les données relatives à votre compte et à votre utilisation du Service, le responsable de traitement est :<br>
+  <b>PageLab</b> — entreprise individuelle Wandrille Robin, 48 rue Saint Charles, 78000 Versailles — <a href="mailto:contact@pagelab.fr">contact@pagelab.fr</a>.</p>
+
+  <h2>2. Deux rôles distincts</h2>
+  <p><b>Données de votre compte</b> (vous, professionnel utilisateur) : PageLab agit comme <b>responsable de traitement</b>.</p>
+  <p><b>Données de vos propres clients / prospects</b> que vous confiez au Service (coordonnées, échanges, montants…) : PageLab agit comme <b>sous-traitant</b>, pour votre compte et selon vos instructions. Vous en êtes le responsable de traitement. Un accord de traitement des données (DPA) est disponible sur demande à <a href="mailto:contact@pagelab.fr">contact@pagelab.fr</a>.</p>
+
+  <h2>3. Données collectées et finalités</h2>
+  <table class="tbl">
+    <tr><th>Données</th><th>Finalité</th><th>Base légale</th></tr>
+    <tr><td>Email, nom de l'entreprise, identifiants de connexion</td><td>Création et gestion du compte</td><td>Exécution du contrat</td></tr>
+    <tr><td>Données d'abonnement et de paiement (via Stripe)</td><td>Facturation, gestion de l'abonnement</td><td>Exécution du contrat / obligation légale</td></tr>
+    <tr><td>Contenus et coordonnées saisis ou connectés (prospects, devis, factures, e-mails, appels)</td><td>Fourniture des agents (préparation de messages, relances)</td><td>Exécution du contrat / intérêt légitime</td></tr>
+    <tr><td>Données d'usage et journaux techniques</td><td>Sécurité, amélioration et bon fonctionnement du Service</td><td>Intérêt légitime</td></tr>
+  </table>
+
+  <h2>4. Prestataires (sous-traitants ultérieurs)</h2>
+  <p>Pour fournir le Service, nous faisons appel à des prestataires qui peuvent traiter des données pour notre compte :</p>
+  <table class="tbl">
+    <tr><th>Prestataire</th><th>Rôle</th><th>Localisation</th></tr>
+    <tr><td>Supabase</td><td>Hébergement de la base de données</td><td>Union européenne</td></tr>
+    <tr><td>Netlify</td><td>Hébergement du site / des fonctions</td><td>États-Unis</td></tr>
+    <tr><td>Stripe</td><td>Paiement et abonnements</td><td>UE / États-Unis</td></tr>
+    <tr><td>Resend</td><td>Envoi des e-mails transactionnels</td><td>États-Unis</td></tr>
+    <tr><td>Anthropic (Claude)</td><td>Génération de contenus par IA</td><td>États-Unis</td></tr>
+    <tr><td>Twilio / Vapi</td><td>Téléphonie (offre Premium)</td><td>États-Unis</td></tr>
+    <tr><td>Google</td><td>Gmail / Agenda, si vous connectez votre compte</td><td>UE / États-Unis</td></tr>
+  </table>
+  <p style="margin-top:10px">Les transferts hors Union européenne sont encadrés par des garanties appropriées (clauses contractuelles types de la Commission européenne). Vos données ne sont jamais vendues.</p>
+
+  <h2>5. Durée de conservation</h2>
+  <p>Les données de compte sont conservées pendant la durée de l'abonnement, puis supprimées ou anonymisées dans un délai raisonnable après la clôture du compte, sous réserve des obligations légales (par exemple, conservation des factures pendant la durée légale). Vous pouvez demander la suppression à tout moment.</p>
+
+  <h2>6. Vos droits</h2>
+  <p>Vous disposez des droits d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité, ainsi que du droit de définir des directives relatives au sort de vos données. Pour les exercer : <a href="mailto:contact@pagelab.fr">contact@pagelab.fr</a>. Vous pouvez également introduire une réclamation auprès de la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">www.cnil.fr</a>).</p>
+  <p>Si vos données sont traitées par PageLab en tant que sous-traitant (données de vos clients), adressez votre demande au professionnel responsable, qui nous transmettra ses instructions.</p>
+
+  <h2>7. Sécurité</h2>
+  <p>Nous mettons en œuvre des mesures techniques et organisationnelles appropriées : chiffrement des connexions, cloisonnement des données par compte, secrets stockés côté serveur, accès restreints. Les connexions à des services tiers (Stripe, Google…) reposent sur des autorisations sécurisées que vous pouvez révoquer à tout moment.</p>
+
+  <h2>8. Cookies</h2>
+  <p>Le site utilise uniquement des cookies et technologies de stockage strictement nécessaires au fonctionnement (maintien de votre session de connexion). Aucun cookie publicitaire ou de suivi tiers n'est déposé sans votre consentement.</p>
+
+  <h2>9. Contact</h2>
+  <p>Pour toute question relative à cette politique : <a href="mailto:contact@pagelab.fr">contact@pagelab.fr</a>.</p>
+
+  <p style="margin-top:30px"><a class="btn btn-ghost" href="index.html">← Retour à l'accueil</a></p>
+</main>
+
+<footer style="border-top:1px solid var(--line);padding:26px 22px;text-align:center;color:var(--muted);font-size:13px">
+  <a href="mentions-legales.html" style="color:var(--muted)">Mentions légales</a> ·
+  <a href="cgv.html" style="color:var(--muted)">CGV</a> ·
+  <a href="confidentialite.html" style="color:var(--muted)">Confidentialité</a> · PageLab
+</footer>
+</body>
+</html>
