@@ -1,155 +1,695 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>PageLab — Plus de chantiers, moins d'administratif</title>
-<link rel="icon" href="logo.svg" type="image/svg+xml"/>
-<meta name="description" content="PageLab donne aux artisans du BTP une équipe d'agents IA : capter les prospects, chiffrer les devis, relancer les impayés, répondre au téléphone. Vous validez d'un clic."/>
-<link rel="stylesheet" href="pagelab.css"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PageLab · Automatisation sur mesure pour cabinets d'avocats</title>
+<meta name="description" content="PageLab prend en charge les tâches répétitives des cabinets d'avocats : tri des pièces, actes récurrents, suivi des appels. Sur mesure, sans engagement.">
+<meta property="og:title" content="PageLab · Automatisation sur mesure pour cabinets d'avocats">
+<meta property="og:description" content="Rendez à vos journées les heures que l'administratif vous prend.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0B0B0C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%230B0B0C'/%3E%3Cpath d='M16.5 10h7a1.2 1.2 0 0 1 0 2.4h-.9v5.2l5.6 10a2.4 2.4 0 0 1-2.1 3.6H13.9a2.4 2.4 0 0 1-2.1-3.6l5.6-10v-5.2h-.9a1.2 1.2 0 0 1 0-2.4z' fill='white'/%3E%3Ccircle cx='18.5' cy='26' r='1.8' fill='%238B5CF6'/%3E%3Ccircle cx='22.3' cy='28.2' r='1.3' fill='%23FF6B8B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
-  @media(max-width:820px){.pricing{grid-template-columns:1fr}}
-  .plan{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);position:relative}
-  .plan.feat{border-color:var(--ochre);border-width:2px}
-  .plan .tag{position:absolute;top:-11px;left:24px;background:var(--ochre);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 11px;border-radius:999px}
-  .plan h3{font-size:19px}
-  .plan .price{font-family:'Bricolage Grotesque';font-weight:800;font-size:34px;letter-spacing:-.02em;margin-top:8px}
-  .plan .price span{font-size:14px;color:var(--muted);font-weight:500}
-  .plan .setup{font-size:12.5px;color:var(--muted);margin-top:2px}
-  .plan ul{list-style:none;margin:16px 0 0;display:flex;flex-direction:column;gap:9px}
-  .plan li{display:flex;gap:9px;font-size:14px;color:var(--ink-soft)}
-  .plan li::before{content:"✓";color:var(--green);font-weight:700}
-  .plan .btn{margin-top:18px;width:100%;justify-content:center}
+:root{
+  --ink:#0B0B0C;
+  --ink-2:#3A3A3F;
+  --muted:#6E6E76;
+  --line:#E7E7E4;
+  --bg:#FFFFFF;
+  --soft:#F5F5F3;
+  --night:#0B0B0C;
+  --night-2:#161618;
+  --night-line:rgba(255,255,255,.1);
+  --blue:#4F6BFF;
+  --violet:#8B5CF6;
+  --pink:#FF6B8B;
+  --amber:#FFB35C;
+  --grad:linear-gradient(110deg,var(--blue),var(--violet) 40%,var(--pink) 75%,var(--amber));
+  --radius:26px;
+  --shadow:0 30px 70px -40px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',ui-rounded,system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+svg{display:block}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.025em;line-height:1.06}
+p{margin:0}
+.grad-text{background:var(--grad);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shift 7s ease-in-out infinite}
+@keyframes shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes spin{to{--a:360deg}}
+@property --a{syntax:'<angle>';inherits:false;initial-value:0deg}
+
+/* progress */
+.progress{position:fixed;top:0;left:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:var(--grad);z-index:60}
+
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--grad);box-shadow:0 0 0 4px rgba(139,92,246,.12)}
+.dark .eyebrow{color:rgba(255,255,255,.6)}
+
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 28px;border-radius:999px;font-weight:800;font-size:16px;text-decoration:none;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s;isolation:isolate;overflow:hidden}
+.btn-main{color:#fff;background:var(--ink);box-shadow:0 14px 30px -14px rgba(0,0,0,.6)}
+.btn-main::before{content:"";position:absolute;inset:0;background:var(--grad);background-size:200% 100%;opacity:0;transition:opacity .35s;z-index:-1;animation:shift 4s linear infinite}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 18px 40px -14px rgba(139,92,246,.7)}
+.btn-main:hover::before{opacity:1}
+.btn-ghost{color:var(--ink);background:#fff;border:1.5px solid var(--line)}
+.btn-ghost:hover{transform:translateY(-2px);border-color:var(--ink)}
+.btn svg{transition:transform .3s}
+.btn:hover svg{transform:translateX(4px)}
+.btn-light{color:var(--ink);background:#fff}
+.btn-light:hover{transform:translateY(-2px)}
+
+/* header */
+header{position:fixed;top:14px;left:0;right:0;z-index:50;pointer-events:none}
+header .wrap{padding:0 16px}
+.nav{pointer-events:auto;max-width:1180px;margin:0 auto;padding:10px 10px 10px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-radius:999px;background:rgba(255,255,255,.78);backdrop-filter:blur(16px) saturate(1.5);-webkit-backdrop-filter:blur(16px) saturate(1.5);border:1px solid rgba(0,0,0,.06);box-shadow:0 10px 30px -18px rgba(0,0,0,.25)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:900;font-size:22px;letter-spacing:-.03em}
+.logo svg{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.logo:hover svg{transform:rotate(-8deg) scale(1.06)}
+.links{display:flex;align-items:center;gap:4px}
+.links a{text-decoration:none;font-weight:700;font-size:15px;color:var(--ink-2);padding:10px 14px;border-radius:999px;transition:background .2s,color .2s}
+.links a:hover{background:var(--soft);color:var(--ink)}
+.links .btn{min-height:44px;padding:0 20px;font-size:15px;color:#fff}
+.links .btn:hover{background:var(--ink);color:#fff}
+
+/* hero */
+.hero{position:relative;padding:160px 0 110px;overflow:hidden}
+.grid-bg{position:absolute;inset:0;z-index:-2;background-image:linear-gradient(rgba(0,0,0,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.05) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%)}
+.orbs{position:absolute;inset:0;z-index:-1;pointer-events:none;filter:blur(60px)}
+.orb{position:absolute;border-radius:50%;opacity:.55;will-change:transform}
+.o1{width:380px;height:380px;background:#C7D0FF;left:-60px;top:80px;animation:f1 16s ease-in-out infinite}
+.o2{width:340px;height:340px;background:#E2D4FF;right:4%;top:40px;animation:f2 19s ease-in-out infinite}
+.o3{width:300px;height:300px;background:#FFD0DA;right:22%;top:46%;animation:f3 17s ease-in-out infinite}
+.o4{width:260px;height:260px;background:#FFE3C2;left:34%;top:62%;animation:f1 21s ease-in-out infinite reverse}
+@keyframes f1{0%,100%{transform:translate(0,0)}50%{transform:translate(70px,40px)}}
+@keyframes f2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,60px)}}
+@keyframes f3{0%,100%{transform:translate(0,0)}50%{transform:translate(50px,-50px)}}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 6px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:14px;font-weight:700;color:var(--ink-2);box-shadow:0 8px 20px -14px rgba(0,0,0,.2)}
+.pill span{padding:4px 11px;border-radius:999px;background:var(--ink);color:#fff;font-size:12px;font-weight:800;position:relative;overflow:hidden}
+.pill span::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.45),transparent 70%);transform:translateX(-100%);animation:sheen 3.2s ease-in-out infinite}
+@keyframes sheen{60%,100%{transform:translateX(100%)}}
+.hero h1{font-size:clamp(42px,6.2vw,78px);margin:24px 0 24px;font-weight:900;letter-spacing:-.045em;line-height:1}
+.w{display:inline-block;opacity:0;transform:translateY(40%) rotate(3deg);filter:blur(6px);animation:wordin .9s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes wordin{to{opacity:1;transform:none;filter:none}}
+.hero .lead{font-size:clamp(18px,1.6vw,21px);color:var(--ink-2);max-width:32em}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}
+.trust{display:flex;gap:22px;flex-wrap:wrap;margin-top:30px;font-size:15px;font-weight:700;color:var(--muted)}
+.trust span{display:inline-flex;align-items:center;gap:8px}
+.trust b{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff}
+
+/* dashboard */
+.dash-wrap{position:relative}
+.ring{position:relative;border-radius:calc(var(--radius) + 2px);padding:2px;background:conic-gradient(from var(--a),var(--blue),var(--violet),var(--pink),var(--amber),var(--blue));animation:spin 6s linear infinite}
+.dash{position:relative;background:#fff;border-radius:var(--radius);padding:26px}
+.float{animation:bob 7s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.dash-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.dash-top h3{font-size:19px;font-weight:800}
+.live{white-space:nowrap;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#fff;background:var(--ink);padding:6px 12px;border-radius:999px}
+.live i{width:8px;height:8px;border-radius:50%;background:#3BE39A;position:relative}
+.live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #3BE39A;animation:ping 1.8s ease-out infinite}
+@keyframes ping{0%{transform:scale(.5);opacity:1}100%{transform:scale(1.7);opacity:0}}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--soft);border-radius:18px;padding:14px 8px;text-align:center}
+.stat strong{display:block;font-size:28px;font-weight:900;line-height:1}
+.stat small{display:block;font-size:12px;font-weight:700;color:var(--muted);margin-top:6px}
+.stat.hl{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.stat.hl::before{content:"";position:absolute;inset:auto 0 0 0;height:4px;background:var(--grad);background-size:200% 100%;animation:shift 3s linear infinite}
+.stat.hl small{color:rgba(255,255,255,.7)}
+.rows{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:16px;background:#fff;opacity:0;transform:translateX(18px);animation:slidein .7s cubic-bezier(.2,.8,.2,1) forwards}
+.row:nth-child(1){animation-delay:.9s}.row:nth-child(2){animation-delay:1.15s}.row:nth-child(3){animation-delay:1.4s}
+@keyframes slidein{to{opacity:1;transform:none}}
+.row b{display:block;font-size:15px;font-weight:800}
+.row small{font-size:13px;color:var(--muted);font-weight:600}
+.tag{font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;white-space:nowrap}
+.ok{background:#E8F8F0;color:#11804F}
+.wait{background:#FFF1E2;color:#B45309}
+.dash-note{margin-top:14px;font-size:12px;font-weight:600;color:var(--muted)}
+.chip{position:absolute;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px 16px;box-shadow:0 20px 40px -22px rgba(0,0,0,.35);font-weight:800;font-size:14px;z-index:2}
+.chip .ic{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.chip .ic::after{content:"";position:absolute;inset:auto 0 0 0;height:3px;background:var(--grad)}
+.chip small{display:block;font-size:12px;color:var(--muted);font-weight:700}
+.chip-a{left:-40px;bottom:-30px;animation:bob 6s ease-in-out infinite .8s}
+.chip-b{right:-28px;top:-58px;animation:bob 8s ease-in-out infinite .2s}
+
+/* sections */
+section{position:relative}
+.sec{padding:120px 0}
+.head{max-width:760px;margin-bottom:56px}
+.head h2{font-size:clamp(34px,4.4vw,56px);margin:16px 0 0;font-weight:900;letter-spacing:-.04em}
+.head p{margin-top:18px;font-size:19px;color:var(--ink-2)}
+.center{text-align:center;margin-left:auto;margin-right:auto}
+.dark{background:var(--night);color:#fff}
+.dark .head p{color:rgba(255,255,255,.72)}
+.soft{background:var(--soft)}
+
+/* spotlight cards */
+.spot{position:relative;overflow:hidden}
+.spot::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(139,92,246,.14),transparent 45%);opacity:0;transition:opacity .4s;pointer-events:none}
+.spot:hover::before{opacity:1}
+
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:34px;transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s,border-color .4s}
+.card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:#D0D0CC}
+.ico{width:56px;height:56px;border-radius:18px;display:grid;place-items:center;background:var(--ink);color:#fff;margin-bottom:24px;position:relative;overflow:hidden;transition:transform .4s}
+.ico::after{content:"";position:absolute;inset:0;background:var(--grad);opacity:0;transition:opacity .4s}
+.ico svg{position:relative;z-index:1}
+.card:hover .ico{transform:rotate(-6deg) scale(1.05)}
+.card:hover .ico::after{opacity:1}
+.card h3{font-size:21px;margin-bottom:10px}
+.card p{color:var(--ink-2)}
+
+/* calc band */
+.band{margin-top:28px;position:relative;overflow:hidden;border-radius:34px;padding:clamp(34px,5vw,60px);color:#fff;background:var(--night);display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;isolation:isolate}
+.band .glow{position:absolute;width:560px;height:560px;border-radius:50%;filter:blur(90px);opacity:.55;z-index:-1}
+.band .g1{background:var(--violet);left:-160px;top:-260px;animation:f2 14s ease-in-out infinite}
+.band .g2{background:var(--pink);right:-200px;bottom:-300px;animation:f1 16s ease-in-out infinite}
+.band .big{font-size:clamp(60px,8.5vw,112px);font-weight:900;letter-spacing:-.05em;line-height:.95}
+.band .big small{font-size:.3em;font-weight:800;letter-spacing:0;margin-left:10px;color:rgba(255,255,255,.85)}
+.band p{font-size:18px;color:rgba(255,255,255,.78)}
+.band .k{font-size:13px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:10px}
+.calc{background:rgba(255,255,255,.06);border:1px solid var(--night-line);border-radius:24px;padding:26px;backdrop-filter:blur(10px)}
+.calc label{display:flex;justify-content:space-between;font-weight:800;font-size:15px;margin-bottom:14px}
+.calc input{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:8px;background:linear-gradient(90deg,#fff var(--p,22%),rgba(255,255,255,.18) var(--p,22%));outline:none;cursor:pointer}
+.calc input::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:#fff;border:6px solid var(--violet);box-shadow:0 0 0 6px rgba(139,92,246,.25)}
+.calc input::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:6px solid var(--violet)}
+.calc .res{margin-top:18px;font-size:15px;color:rgba(255,255,255,.75)}
+.calc .res b{font-size:22px;color:#fff}
+
+/* approach (dark) */
+.dark .split{display:grid;grid-template-columns:.95fr 1.05fr;gap:64px;align-items:start}
+.split .head{margin-bottom:0;position:sticky;top:120px}
+.steps{list-style:none;margin:0;padding:0 0 0 28px;display:flex;flex-direction:column;gap:16px;position:relative}
+.steps::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;background:var(--night-line);border-radius:2px}
+.steps .fill{position:absolute;left:0;top:10px;width:2px;height:0;background:var(--grad);border-radius:2px;transition:height .15s linear}
+.step{display:flex;gap:22px;padding:26px 28px;background:var(--night-2);border:1px solid var(--night-line);border-radius:24px;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s}
+.step:hover{transform:translateX(6px);border-color:rgba(255,255,255,.25)}
+.num{flex:0 0 52px;height:52px;border-radius:16px;display:grid;place-items:center;font-weight:900;font-size:19px;color:var(--ink);background:#fff;position:relative;overflow:hidden}
+.step:hover .num{color:#fff;background:var(--grad)}
+.step h3{font-size:20px;margin-bottom:4px}
+.step p{color:rgba(255,255,255,.7)}
+.dark .spot::before{background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.08),transparent 45%)}
+
+/* offers */
+.offers{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:stretch}
+.offer{position:relative;display:flex;flex-direction:column;gap:16px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px 26px;transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
+.offer:hover{transform:translateY(-8px);box-shadow:var(--shadow)}
+.offer h3{font-size:25px}
+.offer .desc{color:var(--ink-2);font-size:16px}
+.offer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;font-size:15.5px;font-weight:600;color:var(--ink-2)}
+.offer li{display:flex;gap:10px;align-items:flex-start}
+.offer li::before{content:"";flex:0 0 20px;height:20px;margin-top:2px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.6 2.5L14 7.5' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat}
+.price{margin-top:auto;padding-top:18px;border-top:1px solid var(--line);font-weight:700;color:var(--muted)}
+.price strong{font-size:38px;font-weight:900;color:var(--ink);letter-spacing:-.04em}
+.badge{align-self:flex-start;margin-bottom:-4px;font-size:12px;font-weight:800;padding:6px 12px;border-radius:999px;background:var(--soft);color:var(--ink-2)}
+.offer.star{border:none;padding:2px;background:conic-gradient(from var(--a),var(--blue),var(--violet),var(--pink),var(--amber),var(--blue));animation:spin 5s linear infinite;box-shadow:0 30px 70px -30px rgba(139,92,246,.6)}
+.offer.star .in{flex:1;display:flex;flex-direction:column;gap:16px;background:var(--night);color:#fff;border-radius:calc(var(--radius) - 2px);padding:28px 24px}
+.offer.star .desc,.offer.star ul{color:rgba(255,255,255,.78)}
+.offer.star li::before{background-color:#fff;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.6 2.5L14 7.5' fill='none' stroke='%230B0B0C' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.offer.star .price{border-color:var(--night-line);color:rgba(255,255,255,.6)}
+.offer.star .price strong{color:#fff}
+.offer.star .badge{background:var(--grad);color:#fff}
+.offer.custom{background:transparent;border:2px dashed #CFCFCB}
+.seg{position:relative;display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:999px;background:var(--soft);isolation:isolate}
+.seg button{font:inherit;font-size:14px;font-weight:800;border:0;background:none;padding:9px 6px;border-radius:999px;cursor:pointer;color:var(--muted);transition:color .3s;min-height:38px}
+.seg button[aria-selected="true"]{color:#fff}
+.seg-knob{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:999px;background:var(--ink);z-index:-1;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.seg.r .seg-knob{transform:translateX(100%)}
+.seg.r .seg-knob{background:linear-gradient(110deg,var(--violet),var(--pink))}
+.mode{display:flex;flex-direction:column;gap:16px;animation:modein .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes modein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.mode[hidden]{display:none}
+.ex{display:flex;flex-wrap:wrap;gap:8px}
+.ex span{font-size:13.5px;font-weight:800;padding:7px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);transition:transform .25s,background .25s,color .25s}
+.ex span:hover{transform:translateY(-2px);background:var(--ink);color:#fff}
+.legal b{color:var(--ink)}
+.legal p{margin-top:8px}
+.note{margin-top:28px;text-align:center;font-weight:700;color:var(--muted)}
+
+/* trust */
+.tgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.titem{padding:30px;border-radius:24px;background:#fff;border:1px solid var(--line);transition:transform .4s}
+.titem:hover{transform:translateY(-5px)}
+.titem .bar{width:42px;height:6px;border-radius:6px;background:var(--ink);margin-bottom:22px;position:relative;overflow:hidden}
+.titem .bar::after{content:"";position:absolute;inset:0;background:var(--grad);transform:translateX(-100%);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.titem:hover .bar::after,.titem.in .bar::after{transform:none}
+.titem h3{font-size:19px;margin-bottom:8px}
+.titem p{color:var(--ink-2);font-size:16px}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.person{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:32px;padding:36px;display:flex;flex-direction:column;gap:20px;transition:transform .4s,box-shadow .4s}
+.person:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.who{display:flex;align-items:center;gap:18px}
+.avatar{flex:0 0 76px;height:76px;border-radius:26px;padding:2px;background:conic-gradient(from var(--a),var(--blue),var(--violet),var(--pink),var(--amber),var(--blue));animation:spin 7s linear infinite}
+.avatar span{width:100%;height:100%;border-radius:24px;display:grid;place-items:center;background:var(--ink);color:#fff;font-weight:900;font-size:26px}
+.who h3{font-size:25px}
+.role{font-weight:700;color:var(--muted);font-size:15px;margin-top:4px}
+.person p{color:var(--ink-2)}
+.contacts{display:flex;flex-wrap:wrap;gap:10px}
+.contacts a{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:0 18px;border-radius:999px;background:var(--soft);text-decoration:none;font-weight:800;font-size:15px;transition:background .25s,color .25s,transform .25s}
+.contacts a:hover{background:var(--ink);color:#fff;transform:translateY(-2px)}
+
+/* contact */
+.cta{position:relative;overflow:hidden;border-radius:40px;padding:clamp(40px,7vw,90px);background:var(--night);color:#fff;display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;isolation:isolate}
+.cta .glow{position:absolute;border-radius:50%;filter:blur(90px);z-index:-1;opacity:.6}
+.cta .g1{width:480px;height:480px;background:var(--blue);left:-140px;bottom:-220px;animation:f1 15s ease-in-out infinite}
+.cta .g2{width:420px;height:420px;background:var(--pink);right:-120px;top:-200px;animation:f2 17s ease-in-out infinite}
+.cta .g3{width:300px;height:300px;background:var(--violet);left:40%;top:30%;opacity:.35;animation:f3 13s ease-in-out infinite}
+.cta h2{font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-.045em}
+.cta p{margin-top:18px;font-size:19px;color:rgba(255,255,255,.78)}
+.clist{display:flex;flex-direction:column;gap:12px}
+.clist a{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:66px;padding:0 24px;border-radius:22px;text-decoration:none;font-weight:800;font-size:18px;transition:transform .3s,background .3s}
+.clist a:hover{transform:translateY(-3px)}
+.clist .w{background:#fff;color:var(--ink)}
+.clist .g{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;backdrop-filter:blur(8px)}
+.clist .g:hover{background:rgba(255,255,255,.15)}
+.clist small{font-size:14px;color:rgba(255,255,255,.6);font-weight:700;margin-top:4px}
+
+footer{padding:40px 0 50px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;color:var(--muted);font-weight:700;font-size:15px}
+.foot button{font:inherit;color:var(--ink-2);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:8px 0}
+.legal{display:none;margin-top:24px;padding:28px;border-radius:24px;background:var(--soft);font-size:15px;color:var(--ink-2)}
+.legal.open{display:block}
+.legal h3{font-size:18px;margin:0 0 10px;color:var(--ink)}
+.legal p+h3{margin-top:18px}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(34px) scale(.98);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+
+@media (max-width:1060px){
+  .offers{grid-template-columns:repeat(2,1fr)}
+  .tgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  .hero{padding-top:130px}
+  .hero-grid,.dark .split,.band,.cta{grid-template-columns:1fr}
+  .split .head{position:static}
+  .cards3,.team{grid-template-columns:1fr}
+  .chip-a{left:-6px}.chip-b{right:-6px}
+  .links a:not(.btn){display:none}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  .nav{padding:8px 8px 8px 14px}
+  .logo{font-size:20px}
+  .links .btn{padding:0 16px;font-size:14px}
+  .offers,.tgrid{grid-template-columns:1fr}
+  .sec{padding:84px 0}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .chip{display:none}
+  .badge.ghost{display:none}
+  .dash{padding:18px}
+  .person{padding:26px}
+  .who h3{font-size:22px}
+  .btn{width:100%}
+  .links .btn{width:auto}
+  .steps{padding-left:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,.row,.w{opacity:1;transform:none;filter:none}
+}
 </style>
 </head>
 <body>
+<div class="progress" id="progress"></div>
 
-<header class="nav">
-  <div class="container row">
-    <a class="brand" href="index.html"><span class="mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fl" d="M9.6 3h4.8a1 1 0 0 1 0 2H14v4.4l5.4 9.9a2 2 0 0 1-1.8 3H6.4a2 2 0 0 1-1.8-3L10 9.4V5h-.4a1 1 0 0 1 0-2z"/><circle cx="10.5" cy="16" r="1.1" fill="#15202e"/><circle cx="13" cy="18.4" r=".8" fill="#15202e"/></svg></span> <span class="wm">PageLab</span></a>
-    <nav class="nav-links">
-      <a href="#agents">Les agents</a>
-      <a href="pricing.html">Tarifs</a>
-      <a href="#comment">Comment ça marche</a>
-      <a class="btn" href="connexion.html">Connexion</a>
+<header>
+  <div class="wrap">
+    <nav class="nav" aria-label="Navigation principale">
+      <a class="logo" href="#top" aria-label="PageLab, accueil">
+        <svg width="38" height="38" viewBox="0 0 40 40" aria-hidden="true">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4F6BFF"/><stop offset=".5" stop-color="#8B5CF6"/><stop offset="1" stop-color="#FF6B8B"/></linearGradient></defs>
+          <rect width="40" height="40" rx="12" fill="#0B0B0C"/>
+          <path d="M26 6v5.5a2.5 2.5 0 0 0 2.5 2.5H34" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M16.5 11h7a1.2 1.2 0 0 1 0 2.4h-.9v5l5.6 9.8a2.4 2.4 0 0 1-2.1 3.6H13.9a2.4 2.4 0 0 1-2.1-3.6l5.6-9.8v-5h-.9a1.2 1.2 0 0 1 0-2.4z" fill="#fff"/>
+          <path d="M14.6 26.2h10.8l1.9 3.3a1.6 1.6 0 0 1-1.4 2.4H14.1a1.6 1.6 0 0 1-1.4-2.4z" fill="url(#lg)"/>
+        </svg>
+        <span>Page<span class="grad-text">Lab</span></span>
+      </a>
+      <div class="links">
+        <a href="#approche">Approche</a>
+        <a href="#offres">Offres</a>
+        <a href="#confiance">Confidentialité</a>
+        <a href="#equipe">Équipe</a>
+        <a class="btn btn-main" href="#contact">Nous contacter</a>
+      </div>
     </nav>
   </div>
 </header>
 
-<main>
-  <section class="hero container">
-    <span class="eyebrow">L'équipe IA des artisans du bâtiment</span>
-    <h1>Plus de chantiers. Moins d'administratif.</h1>
-    <p class="lead">PageLab vous donne une équipe d'agents qui captent vos prospects, chiffrent vos devis, relancent vos impayés et répondent au téléphone. Ils préparent, vous validez d'un clic — depuis le chantier.</p>
-    <div class="cta">
-      <a class="btn btn-lg" href="#offres">Voir les offres</a>
-      <a class="btn btn-ghost btn-lg" href="#comment">Comment ça marche ?</a>
-    </div>
-  </section>
+<main id="top">
 
-  <section class="container" style="padding-top:0">
-    <div class="stats">
-      <div class="stat"><div class="n">1<span class="u">/4</span></div><div class="l">faillite d'artisan causée par les impayés (Banque de France)</div></div>
-      <div class="stat"><div class="n">47<span class="u">%</span></div><div class="l">des factures BTP payées en retard de +30 jours</div></div>
-      <div class="stat"><div class="n">+10<span class="u">h</span></div><div class="l">par semaine perdues sur l'administratif</div></div>
-      <div class="stat"><div class="n">2027</div><div class="l">la facturation électronique devient obligatoire</div></div>
+<section class="hero">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="orbs" aria-hidden="true" id="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="orb o4"></div></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="pill rv"><span>Sur mesure</span>Pour les cabinets d'avocats</div>
+      <h1 id="h1" data-split>Rendez à vos journées les heures que <span class="grad-text">l'administratif</span> vous prend.</h1>
+      <p class="lead rv d2">PageLab prend en charge les tâches répétitives de votre cabinet. Les pièces sont triées, les actes préparés, les appels résumés. Vous relisez, vous validez, vous passez à la suite.</p>
+      <div class="ctas rv d3">
+        <a class="btn btn-main" href="#contact">Échanger 15 minutes
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="btn btn-ghost" href="#offres">Voir les offres</a>
+      </div>
+      <div class="trust rv d3">
+        <span><b><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></b>Sans engagement</span>
+        <span><b><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></b>Configuré pour votre cabinet</span>
+        <span><b><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></b>Rien ne part sans vous</span>
+      </div>
     </div>
-  </section>
 
-  <section class="container" id="agents">
-    <span class="eyebrow section-eyebrow">Votre équipe</span>
-    <h2 style="font-size:30px;max-width:20ch">Trois agents qui travaillent pendant que vous êtes sur le chantier</h2>
-    <div class="grid3" style="margin-top:24px">
-      <div class="card agent-card">
-        <div class="ic">◆</div>
-        <h3>Agent Commercial</h3><div class="role">Ne perdez plus aucun prospect</div>
-        <p>Capte les demandes (site, email, téléphone), les qualifie, prépare la réponse et relance les prospects inactifs. Récolte aussi vos avis Google après chaque chantier.</p>
+    <div class="dash-wrap rv d2" id="tilt">
+      <div class="float">
+        <div class="ring">
+          <div class="dash">
+            <div class="dash-top">
+              <h3>Aujourd'hui au cabinet</h3>
+              <span class="live"><i></i>En service</span>
+            </div>
+            <div class="stats">
+              <div class="stat"><strong data-count="12">12</strong><small>Reçus</small></div>
+              <div class="stat"><strong data-count="12">12</strong><small>Lus</small></div>
+              <div class="stat"><strong data-count="10">10</strong><small>Préparés</small></div>
+              <div class="stat hl"><strong data-count="2">2</strong><small>À relire</small></div>
+            </div>
+            <div class="rows">
+              <div class="row"><div><b>Dossier 2026-114</b><small>Pièces classées, acte préparé</small></div><span class="tag ok">Prêt</span></div>
+              <div class="row"><div><b>Dossier 2026-115</b><small>Une date à confirmer avant envoi</small></div><span class="tag wait">À relire</span></div>
+              <div class="row"><div><b>Courriers récurrents</b><small>Trois relances préparées</small></div><span class="tag ok">Prêt</span></div>
+            </div>
+            <p class="dash-note">Illustration de l'interface</p>
+          </div>
+        </div>
       </div>
-      <div class="card agent-card">
-        <div class="ic">€</div>
-        <h3>Agent Devis & Facturation</h3><div class="role">Améliorez votre trésorerie</div>
-        <p>Chiffre vos devis avec la bonne TVA et les mentions obligatoires, détecte les devis sans réponse et les factures impayées, et prépare les relances.</p>
-      </div>
-      <div class="card agent-card">
-        <div class="ic">☎</div>
-        <h3>Agent Téléphonique</h3><div class="role">Ne ratez plus aucun appel</div>
-        <p>Répond aux appels quand vous êtes sur chantier, pose les bonnes questions, qualifie le prospect et vous envoie un résumé. Disponible en offre Premium.</p>
-      </div>
+      <div class="chip chip-b"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div>2 h 40 gagnées<small>cette semaine</small></div></div>
+      <div class="chip chip-a"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div>Acte prêt à relire<small>il y a 2 min</small></div></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="container" id="comment">
-    <span class="eyebrow section-eyebrow">Simple comme bonjour</span>
-    <h2 style="font-size:30px">Comment ça marche</h2>
-    <div class="steps" style="margin-top:24px">
-      <div class="card step"><div class="num"></div><h3>Activez vos agents</h3><p>Choisissez les agents dont vous avez besoin. On les configure avec vos outils.</p></div>
-      <div class="card step"><div class="num"></div><h3>Ils préparent le travail</h3><p>Réponses, devis, relances : tout est rédigé et prêt, en attente de votre accord.</p></div>
-      <div class="card step"><div class="num"></div><h3>Vous validez d'un clic</h3><p>Vous relisez, vous envoyez. Rien ne part sans vous. Depuis votre téléphone.</p></div>
+<section class="sec" style="padding-top:40px">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow"><i></i>Le constat</span>
+      <h2>Chaque semaine, des heures non facturables partent dans des tâches que <span class="grad-text">personne n'a choisies.</span></h2>
     </div>
-  </section>
+    <div class="cards3">
+      <article class="card spot rv">
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l9 6 9-6"/><rect x="3" y="5" width="18" height="14" rx="3"/></svg></div>
+        <h3>Le tri des mails et des pièces</h3>
+        <p>Retrouver le bon dossier, renommer, classer, rapprocher les pièces d'un même client. Tous les jours.</p>
+      </article>
+      <article class="card spot rv d1">
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h7l4 4v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9.5 12h6M9.5 16h6"/></svg></div>
+        <h3>Les actes et courriers récurrents</h3>
+        <p>Reprendre les mêmes informations d'un document à l'autre, remplir les mêmes trames, vérifier les mêmes champs.</p>
+      </article>
+      <article class="card spot rv d2">
+        <div class="ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></div>
+        <h3>Les appels et les relances</h3>
+        <p>Les messages manqués pendant une audience, les clients à rappeler, les pièces à réclamer.</p>
+      </article>
+    </div>
 
-  <section class="container" id="offres">
-    <span class="eyebrow section-eyebrow">Offres</span>
-    <h2 style="font-size:30px">Un tarif simple, des résultats concrets</h2>
-    <p class="lead" style="margin:8px 0 26px;max-width:48ch">Utilisation raisonnable incluse. Frais d'installation uniques pour la configuration sur mesure.</p>
-    <div class="pricing">
-      <div class="plan">
-        <h3>Starter</h3>
-        <div class="price">79,99 € <span>/mois à vie</span></div>
-        <ul>
-          <li>Agent Commercial</li>
-          <li>Qualification des prospects</li>
-          <li>Réponses préparées + relances</li>
-          <li>Dashboard & validation humaine</li>
-        </ul>
-        <a class="btn btn-ghost" href="connexion.html">Commencer</a>
+    <div class="band rv">
+      <div class="glow g1"></div><div class="glow g2"></div>
+      <div>
+        <div class="k">Faites le calcul</div>
+        <div class="big"><span id="yearly">135</span><small>heures par an</small></div>
+        <p style="margin-top:14px">rendues à vos dossiers, sur 45 semaines travaillées.</p>
       </div>
-      <div class="plan feat">
-        <span class="tag">Le plus choisi</span>
-        <h3>Pro</h3>
-        <div class="price">149,99 € <span>/mois à vie</span></div>
-        <ul>
-          <li>Tout Starter</li>
-          <li>Agent Devis & Facturation</li>
-          <li>Relances devis & impayés</li>
-          <li>Connecteurs (Gmail, Pennylane…)</li>
-          <li>Support prioritaire</li>
-        </ul>
-        <a class="btn" href="connexion.html">Commencer</a>
-      </div>
-      <div class="plan">
-        <h3>Premium</h3>
-        <div class="price">299,99 € <span>/mois à vie</span></div>
-        <ul>
-          <li>Tout Pro</li>
-          <li>Agent Téléphonique IA</li>
-          <li>Numéro dédié & résumés d'appels</li>
-          <li>Automatisations sur mesure</li>
-        </ul>
-        <a class="btn btn-ghost" href="connexion.html">Commencer</a>
+      <div class="calc">
+        <label for="hrs"><span>Temps gagné par semaine</span><span id="hrsv">3 h</span></label>
+        <input id="hrs" type="range" min="1" max="10" step="1" value="3" aria-label="Heures gagnées par semaine">
+        <p class="res">Soit environ <b id="days">17</b> journées de travail par an que vous pouvez consacrer à vos clients plutôt qu'à l'administratif.</p>
       </div>
     </div>
-    <p style="font-size:13.5px;color:var(--ink-soft);margin-top:16px">Utilisation incluse adaptée à la taille de votre entreprise.</p>
-    <p style="font-size:12.5px;color:var(--muted);margin-top:6px"><strong>Offre Fondateur</strong> limitée aux 10 premiers clients : tarif préférentiel conservé à vie, en échange de vos retours pour construire PageLab avec nous. <a href="cgv.html" style="color:var(--ochre)">Conditions</a></p>
-  </section>
+  </div>
+</section>
 
-  <section class="container">
-    <div class="cta-band">
-      <h2>Reprenez vos soirées.</h2>
-      <p>Laissez votre équipe PageLab s'occuper de la paperasse et des prospects.</p>
-      <a class="btn btn-lg" href="connexion.html">Commencer maintenant</a>
+<section class="sec dark" id="approche">
+  <div class="wrap split">
+    <div class="head rv">
+      <span class="eyebrow"><i></i>Notre approche</span>
+      <h2>Pas un logiciel de plus. Un outil construit pour <span class="grad-text">votre</span> cabinet.</h2>
+      <p>Chaque cabinet a ses dossiers, ses modèles et ses habitudes. Nous partons de votre façon de travailler et nous configurons l'outil autour d'elle, plutôt que de vous demander de changer vos pratiques.</p>
+      <p>Le résultat : une interface simple à lire, qui montre à chaque instant ce qui a été fait et ce qui attend votre validation.</p>
     </div>
-  </section>
+    <ol class="steps" id="steps">
+      <li class="fill" id="fill" aria-hidden="true"></li>
+      <li class="step spot rv"><span class="num">01</span><div><h3>Comprendre</h3><p>Un échange pour identifier les tâches qui vous coûtent le plus de temps.</p></div></li>
+      <li class="step spot rv d1"><span class="num">02</span><div><h3>Concevoir sur mesure</h3><p>Nous configurons l'outil sur vos documents, vos modèles et vos règles.</p></div></li>
+      <li class="step spot rv d2"><span class="num">03</span><div><h3>Démarrer</h3><p>Nous vous accompagnons pour la prise en main, à votre rythme.</p></div></li>
+      <li class="step spot rv d3"><span class="num">04</span><div><h3>Ajuster et suivre</h3><p>Nous affinons les premières semaines, puis nous restons disponibles.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec" id="offres">
+  <div class="wrap">
+    <div class="head center rv">
+      <span class="eyebrow"><i></i>Nos offres</span>
+      <h2>Commencez par ce qui vous <span class="grad-text">pèse le plus.</span></h2>
+      <p>Un abonnement mensuel, sans engagement. Chaque offre est configurée pour votre cabinet.</p>
+    </div>
+    <div class="offers">
+      <article class="offer spot rv">
+        <span class="badge ghost" style="visibility:hidden" aria-hidden="true">.</span>
+        <h3>Dossiers</h3>
+        <p class="desc">Pour les cabinets qui reçoivent beaucoup de pièces et d'actes à préparer.</p>
+        <ul><li>Réception et lecture des dossiers</li><li>Extraction des informations utiles</li><li>Préparation des actes et courriers</li><li>Classement automatique des pièces</li></ul>
+        <p class="price"><strong>390 €</strong> / mois</p>
+      </article>
+      <article class="offer spot rv d1">
+        <span class="badge">Bientôt</span>
+        <h3>Appels</h3>
+        <div class="seg" role="tablist" aria-label="Formule Appels">
+          <button type="button" role="tab" aria-selected="true" data-mode="recap">Récap</button>
+          <button type="button" role="tab" aria-selected="false" data-mode="secr">Secrétaire</button>
+          <i class="seg-knob" aria-hidden="true"></i>
+        </div>
+        <div class="mode" data-panel="recap">
+          <p class="desc">Vos messages vocaux résumés par écrit, pour ne plus perdre le fil pendant une audience.</p>
+          <ul><li>Récapitulatif écrit de chaque message</li><li>Qui a appelé, pourquoi, avec quelle urgence</li><li>Liste des personnes à rappeler</li></ul>
+        </div>
+        <div class="mode" data-panel="secr" hidden>
+          <p class="desc">Une secrétaire virtuelle qui décroche quand vous ne pouvez pas, avec le ton de votre cabinet.</p>
+          <ul><li>Répond aux appels et qualifie la demande</li><li>Prend le message ou propose un rendez-vous</li><li>Vous transmet un résumé immédiat</li></ul>
+        </div>
+        <p class="price" data-price-recap="&lt;strong&gt;200 €&lt;/strong&gt; / mois" data-price-secr="&lt;strong&gt;Sur devis&lt;/strong&gt;"><strong>200 €</strong> / mois</p>
+      </article>
+      <article class="offer star rv d2">
+        <div class="in">
+          <span class="badge">Le plus complet</span>
+          <h3>Cabinet</h3>
+          <p class="desc">Dossiers et Appels réunis dans un seul outil.</p>
+          <ul><li>Tout le contenu de Dossiers</li><li>Appels, formule Récap</li><li>Un seul tableau de bord</li><li>Suivi prioritaire</li></ul>
+          <p class="price"><strong>520 €</strong> / mois</p>
+        </div>
+      </article>
+      <article class="offer custom rv d3">
+        <span class="badge ghost" style="visibility:hidden" aria-hidden="true">.</span>
+        <h3>Sur mesure</h3>
+        <p class="desc">Une tâche propre à votre cabinet ou à votre spécialité ? Nous construisons l'outil qui s'en charge.</p>
+        <div class="ex"><span>Relance des pièces manquantes</span><span>Relance des honoraires impayés</span><span>Suivi des délais et échéances</span><span>Tri de la boîte mail</span><span>Comptes rendus de rendez-vous</span><span>Ouverture de dossier client</span></div>
+        <p class="price"><strong>Sur devis</strong></p>
+      </article>
+    </div>
+    <p class="note rv">Sans engagement. Vous arrêtez quand vous voulez.</p>
+  </div>
+</section>
+
+<section class="sec soft" id="confiance">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow"><i></i>Confidentialité et déontologie</span>
+      <h2>L'outil prépare. <span class="grad-text">L'avocat décide.</span></h2>
+    </div>
+    <div class="tgrid">
+      <div class="titem rv"><div class="bar"></div><h3>Vous gardez la main</h3><p>Rien n'est envoyé ni déposé sans votre relecture. L'outil ne rédige aucune consultation à votre place.</p></div>
+      <div class="titem rv d1"><div class="bar"></div><h3>Pensé pour la profession</h3><p>Conçu au regard du secret professionnel et des recommandations du CNB sur l'usage de l'intelligence artificielle.</p></div>
+      <div class="titem rv d2"><div class="bar"></div><h3>Conforme au RGPD</h3><p>Nous vous indiquons quelles données sont traitées et par quels services, et nous signons avec chaque cabinet un accord de sous-traitance (article 28 du RGPD).</p></div>
+      <div class="titem rv d3"><div class="bar"></div><h3>Aucune réutilisation</h3><p>Vos documents servent uniquement à traiter vos dossiers. Jamais à autre chose.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="equipe">
+  <div class="wrap">
+    <div class="head rv">
+      <span class="eyebrow"><i></i>L'équipe</span>
+      <h2>Deux fondateurs, entre <span class="grad-text">le droit et la technique.</span></h2>
+      <p>Nous avons fondé PageLab avec une conviction : l'intelligence artificielle utile pour un cabinet n'est pas celle qui impressionne, c'est celle qui fait gagner du temps sans rien retirer à l'avocat.</p>
+    </div>
+    <div class="team">
+      <article class="person spot rv">
+        <div class="who"><div class="avatar"><span>WR</span></div><div><h3>Wandrille Robin</h3><div class="role">Cofondateur · Produit et technique</div></div></div>
+        <p>Étudiant en droit à l'UVSQ, il conçoit et développe les outils PageLab, au plus près du quotidien des cabinets.</p>
+        <div class="contacts">
+          <a href="tel:+33698294872"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>06 98 29 48 72</a>
+          <a href="https://www.linkedin.com/in/wandrille-robin-b454083b7/" target="_blank" rel="noopener"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3zM9.5 9.75h3.8v1.5h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v5.45h-4v-4.83c0-1.15-.02-2.63-1.6-2.63-1.6 0-1.85 1.25-1.85 2.55v4.91h-4z"/></svg>LinkedIn</a>
+        </div>
+      </article>
+      <article class="person spot rv d1">
+                <div class="who"><div class="avatar"><span>BT</span></div><div><h3>Baptiste Tardieu</h3><div class="role">Cofondateur · Relation cabinets</div></div></div>
+        <p>Interlocuteur des cabinets, il accompagne chaque mise en route et reste votre point de contact au quotidien.</p>
+        <div class="contacts">
+          <a href="tel:+33625082061"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>06 25 08 20 61</a>
+          <a href="https://www.linkedin.com/in/baptiste-tardieu-pagelab/" target="_blank" rel="noopener"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3zM9.5 9.75h3.8v1.5h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v5.45h-4v-4.83c0-1.15-.02-2.63-1.6-2.63-1.6 0-1.85 1.25-1.85 2.55v4.91h-4z"/></svg>LinkedIn</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="contact" style="padding-top:20px">
+  <div class="wrap">
+    <div class="cta rv">
+      <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+      <div>
+        <h2>Parlons de <span class="grad-text">votre cabinet.</span></h2>
+        <p>Un échange de 15 minutes, par téléphone ou en visio, pour voir si PageLab peut vous faire gagner du temps. Sans engagement.</p>
+      </div>
+      <div class="clist">
+        <a class="w" href="mailto:contact@pagelab.fr"><span>contact@pagelab.fr</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="g" href="tel:+33698294872"><span>06 98 29 48 72</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <small>Réponse sous 24 heures ouvrées.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
 </main>
 
-<footer class="footer">
-  <div class="container row">
-    <div class="brand" style="font-size:16px"><span class="mark" style="width:24px;height:24px;border-radius:7px"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fl" d="M9.6 3h4.8a1 1 0 0 1 0 2H14v4.4l5.4 9.9a2 2 0 0 1-1.8 3H6.4a2 2 0 0 1-1.8-3L10 9.4V5h-.4a1 1 0 0 1 0-2z"/><circle cx="10.5" cy="16" r="1.1" fill="#15202e"/><circle cx="13" cy="18.4" r=".8" fill="#15202e"/></svg></span> <span class="wm">PageLab</span></div>
-    <div class="links"><a href="pricing.html">Tarifs</a><a href="mentions-legales.html">Mentions légales</a><a href="cgv.html">CGV</a><a href="confidentialite.html">Confidentialité</a></div>
-    <span>contact@pagelab.fr · © 2026 PageLab</span>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a class="logo" href="#top" style="font-size:19px"><span>Page<span class="grad-text">Lab</span></span></a>
+      <span>© 2026 PageLab · Automatisation sur mesure pour cabinets d'avocats</span>
+      <button type="button" id="legalBtn" aria-expanded="false" aria-controls="legal">Mentions légales et RGPD</button>
+    </div>
+    <div class="legal" id="legal">
+      <!-- A COMPLETER une fois la société immatriculée (forme, capital, RCS, siège) -->
+      <h3>Éditeur du site</h3>
+      <p>PageLab, projet porté par Wandrille Robin et Baptiste Tardieu. Société en cours de création.<br>Contact : contact@pagelab.fr · 06 98 29 48 72<br>Directeur de la publication : Wandrille Robin.</p>
+      <h3>Hébergement</h3>
+      <p>Netlify, Inc., 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis.</p>
+      <h3>Données personnelles (RGPD)</h3>
+      <p><b>Responsable du traitement :</b> PageLab, représenté par Wandrille Robin, contact@pagelab.fr.</p>
+      <p><b>Données collectées :</b> uniquement celles que vous nous transmettez par e-mail ou par téléphone (nom, cabinet, coordonnées, contenu de votre demande). Ce site ne dépose aucun cookie de mesure d'audience ni de publicité et ne comporte aucun formulaire.</p>
+      <p><b>Finalité et base légale :</b> répondre à vos demandes et, le cas échéant, préparer et exécuter un contrat avec votre cabinet (intérêt légitime et mesures précontractuelles).</p>
+      <p><b>Durée de conservation :</b> 3 ans à compter du dernier échange pour les prospects ; pour les clients, la durée de la relation contractuelle augmentée des délais légaux de prescription.</p>
+      <p><b>Destinataires :</b> les seuls fondateurs de PageLab. Vos données ne sont ni vendues ni cédées.</p>
+      <p><b>Données des cabinets clients :</b> lorsque nous traitons des documents pour le compte d'un cabinet, nous agissons en tant que sous-traitant au sens de l'article 28 du RGPD. Un accord de sous-traitance précise les services utilisés, les mesures de sécurité et la durée de conservation. Les documents ne servent qu'au traitement des dossiers du cabinet.</p>
+      <p><b>Vos droits :</b> accès, rectification, effacement, limitation, opposition et portabilité, en écrivant à contact@pagelab.fr. Vous pouvez aussi introduire une réclamation auprès de la CNIL (www.cnil.fr).</p>
+    </div>
   </div>
 </footer>
 
+<script>
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // titre mot par mot
+  var h=document.getElementById('h1');
+  if(h&&!reduce){
+    var i=0;
+    (function walk(node){
+      Array.prototype.slice.call(node.childNodes).forEach(function(n){
+        if(n.nodeType===3){
+          var frag=document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function(t){
+            if(!t)return;
+            if(/^\s+$/.test(t)){frag.appendChild(document.createTextNode(t));return;}
+            var s=document.createElement('span');s.className='w';s.textContent=t;s.style.animationDelay=(0.15+i*0.06)+'s';i++;frag.appendChild(s);
+          });
+          node.replaceChild(frag,n);
+        }else if(n.nodeType===1){
+          if(n.classList.contains('grad-text')){n.classList.add('w');n.style.animationDelay=(0.15+i*0.06)+'s';i++;}
+          else walk(n);
+        }
+      });
+    })(h);
+  }
+
+  // apparition au scroll
+  var els=document.querySelectorAll('.rv,.titem');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(el){io.observe(el);});
+  }else{els.forEach(function(el){el.classList.add('in');});}
+
+  // compteurs
+  function count(el,end,dur){var t0=null;function step(t){if(!t0)t0=t;var p=Math.min((t-t0)/dur,1);el.textContent=Math.round(end*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+  if(!reduce){
+    document.querySelectorAll('[data-count]').forEach(function(el){var e=+el.dataset.count;el.textContent='0';setTimeout(function(){count(el,e,1400);},600);});
+  }
+
+  // calculateur
+  var r=document.getElementById('hrs'),y=document.getElementById('yearly'),v=document.getElementById('hrsv'),d=document.getElementById('days');
+  function upd(anim){var hh=+r.value,tot=hh*45;v.textContent=hh+' h';d.textContent=Math.round(tot/8);r.style.setProperty('--p',((hh-1)/9*100)+'%');if(anim&&!reduce)count(y,tot,700);else y.textContent=tot;}
+  r.addEventListener('input',function(){upd(false);});upd(false);
+  if('IntersectionObserver' in window&&!reduce){
+    var bo=new IntersectionObserver(function(es){if(es[0].isIntersecting){upd(true);bo.disconnect();}},{threshold:.5});
+    bo.observe(document.querySelector('.band'));
+  }
+
+  // halo qui suit la souris
+  document.querySelectorAll('.spot').forEach(function(c){
+    c.addEventListener('pointermove',function(e){var b=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-b.left)+'px');c.style.setProperty('--my',(e.clientY-b.top)+'px');});
+  });
+
+  // barre de progression, ligne des étapes, parallaxe
+  var prog=document.getElementById('progress'),steps=document.getElementById('steps'),fill=document.getElementById('fill'),orbs=document.getElementById('orbs');
+  function onScroll(){
+    var st=window.scrollY,max=document.documentElement.scrollHeight-innerHeight;
+    prog.style.transform='scaleX('+(max>0?st/max:0)+')';
+    if(steps){var b=steps.getBoundingClientRect();var p=Math.min(Math.max((innerHeight*0.6-b.top)/b.height,0),1);fill.style.height=(p*(b.height-20))+'px';}
+    if(orbs&&!reduce)orbs.style.transform='translateY('+(st*0.25)+'px)';
+  }
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  // inclinaison du tableau de bord
+  var tilt=document.getElementById('tilt');
+  if(tilt&&!reduce&&matchMedia('(pointer:fine)').matches){
+    var hero=document.querySelector('.hero');
+    hero.addEventListener('pointermove',function(e){var b=tilt.getBoundingClientRect();var x=(e.clientX-(b.left+b.width/2))/b.width,yy=(e.clientY-(b.top+b.height/2))/b.height;tilt.style.transform='perspective(1000px) rotateY('+(x*6)+'deg) rotateX('+(-yy*6)+'deg)';});
+    hero.addEventListener('pointerleave',function(){tilt.style.transform='';});
+    tilt.style.transition='transform .4s cubic-bezier(.2,.8,.2,1)';
+  }
+
+  // Appels : Récap / Secrétaire
+  document.querySelectorAll('.seg').forEach(function(seg){
+    var card=seg.closest('.offer'),price=card.querySelector('.price');
+    seg.querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click',function(){
+        var m=b.dataset.mode;
+        seg.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-selected',x===b);});
+        seg.classList.toggle('r',m==='secr');
+        card.querySelectorAll('.mode').forEach(function(pn){pn.hidden=pn.dataset.panel!==m;});
+        price.innerHTML=price.getAttribute('data-price-'+m);
+      });
+    });
+  });
+
+  // mentions légales
+  var lb=document.getElementById('legalBtn'),l=document.getElementById('legal');
+  lb.addEventListener('click',function(){var o=l.classList.toggle('open');lb.setAttribute('aria-expanded',o);if(o)l.scrollIntoView({behavior:'smooth',block:'nearest'});});
+})();
+</script>
 </body>
 </html>
